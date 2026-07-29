@@ -4,9 +4,15 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/Boldstone-256/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>client</title>
-    <script type="module" crossorigin src="/Boldstone-256/assets/index-B0VQZ9-1.js"></script>
-    <link rel="stylesheet" crossorigin href="/Boldstone-256/assets/index-BSKuc6fm.css">
+    <title>Boldstone Investments</title>
+    <script>
+      (function () {
+        var p = new URLSearchParams(window.location.search).get('p');
+        if (p) window.history.replaceState(null, '', '/Boldstone-256' + p);
+      })();
+    </script>
+    <script type="module" crossorigin src="/Boldstone-256/assets/index-BtCBvEsZ.js"></script>
+    <link rel="stylesheet" crossorigin href="/Boldstone-256/assets/index--tBEQYoy.css">
   </head>
   <body>
     <div id="root"></div>
