@@ -14,20 +14,20 @@ export default function Navbar() {
 
   return (
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
-        <NavLink to="/" className="text-xl font-black text-[#0d1f1c] tracking-tight">
+      <div className="w-full px-8 flex items-center justify-between h-16">
+        <NavLink to="/" className="text-2xl font-black text-[#0d1f1c] tracking-tight">
           Bold<span className="text-[#0f8972]">stone</span>
         </NavLink>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-8">
           {links.map(l => (
             <NavLink
               key={l.to}
               to={l.to}
               end={l.to === '/'}
               className={({ isActive }) =>
-                `text-sm font-600 transition-colors ${isActive ? 'text-[#0f8972] font-bold' : 'text-gray-600 hover:text-[#0f8972]'}`
+                `text-base font-semibold transition-colors ${isActive ? 'text-[#0f8972] font-bold' : 'text-gray-700 hover:text-[#0f8972]'}`
               }
             >
               {l.label}
@@ -35,7 +35,7 @@ export default function Navbar() {
           ))}
           <NavLink
             to="/partnership"
-            className="bg-[#0f8972] text-white text-sm font-bold px-4 py-2 rounded-lg hover:bg-[#0d7a65] transition-colors"
+            className="bg-[#0f8972] text-white text-base font-bold px-5 py-2 rounded-lg hover:bg-[#0d7a65] transition-colors"
           >
             Become a Partner
           </NavLink>
