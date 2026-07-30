@@ -1663,3 +1663,12 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .profile-card { padding: 20px 16px; }
   .profile-img { width: 120px; }
 }
+
+/* ── PAYMENT BAR ── */
+@media (max-width: 640px) {
+  .hide-mobile { display: none !important; }
+  .show-mobile { display: flex !important; }
+}
+@media (min-width: 641px) {
+  .show-mobile { display: none !important; }
+}
