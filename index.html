@@ -19,12 +19,15 @@
     <meta name="twitter:image" content="https://www.boldstoneinvestments.com/web/image/website/1/logo/Boldstone?unique=6efab92" />
     <script>
       (function () {
-        var p = new URLSearchParams(window.location.search).get('p');
-        if (p) window.history.replaceState(null, '', '/Boldstone-256' + p);
+        var redirect = sessionStorage.getItem('redirect');
+        if (redirect) {
+          sessionStorage.removeItem('redirect');
+          window.history.replaceState(null, '', redirect);
+        }
       })();
     </script>
-    <script type="module" crossorigin src="/Boldstone-256/assets/index-Dshu9Pf4.js"></script>
-    <link rel="stylesheet" crossorigin href="/Boldstone-256/assets/index-DlYY7ESN.css">
+    <script type="module" crossorigin src="/Boldstone-256/assets/index-Bc8_0Q2T.js"></script>
+    <link rel="stylesheet" crossorigin href="/Boldstone-256/assets/index-BkboRxHg.css">
   </head>
   <body>
     <div id="root"></div>

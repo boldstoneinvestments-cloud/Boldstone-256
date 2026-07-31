@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <script>
-      var path = window.location.pathname.replace('/Boldstone-256', '') + window.location.search + window.location.hash;
-      window.location.replace('/Boldstone-256/?p=' + encodeURIComponent(path));
+      sessionStorage.setItem('redirect', window.location.pathname + window.location.search + window.location.hash);
+      window.location.replace('/Boldstone-256/');
     </script>
   </head>
   <body></body>
