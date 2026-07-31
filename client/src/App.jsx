@@ -21,6 +21,7 @@ export default function App() {
           <Route path="/farmers" element={<Farmers />} />
           <Route path="/partnership" element={<Partnership />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/blog" element={<NotFound />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

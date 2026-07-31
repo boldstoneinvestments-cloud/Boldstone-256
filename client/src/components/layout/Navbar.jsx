@@ -3,10 +3,11 @@ import { NavLink } from 'react-router-dom'
 
 const links = [
   { to: '/', label: 'Home' },
-  { to: '/about', label: 'About' },
-  { to: '/investors', label: 'Investors' },
-  { to: '/farmers', label: 'Farmers' },
-  { to: '/partnership', label: 'Partnership' },
+  { to: '/farmers', label: 'For Farmers' },
+  { to: '/investors', label: 'For Investors' },
+  { to: '/partnership', label: 'Partnerships' },
+  { to: '/about', label: 'About Us' },
+  { to: '/blog', label: 'Blog' },
 ]
 
 export default function Navbar() {
@@ -25,30 +26,34 @@ export default function Navbar() {
           />
         </NavLink>
 
-        {/* Desktop links */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 32 }} className="desktop-nav">
-          {links.map(l => (
+        {/* Desktop links + Contact Us */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 0, flex: 1 }} className="desktop-nav">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginLeft: 40 }}>
+            {links.map(l => (
+              <NavLink
+                key={l.to}
+                to={l.to}
+                end={l.to === '/'}
+                style={({ isActive }) => ({
+                  fontSize: 15,
+                  fontWeight: isActive ? 700 : 600,
+                  color: isActive ? '#0f8972' : '#374151',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s',
+                })}
+              >
+                {l.label}
+              </NavLink>
+            ))}
+          </div>
+          <div style={{ marginLeft: 'auto' }}>
             <NavLink
-              key={l.to}
-              to={l.to}
-              end={l.to === '/'}
-              style={({ isActive }) => ({
-                fontSize: 15,
-                fontWeight: isActive ? 700 : 600,
-                color: isActive ? '#0f8972' : '#374151',
-                textDecoration: 'none',
-                transition: 'color 0.2s',
-              })}
+              to="/contact"
+              style={{ background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: '10px 20px', borderRadius: 8, textDecoration: 'none', whiteSpace: 'nowrap' }}
             >
-              {l.label}
+              Contact Us
             </NavLink>
-          ))}
-          <NavLink
-            to="/contact"
-            style={{ background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: '10px 20px', borderRadius: 8, textDecoration: 'none', whiteSpace: 'nowrap' }}
-          >
-            Contact Us
-          </NavLink>
+          </div>
         </div>
 
         {/* Mobile hamburger */}
