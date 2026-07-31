@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faTrash, faPlus, faLock } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faTrash, faPlus, faLock, faImage } from '@fortawesome/free-solid-svg-icons'
 
 const ADMIN_PASSWORD = 'boldstone2026'
 const STORAGE_KEY = 'boldstone_blog_posts'
@@ -21,7 +21,7 @@ function savePosts(posts) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(posts))
 }
 
-const emptyForm = { title: '', category: 'News', author: '', date: '', image: '', excerpt: '', body: '' }
+const emptyForm = { title: '', category: 'News', author: '', date: '', image: '', imagePreview: '', excerpt: '', body: '' }
 
 export default function AdminBlog() {
   const [authed, setAuthed] = useState(false)
@@ -39,6 +39,14 @@ export default function AdminBlog() {
   }
 
   const handle = e => setForm({ ...form, [e.target.name]: e.target.value })
+
+  const handleImageUpload = e => {
+    const file = e.target.files[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => setForm(f => ({ ...f, image: reader.result, imagePreview: reader.result }))
+    reader.readAsDataURL(file)
+  }
 
   const submit = e => {
     e.preventDefault()
@@ -126,19 +134,33 @@ export default function AdminBlog() {
               { name: 'title', label: 'Title', type: 'text', placeholder: 'Post title...' },
               { name: 'author', label: 'Author', type: 'text', placeholder: 'e.g. Moses Alicwamu' },
               { name: 'date', label: 'Date (optional)', type: 'text', placeholder: 'e.g. July 10, 2026 — leave blank for today' },
-              { name: 'image', label: 'Image URL (optional)', type: 'text', placeholder: 'https://... — leave blank for default' },
               { name: 'excerpt', label: 'Excerpt / Summary', type: 'text', placeholder: 'Short summary shown on the blog list...' },
             ].map(f => (
               <div key={f.name} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <label style={{ fontSize: 13, fontWeight: 600, color: '#0d1f1c' }}>{f.label}</label>
                 <input name={f.name} type={f.type} placeholder={f.placeholder} value={form[f.name]} onChange={handle}
-                  required={!['date', 'image'].includes(f.name)}
+                  required={!['date'].includes(f.name)}
                   style={{ border: '1px solid #e0e0e0', borderRadius: 8, padding: '11px 14px', fontSize: 14, color: '#0d1f1c', outline: 'none' }}
                   onFocus={e => e.target.style.borderColor = '#0f8972'}
                   onBlur={e => e.target.style.borderColor = '#e0e0e0'}
                 />
               </div>
             ))}
+
+            {/* Image Upload */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <label style={{ fontSize: 13, fontWeight: 600, color: '#0d1f1c' }}>Post Image</label>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, border: '1px dashed #0f8972', borderRadius: 8, padding: '12px 14px', cursor: 'pointer', background: '#f0faf7' }}>
+                <FontAwesomeIcon icon={faImage} style={{ color: '#0f8972', fontSize: 18 }} />
+                <span style={{ fontSize: 13, color: '#0f8972', fontWeight: 600 }}>
+                  {form.imagePreview ? 'Change image' : 'Click to upload image'}
+                </span>
+                <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
+              </label>
+              {form.imagePreview && (
+                <img src={form.imagePreview} alt="preview" style={{ width: '100%', height: 180, objectFit: 'cover', borderRadius: 8, marginTop: 4 }} />
+              )}
+            </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               <label style={{ fontSize: 13, fontWeight: 600, color: '#0d1f1c' }}>Category</label>
