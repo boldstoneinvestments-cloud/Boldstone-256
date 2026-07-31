@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
-import PaymentBar from './components/layout/PaymentBar'
 import Home from './pages/Home'
 import About from './pages/About'
 import Investors from './pages/Investors'
@@ -25,7 +24,6 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      <PaymentBar />
       <Footer />
     </div>
   )
