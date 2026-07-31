@@ -19,8 +19,11 @@
     <meta name="twitter:image" content="https://www.boldstoneinvestments.com/web/image/website/1/logo/Boldstone?unique=6efab92" />
     <script>
       (function () {
-        var p = new URLSearchParams(window.location.search).get('p');
-        if (p) window.history.replaceState(null, '', '/Boldstone-256' + p);
+        var redirect = sessionStorage.getItem('redirect');
+        if (redirect) {
+          sessionStorage.removeItem('redirect');
+          window.history.replaceState(null, '', redirect);
+        }
       })();
     </script>
   </head>

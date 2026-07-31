@@ -7,6 +7,7 @@ import About from './pages/About'
 import Investors from './pages/Investors'
 import Farmers from './pages/Farmers'
 import Partnership from './pages/Partnership'
+import Contact from './pages/Contact'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/investors" element={<Investors />} />
           <Route path="/farmers" element={<Farmers />} />
           <Route path="/partnership" element={<Partnership />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
