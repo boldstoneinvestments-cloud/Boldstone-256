@@ -59,7 +59,7 @@ export default function Footer() {
               style={{ height: 64, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)', alignSelf: 'flex-start' }}
             />
           </NavLink>
-          <p style={{ fontSize: 14, lineHeight: 1.8, color: '#fff', maxWidth: 280, margin: 0 }}>
+          <p style={{ fontSize: 14, fontWeight: 500, lineHeight: 1.8, color: '#fff', maxWidth: 280, margin: 0 }}>
             Boldstone Property Investments is a diversified alternative asset investment firm with specialist expertise in commercial coffee farming, processing and trade in Uganda and East Africa.
           </p>
           {/* Socials */}
@@ -78,7 +78,7 @@ export default function Footer() {
 
         {/* Quick Links */}
         <div>
-          <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 2.5, textTransform: 'uppercase', color: '#000', marginBottom: 20, margin: '0 0 20px' }}>
+          <p style={{ fontSize: 16, fontWeight: 800, letterSpacing: 2.5, textTransform: 'uppercase', color: '#000', marginBottom: 20, margin: '0 0 20px' }}>
             Quick Links
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -97,7 +97,7 @@ export default function Footer() {
 
         {/* Contact */}
         <div>
-          <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: 2.5, textTransform: 'uppercase', color: '#000', margin: '0 0 20px' }}>
+          <p style={{ fontSize: 16, fontWeight: 800, letterSpacing: 2.5, textTransform: 'uppercase', color: '#000', margin: '0 0 20px' }}>
             Get In Touch
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -116,8 +116,8 @@ export default function Footer() {
               <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                 <span style={{ marginTop: 2, color: '#fff', flexShrink: 0 }}>{item.icon}</span>
                 {item.href
-                  ? <a href={item.href} style={{ fontSize: 14, color: '#fff', textDecoration: 'none' }}>{item.text}</a>
-                  : <span style={{ fontSize: 14, color: '#fff' }}>{item.text}</span>
+                  ? <a href={item.href} style={{ fontSize: 14, fontWeight: 500, color: '#fff', textDecoration: 'none' }}>{item.text}</a>
+                  : <span style={{ fontSize: 14, fontWeight: 500, color: '#fff' }}>{item.text}</span>
                 }
               </div>
             ))}
@@ -137,12 +137,12 @@ export default function Footer() {
       {/* Bottom bar */}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '20px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-          <p style={{ fontSize: 13, color: '#fff', margin: 0 }}>
+          <p style={{ fontSize: 14, fontWeight: 500, color: '#fff', margin: 0 }}>
             © {new Date().getFullYear()} Boldstone Property Investments LLC. All rights reserved.
           </p>
           <div style={{ display: 'flex', gap: 24 }}>
             {['Privacy Policy', 'Terms of Use'].map(label => (
-              <a key={label} href="#" style={{ fontSize: 13, color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }}
+              <a key={label} href="#" style={{ fontSize: 14, fontWeight: 500, color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }}
                 onMouseOver={e => e.currentTarget.style.color = '#000'}
                 onMouseOut={e => e.currentTarget.style.color = '#fff'}
               >
