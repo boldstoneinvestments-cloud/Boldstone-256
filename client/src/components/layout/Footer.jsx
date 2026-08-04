@@ -52,11 +52,13 @@ export default function Footer() {
 
         {/* Brand column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <img
-            src="https://address-restaurant2.odoo.com/web/image/1959-1ec89697/Boldstone%20logo.webp"
-            alt="Boldstone"
-            style={{ height: 64, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)', alignSelf: 'flex-start' }}
-          />
+          <NavLink to="/">
+            <img
+              src="https://address-restaurant2.odoo.com/web/image/1959-1ec89697/Boldstone%20logo.webp"
+              alt="Boldstone"
+              style={{ height: 64, width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)', alignSelf: 'flex-start' }}
+            />
+          </NavLink>
           <p style={{ fontSize: 14, lineHeight: 1.8, color: '#fff', maxWidth: 280, margin: 0 }}>
             Boldstone Property Investments is a diversified alternative asset investment firm with specialist expertise in commercial coffee farming, processing and trade in Uganda and East Africa.
           </p>
