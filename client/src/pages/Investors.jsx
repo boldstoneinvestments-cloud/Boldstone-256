@@ -6,7 +6,6 @@ import { faCircleCheck, faArrowRight, faRulerCombined, faMountain, faCloudRain, 
 import { MapContainer, TileLayer, Polygon, Tooltip, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import * as turf from '@turf/turf'
-import PaymentBar from '../components/layout/PaymentBar'
 
 // ── ESTATE MOCK DATA ──────────────────────────────────────────────────────────
 const ESTATE = {
@@ -499,8 +498,6 @@ export default function Investors() {
           </div>
         </div>
       </section>
-
-      <PaymentBar />
 
     </div>
   )
