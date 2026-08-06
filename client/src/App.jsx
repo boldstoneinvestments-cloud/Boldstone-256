@@ -1,6 +1,7 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
+import PaymentBar from './components/layout/PaymentBar'
 import Home from './pages/Home'
 import About from './pages/About'
 import Investors from './pages/Investors'
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
+      {!['/','/about'].includes(useLocation().pathname) && <PaymentBar />}
       <Footer />
     </div>
   )

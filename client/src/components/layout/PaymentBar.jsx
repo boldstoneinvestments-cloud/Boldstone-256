@@ -48,11 +48,11 @@ export default function PaymentBar() {
     <div style={{ background: '#f8fffe', borderTop: '1px solid #e0ede9', borderBottom: '1px solid #e0ede9' }}>
       <div className="bs-wrap" style={{ padding: '12px 24px' }}>
 
-        {/* Top row — lock text + stripe (desktop) */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '10px' }}>
+        {/* Single row — lock+text | logos | stripe */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
 
           {/* LEFT — lock + text */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
             <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'rgba(15,137,114,0.1)', border: '1px solid rgba(15,137,114,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0f8972" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
@@ -65,43 +65,35 @@ export default function PaymentBar() {
             </div>
           </div>
 
-          {/* RIGHT — Stripe desktop only */}
-          <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '10px', color: '#9ca3af', whiteSpace: 'nowrap' }}>Payments powered by</span>
-            <img src="./images/stripe logo.png" alt="Stripe" {...protect} style={{ ...protectStyle, height: '32px', width: 'auto', objectFit: 'contain', display: 'block' }} />
-          </div>
-        </div>
+          {/* MIDDLE — logos */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center', flex: 1 }}>
+            {mainLogos.map(m => <Badge key={m.label} method={m} />)}
 
-        {/* Bottom row — logos */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {/* MTN + Airtel — visible on desktop, hidden on mobile */}
+            {moreLogos.map(m => (
+              <div key={m.label} className="hide-mobile">
+                <Badge method={m} />
+              </div>
+            ))}
 
-          {/* Always visible logos */}
-          {mainLogos.map(m => <Badge key={m.label} method={m} />)}
-
-          {/* MTN + Airtel — visible on desktop, hidden on mobile */}
-          {moreLogos.map(m => (
-            <div key={m.label} className="hide-mobile">
-              <Badge method={m} />
+            {/* More button + inline logos — mobile only */}
+            <div className="show-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'nowrap', flexShrink: 0 }}>
+              {open && moreLogos.map(m => <Badge key={m.label} method={m} />)}
+              <button
+                onClick={() => setOpen(o => !o)}
+                style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '4px 9px', fontSize: '11px', fontWeight: 700, color: '#555', cursor: 'pointer', height: '36px', flexShrink: 0 }}
+              >
+                {open ? 'Less' : 'More'}
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
             </div>
-          ))}
-
-          {/* More button + inline logos — mobile only, all in one row */}
-          <div className="show-mobile" style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'nowrap', flexShrink: 0 }}>
-            {open && moreLogos.map(m => <Badge key={m.label} method={m} />)}
-            <button
-              onClick={() => setOpen(o => !o)}
-              style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '4px 9px', fontSize: '11px', fontWeight: 700, color: '#555', cursor: 'pointer', height: '36px', flexShrink: 0 }}
-            >
-              {open ? 'Less' : 'More'}
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
           </div>
 
-          {/* Stripe — always after logos */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '4px' }}>
-            <span style={{ fontSize: '10px', color: '#9ca3af', whiteSpace: 'nowrap' }}>Powered by</span>
+          {/* RIGHT — Stripe */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+            <span style={{ fontSize: '10px', color: '#9ca3af', whiteSpace: 'nowrap' }}>Payments powered by</span>
             <img src="./images/stripe logo.png" alt="Stripe" {...protect} style={{ ...protectStyle, height: '32px', width: 'auto', objectFit: 'contain', display: 'block' }} />
           </div>
 
