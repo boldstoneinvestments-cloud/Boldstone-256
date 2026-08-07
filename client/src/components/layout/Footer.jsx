@@ -133,14 +133,6 @@ export default function Footer() {
             ))}
           </div>
 
-          {/* CTA */}
-          <NavLink to="/contact"
-            style={{ display: 'inline-block', marginTop: 28, background: '#fff', color: '#0f8972', fontWeight: 700, fontSize: 13, padding: '11px 22px', borderRadius: 8, textDecoration: 'none', transition: 'opacity 0.2s' }}
-            onMouseOver={e => e.currentTarget.style.opacity = '0.9'}
-            onMouseOut={e => e.currentTarget.style.opacity = '1'}
-          >
-            Contact Us →
-          </NavLink>
         </div>
       </div>
 
