@@ -691,12 +691,12 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
    ========================================================= */
 .offer-card-content h4 {
   margin: 0;
-  font-family: 'Playfair Display', 'Cormorant Garamond', 'Times New Roman', serif;
+  
   font-size: clamp(1.25rem, 1.6vw, 1.5rem);
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: #0e1f1b;
+  font-weight: 700;
+  line-height: 1.2;
+  
+  color: #0d1f1c;
 }
 
 /* =========================================================
@@ -704,12 +704,12 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
    ========================================================= */
 .offer-card-content p {
   margin: 12px 0 0;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  
   font-size: 0.78rem;
   font-weight: 400;
   line-height: 1.65;
-  letter-spacing: -0.005em;
-  color: #3f4543;
+  
+  color: #555;
 }
 
 /* PLANS */
@@ -1783,3 +1783,6 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 @media (min-width: 641px) {
   .show-mobile { display: none !important; }
 }
+
+
+
