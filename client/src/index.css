@@ -753,39 +753,50 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 }
 
 .plan-card {
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 16px;
-  padding: 32px 28px;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-  display: flex;
-  flex-direction: column;
-}
-
-.plan-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #0f8972, #a0ddd4);
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: transform 0.35s ease;
 }
 
 .plan-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 48px rgba(15,137,114,0.13);
-  border-color: rgba(15,137,114,0.3);
+  transform: translateY(-5px);
 }
 
-.plan-card.featured {
+.plan-card .offer-card-back {
+  display: none;
+}
+
+.plan-card .offer-card-inner {
+  position: relative;
+  inset: unset;
+  grid-area: 1 / 1;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid rgba(15,137,114,0.35);
+  box-shadow: 0 2px 8px rgba(17,31,27,0.06);
+  transition: box-shadow 0.35s ease;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.plan-card:hover .offer-card-inner {
+  box-shadow: 0 4px 14px rgba(17,31,27,0.09);
+}
+
+.plan-card.featured .offer-card-back {
+  background: #0a6b58;
+}
+
+.plan-card.featured .offer-card-inner {
   background: #0f8972;
   border-color: #0f8972;
-  color: #fff;
 }
 
-.plan-card.featured::before { background: rgba(255,255,255,0.25); }
-.plan-card.featured:hover { box-shadow: 0 16px 48px rgba(15,137,114,0.35); }
+.plan-card-content {
+  padding: 28px 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+}
 
 .plan-badge {
   display: inline-block;
@@ -881,6 +892,12 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .plan-card.featured .plan-cta {
   background: #fff;
   color: #0f8972;
+}
+
+/* Override offer-card-inner corner accents for featured plan */
+.plan-card.featured .offer-card-inner::before,
+.plan-card.featured .offer-card-inner::after {
+  border-color: rgba(255,255,255,0.4);
 }
 
 /* STATS */

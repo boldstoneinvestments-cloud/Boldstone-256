@@ -167,21 +167,26 @@ export default function Farmers() {
           <div className="plans-grid">
             {plans.map((plan, i) => (
               <div key={i} className={`plan-card${plan.featured ? ' featured' : ''}`}>
-                <span className="plan-badge">{plan.badge}</span>
-                <p className="plan-name">{plan.name}</p>
-                <p className="plan-desc">{plan.desc}</p>
-                <div className="plan-divider" />
-                <ul className="plan-features">
-                  {plan.features.map((f, j) => (
-                    <li key={j}>
-                      <FontAwesomeIcon icon={faCircleCheck} />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <a href="#" className="plan-cta">
-                  Get Started <FontAwesomeIcon icon={faArrowRight} />
-                </a>
+                <div className="offer-card-back" />
+                <div className="offer-card-inner">
+                  <div className="plan-card-content">
+                    <span className="plan-badge">{plan.badge}</span>
+                    <p className="plan-name">{plan.name}</p>
+                    <p className="plan-desc">{plan.desc}</p>
+                    <div className="plan-divider" />
+                    <ul className="plan-features">
+                      {plan.features.map((f, j) => (
+                        <li key={j}>
+                          <FontAwesomeIcon icon={faCircleCheck} />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                    <a href="#" className="plan-cta">
+                      Get Started <FontAwesomeIcon icon={faArrowRight} />
+                    </a>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
