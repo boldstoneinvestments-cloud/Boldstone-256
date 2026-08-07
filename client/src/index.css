@@ -553,7 +553,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 
 /* WHY BOLDSTONE */
 .why-section {
-  padding: 72px 0;
+  padding: 72px 0 90px;
   background: #f0faf7;
   background-image: repeating-linear-gradient(
     -45deg, transparent, transparent 40px,
@@ -578,38 +578,138 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 
 .why-left h2 span { color: #0f8972; }
 
-/* OFFER GRID */
+/* =========================================================
+   OFFER GRID
+   ========================================================= */
 .offer-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 44px 28px;
 }
 
+/* =========================================================
+   CARD WRAPPER  (tilt + hover)
+   ========================================================= */
 .offer-card {
-  background: #f9f9f7;
-  border: 1px solid #e0e0e0;
-  border-top: 3px solid #0f8972;
-  border-radius: 0 0 12px 12px;
-  padding: 24px 20px;
-  transition: transform 0.25s, box-shadow 0.25s;
+  position: relative;
+  width: 100%;
+  height: 200px;
+  transform: none;
+  transition: transform 0.35s ease;
 }
 
 .offer-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(15,137,114,0.1);
+  transform: translateY(-5px);
 }
 
-.offer-card h4 {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: #1a1a1a;
+/* =========================================================
+   GREEN BACKING LAYER
+   ========================================================= */
+.offer-card-back {
+  position: absolute;
+  inset: 0;
+  transform: translate(5px, 5px);
+  border-radius: 18px;
+  background: #61766a;
+  z-index: 1;
+  box-shadow: none;
 }
 
-.offer-card p {
-  font-size: 13px;
-  color: #555;
-  line-height: 1.7;
+/* =========================================================
+   MAIN CARD SURFACE
+   ========================================================= */
+.offer-card-inner {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: #f7f6f3;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 8px rgba(17, 31, 27, 0.06);
+  overflow: hidden;
+  transition: box-shadow 0.35s ease;
+}
+
+.offer-card:hover .offer-card-inner {
+  box-shadow: 0 4px 14px rgba(17, 31, 27, 0.09);
+}
+
+/* =========================================================
+   INCOMPLETE GREEN BORDER  (top-right + bottom-left, fading ends)
+   ========================================================= */
+.offer-card-inner::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 90px;
+  height: 70px;
+  border-top: 1.5px solid #0f8972;
+  border-right: 1.5px solid #0f8972;
+  border-top-right-radius: 14px;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(to right, transparent 0%, black 30%, black 100%) top / 100% 2px no-repeat,
+    linear-gradient(to bottom, black 0%, black 70%, transparent 100%) right / 2px 100% no-repeat;
+  mask:
+    linear-gradient(to right, transparent 0%, black 30%, black 100%) top / 100% 2px no-repeat,
+    linear-gradient(to bottom, black 0%, black 70%, transparent 100%) right / 2px 100% no-repeat;
+}
+
+.offer-card-inner::after {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 50px;
+  height: 65px;
+  border-bottom: 1.5px solid #0f8972;
+  border-left: 1.5px solid #0f8972;
+  border-bottom-left-radius: 14px;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(to left, transparent 0%, black 30%, black 100%) bottom / 100% 2px no-repeat,
+    linear-gradient(to top, black 0%, black 70%, transparent 100%) left / 2px 100% no-repeat;
+  mask:
+    linear-gradient(to left, transparent 0%, black 30%, black 100%) bottom / 100% 2px no-repeat,
+    linear-gradient(to top, black 0%, black 70%, transparent 100%) left / 2px 100% no-repeat;
+}
+
+/* =========================================================
+   CONTENT AREA
+   ========================================================= */
+.offer-card-content {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  padding: 28px 24px 0 28px;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+.offer-card-content h4 {
+  margin: 0;
+  font-family: 'Playfair Display', 'Cormorant Garamond', 'Times New Roman', serif;
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #0e1f1b;
+}
+
+/* =========================================================
+   ACCENT LINE
+   ========================================================= */
+.offer-card-content p {
+  margin: 12px 0 0;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: -0.005em;
+  color: #3f4543;
 }
 
 /* PLANS */
@@ -900,7 +1000,11 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 
 /* FARMERS RESPONSIVE */
 @media (max-width: 1024px) {
-  .offer-grid { grid-template-columns: 1fr 1fr; }
+  .offer-grid { grid-template-columns: 1fr 1fr; gap: 44px 24px; }
+  .offer-card { height: 185px; }
+  .offer-card-inner::before { width: 80px; height: 60px; }
+  .offer-card-inner::after { width: 44px; height: 58px; }
+  .offer-card-back { transform: translate(4px, 4px); }
   .plans-grid { grid-template-columns: 1fr; max-width: 500px; margin: 0 auto; }
 }
 
@@ -910,7 +1014,14 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 
 @media (max-width: 767px) {
   .hero-content h1 { font-size: 2rem; }
-  .offer-grid { grid-template-columns: 1fr; }
+  .offer-grid { grid-template-columns: 1fr; gap: 44px 0; }
+  .offer-card { height: 180px; }
+  .offer-card:hover { transform: translateY(-3px); }
+  .offer-card-back { transform: translate(4px, 4px); border-radius: 16px; }
+  .offer-card-inner { border-radius: 16px; }
+  .offer-card-inner::before { top: 8px; right: 8px; width: 70px; height: 55px; border-top-right-radius: 12px; }
+  .offer-card-inner::after { bottom: 8px; left: 8px; width: 40px; height: 52px; border-bottom-left-radius: 12px; }
+  .offer-card-content { padding: 24px 20px 0 24px; }
   .why-section { padding: 52px 0; }
   .why-left h2 { font-size: 26px; }
   .farmer-plans { padding: 52px 0; }

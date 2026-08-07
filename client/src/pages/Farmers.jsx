@@ -143,8 +143,13 @@ export default function Farmers() {
           <div className="offer-grid" style={{ marginTop: '48px' }}>
             {offerCards.map((card, i) => (
               <div key={i} className="offer-card">
-                <h4>{card.title}</h4>
-                <p>{card.desc}</p>
+                <div className="offer-card-back" />
+                <div className="offer-card-inner">
+                  <div className="offer-card-content">
+                    <h4>{card.title}</h4>
+                    <p>{card.desc}</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
