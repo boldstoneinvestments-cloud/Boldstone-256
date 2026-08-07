@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBullhorn, faShieldHalved, faPeopleGroup, faHeart, faComments, faArrowLeft,
@@ -80,7 +80,7 @@ const team = [
   { id: 'jonathan', name: 'Jonathan Byaruhanga', position: 'Head of Agronomy', img: 'https://address-restaurant2.odoo.com/web/image/1884-ccb07d63/ChatGPT%20Image%20Jul%2010%2C%202026%2C%2001_35_24%20PM.webp' },
   { id: 'okwiri', name: 'Okwiri Expedito', position: 'Head of International Partnerships', img: 'https://boldstone.odoo.com/web/image/429-43daa88a/Screenshot%202025-12-02%20095443.webp' },
   { id: 'sabira', name: 'Sabira Ssemata', position: 'Backend Software Engineer', img: 'https://address-restaurant2.odoo.com/web/image/1888-df4ef49b/Sabira.webp' },
-  { id: 'habib', name: 'Habib Tumwesige', position: 'Frontend Software Engineer', img: 'https://media.licdn.com/dms/image/v2/D4D03AQEQ8Ex7uuS5EA/profile-displayphoto-crop_800_800/B4DZ20mTz8K4AM-/0/1776851443577?e=1785369600&v=beta&t=JIUhYkmCajSOgfI-6f5UMHuC5dcaEHGB569T76H-6aY' },
+  { id: 'habib', name: 'Habib Tumwesige', position: 'Frontend Software Engineer', img: 'https://address-restaurant2.odoo.com/web/image/1982-2595a3af/Habib%20Salah.webp' },
 ]
 
 const profiles = {
@@ -122,7 +122,7 @@ const profiles = {
   habib: {
     name: 'Habib Tumwesige',
     role: 'Frontend Software Engineer',
-    img: 'https://media.licdn.com/dms/image/v2/D4D03AQEQ8Ex7uuS5EA/profile-displayphoto-crop_800_800/B4DZ20mTz8K4AM-/0/1776851443577?e=1785369600&v=beta&t=JIUhYkmCajSOgfI-6f5UMHuC5dcaEHGB569T76H-6aY',
+    img: 'https://address-restaurant2.odoo.com/web/image/1982-2595a3af/Habib%20Salah.webp',
     bio: ["Habib is a frontend software engineer responsible for building and maintaining Boldstone's user-facing digital experiences."],
     linkedin: 'https://www.linkedin.com/in/habib-tumwesige-17a931351/',
   },
@@ -138,12 +138,20 @@ const profiles = {
 export default function About() {
   const [activeProfile, setActiveProfile] = useState(null)
 
+  const teamRef = useRef(null)
+  const profileRef = useRef(null)
+  const scrollPosRef = useRef(0)
+
   const showProfile = (id) => {
+    scrollPosRef.current = window.scrollY
     setActiveProfile(id)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setTimeout(() => profileRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
   }
 
-  const hideProfile = () => setActiveProfile(null)
+  const hideProfile = () => {
+    setActiveProfile(null)
+    setTimeout(() => window.scrollTo({ top: scrollPosRef.current, behavior: 'smooth' }), 50)
+  }
 
   const profile = activeProfile ? profiles[activeProfile] : null
 
@@ -215,7 +223,7 @@ export default function About() {
 
       {/* TEAM GRID */}
       {!activeProfile && (
-        <section className="team-section">
+        <section className="team-section" ref={teamRef}>
           <div className="bs-wrap">
             <p className="team-label">Our Team</p>
             <h2 className="team-heading">
@@ -242,7 +250,7 @@ export default function About() {
 
       {/* PROFILE VIEW */}
       {activeProfile && profile && (
-        <section className="profile-section">
+        <section className="profile-section" ref={profileRef}>
           <div className="bs-wrap">
             <button className="back-link" onClick={hideProfile}>
               <FontAwesomeIcon icon={faArrowLeft} /> Back to Team
