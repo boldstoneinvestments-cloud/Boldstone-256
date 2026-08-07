@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 
 const quickLinks = [
@@ -44,6 +45,13 @@ const socials = [
 ]
 
 export default function Footer() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
   return (
     <footer style={{ background: '#0f8972', color: '#fff', fontFamily: 'inherit' }}>
 
@@ -62,18 +70,20 @@ export default function Footer() {
           <p style={{ fontSize: 14, fontWeight: 500, lineHeight: 1.8, color: '#fff', maxWidth: 280, margin: 0 }}>
             Boldstone Property Investments is a diversified alternative asset investment firm with specialist expertise in commercial coffee farming, processing and trade in Uganda and East Africa.
           </p>
-          {/* Socials */}
-          <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-            {socials.map(s => (
-              <a key={s.label} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label}
-                style={{ width: 36, height: 36, borderRadius: '50%', background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', transition: 'opacity 0.2s', textDecoration: 'none' }}
-                onMouseOver={e => e.currentTarget.style.opacity = '0.85'}
-                onMouseOut={e => e.currentTarget.style.opacity = '1'}
-              >
-                {s.icon}
-              </a>
-            ))}
-          </div>
+          {/* Socials — desktop only */}
+          {!isMobile && (
+            <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
+              {socials.map(s => (
+                <a key={s.label} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label}
+                  style={{ width: 36, height: 36, borderRadius: '50%', background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', transition: 'opacity 0.2s', textDecoration: 'none' }}
+                  onMouseOver={e => e.currentTarget.style.opacity = '0.85'}
+                  onMouseOut={e => e.currentTarget.style.opacity = '1'}
+                >
+                  {s.icon}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Quick Links */}
@@ -133,6 +143,26 @@ export default function Footer() {
           </NavLink>
         </div>
       </div>
+
+      {/* Socials — mobile only, below all columns */}
+      {isMobile && (
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 40px 40px' }}>
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.15)', paddingTop: 24 }}>
+            <p style={{ fontSize: 14, fontWeight: 600, color: '#fff', marginBottom: 14 }}>Connect with us</p>
+            <div style={{ display: 'flex', gap: 10 }}>
+              {socials.map(s => (
+                <a key={s.label} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label}
+                  style={{ width: 36, height: 36, borderRadius: '50%', background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', transition: 'opacity 0.2s', textDecoration: 'none' }}
+                  onMouseOver={e => e.currentTarget.style.opacity = '0.85'}
+                  onMouseOut={e => e.currentTarget.style.opacity = '1'}
+                >
+                  {s.icon}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Bottom bar */}
       <div style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>
