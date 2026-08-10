@@ -240,7 +240,7 @@ export default function Investors() {
           </motion.p>
           <motion.div
             variants={fadeUp} initial="hidden" animate="show" transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-wrap gap-3 justify-center"
+            className="hero-actions"
           >
             <Link to="/partnership" className="btn-primary">Get Started →</Link>
             <Link to="/about" className="btn-secondary">Learn More</Link>
