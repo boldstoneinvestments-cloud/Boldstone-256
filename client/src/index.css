@@ -241,9 +241,9 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   height: 520px;
   background: url("https://address-restaurant2.odoo.com/web/image/1943-d317c2fe/coffee-plant-icon-free-vector%20%282%29.webp") no-repeat center;
   background-size: contain;
-  opacity: 1;
+  opacity: 0.2;
   pointer-events: none;
-  z-index: 1;
+  z-index: 0;
 }
 
 .partner-content > * {
