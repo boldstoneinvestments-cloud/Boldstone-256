@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBullhorn, faTractor, faLandmark, faArrowRight,
@@ -90,24 +91,46 @@ export default function Partnership() {
       </div>
 
       {/* HERO */}
-      <section className="p-hero">
-        <img
-          className="p-hero-bg"
-          src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=80"
-          alt="Coffee farmers"
-          loading="lazy"
-        />
-        <div className="p-hero-overlay" />
-        <div className="p-hero-content">
-          <h1>Partner With Boldstone</h1>
-          <p>
-            Coffee in Uganda is more than a crop — it's a high-value export asset bringing in $2.2B
-            annually into the Ugandan economy. Are you a coffee co-operative, SACCO, Bank, NGO, or
-            just an influencer? There's a place for you in our ecosystem.
-          </p>
-          <a href="https://forms.gle/amtu1ouEKpt2kNYP7" className="btn-primary">
-            Explore Opportunities
-          </a>
+      <section
+        style={{
+          position: 'relative',
+          minHeight: '520px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          overflow: 'hidden',
+          backgroundImage: "url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=80')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(4,20,14,0.55), rgba(4,20,14,0.75))' }} />
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: '720px', margin: '0 auto', padding: '90px 24px', color: '#fff' }}>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+            className="hero-label"
+          >
+            Boldstone Partnership Program
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
+            style={{ fontSize: 'clamp(2.8rem, 4.5vw, 4.4rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', margin: '0 0 20px', color: '#fff' }}
+          >
+            Partner With <span style={{ color: '#0f8972' }}>Boldstone</span>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
+            style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.78)', lineHeight: 1.8, marginBottom: '32px', maxWidth: '520px', marginLeft: 'auto', marginRight: 'auto' }}
+          >
+            Coffee in Uganda is more than a crop — it's a high-value export asset bringing in $2.2B annually. Are you a co-operative, SACCO, Bank, NGO, or influencer? There's a place for you in our ecosystem.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
+            className="hero-actions"
+          >
+            <a href="https://forms.gle/amtu1ouEKpt2kNYP7" className="btn-primary">Explore Opportunities →</a>
+          </motion.div>
         </div>
       </section>
 

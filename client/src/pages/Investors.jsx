@@ -221,25 +221,25 @@ export default function Investors() {
         <div className="absolute inset-0 bg-gradient-to-b from-[rgba(4,20,14,0.55)] to-[rgba(4,20,14,0.75)]" />
         <div className="relative z-10 max-w-3xl mx-auto px-6 py-24 text-white">
           <motion.span
-            variants={fadeUp} initial="hidden" animate="show"
-            className="inline-block bg-white/10 border border-white/25 text-[#3dffc0] text-[11px] font-bold tracking-[3px] uppercase px-5 py-2 rounded-full mb-6 backdrop-blur-sm"
+            variants={fadeUp} initial="hidden" animate="show" transition={{ duration: 0.5 }}
+            style={{ display: 'inline-block', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)', color: '#0f8972', fontSize: '11px', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', padding: '10px 24px', borderRadius: '9999px', marginBottom: '24px', backdropFilter: 'blur(4px)' }}
           >
             Invest in Coffee · Grow the Future
           </motion.span>
           <motion.h1
-            variants={fadeUp} initial="hidden" animate="show" transition={{ delay: 0.1 }}
-            className="text-5xl font-black leading-[1.05] tracking-tight mb-5"
+            variants={fadeUp} initial="hidden" animate="show" transition={{ duration: 0.6, delay: 0.1 }}
+            style={{ fontSize: 'clamp(2.8rem, 4.5vw, 4.4rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', margin: '0 0 20px', color: '#fff' }}
           >
-            Own a Coffee Farm<br />in <span className="text-[#3dffc0]">Uganda</span>
+            Own a Coffee Farm in <span style={{ color: '#0f8972' }}>Uganda</span>
           </motion.h1>
           <motion.p
-            variants={fadeUp} initial="hidden" animate="show" transition={{ delay: 0.2 }}
-            className="text-white/75 text-base leading-relaxed max-w-xl mx-auto mb-8"
+            variants={fadeUp} initial="hidden" animate="show" transition={{ duration: 0.6, delay: 0.2 }}
+            style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.78)', lineHeight: 1.8, marginBottom: '32px', maxWidth: '520px', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}
           >
-            Lease a portion of our 3,000-acre estate and be part of a sustainable coffee future. We handle the farming — you enjoy the ownership.
+            Invest in large-scale commercial coffee farming in Uganda — individually or as part of a group.
           </motion.p>
           <motion.div
-            variants={fadeUp} initial="hidden" animate="show" transition={{ delay: 0.3 }}
+            variants={fadeUp} initial="hidden" animate="show" transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-wrap gap-3 justify-center"
           >
             <Link to="/partnership" className="btn-primary">Get Started →</Link>
@@ -470,29 +470,34 @@ export default function Investors() {
           <div className="plans-header">
             <h1 className="section-label">INVESTOR PLANS</h1>
             <h2>Choose your <span>plan.</span></h2>
-            <p>Start with a single acre and scale up. Every plan includes full farm management — we do the work, you own the land.</p>
+            <p>Start with a single acre and scale up. Every plan includes full farm management — we do the work, you own the coffee.</p>
           </div>
           <div className="plans-grid">
             {plans.map((plan, i) => (
               <div key={i} className={`plan-card${plan.featured ? ' featured' : ''}`}>
-                <span className="plan-badge">{plan.badge}</span>
-                <p className="plan-name">{plan.name}</p>
-                <div style={{ fontSize: '2.2rem', fontWeight: 900, lineHeight: 1, color: plan.featured ? '#fff' : '#0d1f1c', margin: '8px 0 4px' }}>
-                  {plan.price} <span style={{ fontSize: '0.85rem', fontWeight: 400, color: plan.featured ? 'rgba(255,255,255,0.55)' : '#aaa' }}>{plan.period}</span>
+                <div className="offer-card-back" />
+                <div className="offer-card-inner">
+                  <div className="plan-card-content">
+                    <span className="plan-badge">{plan.badge}</span>
+                    <p className="plan-name">{plan.name}</p>
+                    <div style={{ fontSize: '2.2rem', fontWeight: 900, lineHeight: 1, color: plan.featured ? '#fff' : '#0d1f1c', margin: '8px 0 4px' }}>
+                      {plan.price} <span style={{ fontSize: '0.85rem', fontWeight: 400, color: plan.featured ? 'rgba(255,255,255,0.55)' : '#aaa' }}>{plan.period}</span>
+                    </div>
+                    <p className="plan-desc">{plan.desc}</p>
+                    <div className="plan-divider" />
+                    <ul className="plan-features">
+                      {plan.features.map((f, j) => (
+                        <li key={j}>
+                          <FontAwesomeIcon icon={faCircleCheck} />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                    <Link to="/partnership" className="plan-cta">
+                      {plan.cta} <FontAwesomeIcon icon={faArrowRight} />
+                    </Link>
+                  </div>
                 </div>
-                <p className="plan-desc">{plan.desc}</p>
-                <div className="plan-divider" />
-                <ul className="plan-features">
-                  {plan.features.map((f, j) => (
-                    <li key={j}>
-                      <FontAwesomeIcon icon={faCircleCheck} />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link to="/partnership" className="plan-cta">
-                  {plan.cta} <FontAwesomeIcon icon={faArrowRight} />
-                </Link>
               </div>
             ))}
           </div>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBullhorn, faLeaf, faChevronDown, faArrowRight, faCircleCheck } from '@fortawesome/free-solid-svg-icons'
 
@@ -115,17 +116,35 @@ export default function Farmers() {
         <div className="farmers-hero-bg" ref={heroBgRef} />
         <div className="hero-overlay" />
         <div className="hero-content">
-          <div className="tag">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+            className="tag"
+          >
             <FontAwesomeIcon icon={faLeaf} /> For Farmers
-          </div>
-          <h1>Grow More. <span>Earn More.</span></h1>
-          <p>Coffee farming is hard enough to keep chasing for the right traders to purchase your coffee or the best agronomical support to ensure that your coffee farms are most productive.</p>
-          <p>Boldstone's digital platform helps you to access the right farming advise, mentor, market prices while selling your coffee at the very best possible time and price.</p>
-          <div className="hero-btns">
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            Grow More. <span>Earn More.</span>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Coffee farming is hard enough to keep chasing for the right traders to purchase your coffee or the best agronomical support to ensure that your coffee farms are most productive.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            Boldstone's digital platform helps you to access the right farming advise, mentor, market prices while selling your coffee at the very best possible time and price.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}
+            className="hero-btns"
+          >
             <a href="https://forms.gle/amtu1ouEKpt2kNYP7" target="_blank" rel="noreferrer" className="hero-btn primary">
               Join as a Farmer
             </a>
-          </div>
+          </motion.div>
         </div>
         <div className="hero-scroll">
           <span>Scroll</span>
