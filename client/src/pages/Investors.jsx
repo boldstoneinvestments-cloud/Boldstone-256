@@ -215,31 +215,39 @@ export default function Investors() {
 
       {/* ── HERO ── */}
       <section
-        className="relative min-h-[560px] flex items-center justify-center text-center overflow-hidden"
-        style={{ backgroundImage: "url('https://address-restaurant2.odoo.com/web/image/1948-db6cb14d/Land%20aerial%20view.webp')", backgroundSize: 'cover', backgroundPosition: 'center top' }}
+        style={{
+          position: 'relative',
+          minHeight: '520px',
+          overflow: 'hidden',
+          color: '#fff',
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundImage: "url('https://address-restaurant2.odoo.com/web/image/1948-db6cb14d/Land%20aerial%20view.webp')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center top',
+        }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(4,20,14,0.55)] to-[rgba(4,20,14,0.75)]" />
-        <div className="relative z-10 max-w-3xl mx-auto px-6 py-24 text-white">
-          <motion.span
-            variants={fadeUp} initial="hidden" animate="show" transition={{ duration: 0.5 }}
-            style={{ display: 'inline-block', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.25)', color: '#0f8972', fontSize: '11px', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', padding: '10px 24px', borderRadius: '9999px', marginBottom: '24px', backdropFilter: 'blur(4px)' }}
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(6,18,12,0.6)' }} />
+        <div className="hero-left">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+            className="hero-label"
           >
             Invest in Coffee · Grow the Future
-          </motion.span>
+          </motion.p>
           <motion.h1
-            variants={fadeUp} initial="hidden" animate="show" transition={{ duration: 0.6, delay: 0.1 }}
-            style={{ fontSize: 'clamp(2.8rem, 4.5vw, 4.4rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.02em', margin: '0 0 20px', color: '#fff' }}
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Own a Coffee Farm in <span style={{ color: '#0f8972' }}>Uganda</span>
+            Own a Coffee Farm in <span>Uganda</span>
           </motion.h1>
           <motion.p
-            variants={fadeUp} initial="hidden" animate="show" transition={{ duration: 0.6, delay: 0.2 }}
-            style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.78)', lineHeight: 1.8, marginBottom: '32px', maxWidth: '520px', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
+            style={{ textAlign: 'center' }}
           >
             Invest in large-scale commercial coffee farming in Uganda — individually or as part of a group.
           </motion.p>
           <motion.div
-            variants={fadeUp} initial="hidden" animate="show" transition={{ duration: 0.6, delay: 0.3 }}
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
             className="hero-actions"
           >
             <Link to="/partnership" className="btn-primary">Get Started →</Link>
