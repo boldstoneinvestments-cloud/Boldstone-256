@@ -179,11 +179,16 @@ export default function About() {
             </div>
           </div>
 
-          <div className="about-cards">
+          <div className="about-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '44px 28px' }}>
             {aboutCards.map((card, i) => (
-              <div key={i} className="about-card">
-                <h4>{card.title}</h4>
-                {card.body.map((p, j) => <p key={j}>{p}</p>)}
+              <div key={i} className="offer-card" style={{ height: 'auto', minHeight: '280px' }}>
+                <div className="offer-card-back" style={{ transform: i % 2 === 0 ? 'translate(-5px, 5px)' : 'translate(5px, 5px)' }} />
+                <div className="offer-card-inner" style={{ height: 'auto' }}>
+                  <div className="offer-card-content" style={{ paddingBottom: '28px' }}>
+                    <h4>{card.title}</h4>
+                    {card.body.map((p, j) => <p key={j} style={{ marginTop: j === 0 ? '12px' : '8px' }}>{p}</p>)}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -193,10 +198,13 @@ export default function About() {
       {/* MISSION */}
       <section className="mission-section">
         <div className="bs-wrap">
-          <div className="mission-card">
-            <div className="mission-content">
-              <p className="mission-title">Our Mission</p>
-              <p>To farm and help bring African grown coffee to local and global markets</p>
+          <div className="offer-card" style={{ maxWidth: '860px', margin: '0 auto' }}>
+            <div className="offer-card-back" />
+            <div className="offer-card-inner" style={{ height: 'auto' }}>
+              <div className="offer-card-content" style={{ paddingBottom: '28px', textAlign: 'center' }}>
+                <h4 style={{ fontSize: '1.6rem', color: '#0f8972' }}>Our Mission</h4>
+                <p style={{ marginTop: '12px', fontSize: '1rem' }}>To farm and help bring African grown coffee to local and global markets</p>
+              </div>
             </div>
           </div>
         </div>
@@ -231,15 +239,16 @@ export default function About() {
             </h2>
             <div className="team-grid">
               {team.map((member) => (
-                <div key={member.id} className="team-card" onClick={() => showProfile(member.id)}>
-                  <div className="team-img">
-                    <img src={member.img} alt={member.name} loading="lazy" style={member.imgStyle} />
-                  </div>
-                  <div className="team-card-body">
-                    <h4>
-                      <span className="team-name">{member.name}</span>
-                    </h4>
-                    <p className="team-position">{member.position}</p>
+                <div key={member.id} className="offer-card" style={{ height: 'auto', minHeight: '320px', cursor: 'pointer' }} onClick={() => showProfile(member.id)}>
+                  <div className="offer-card-back" style={{ transform: team.indexOf(member) % 2 === 0 ? 'translate(-5px, 5px)' : 'translate(5px, 5px)' }} />
+                  <div className="offer-card-inner" style={{ position: 'relative', inset: 'unset', height: 'auto', borderRadius: '18px', border: '1px solid rgba(15,137,114,0.35)', boxShadow: '0 2px 8px rgba(17,31,27,0.06)', overflow: 'hidden', background: '#fff', display: 'flex', flexDirection: 'column' }}>
+                    <div className="team-img">
+                      <img src={member.img} alt={member.name} loading="lazy" style={member.imgStyle} />
+                    </div>
+                    <div className="team-card-body">
+                      <h4><span className="team-name">{member.name}</span></h4>
+                      <p className="team-position">{member.position}</p>
+                    </div>
                   </div>
                 </div>
               ))}

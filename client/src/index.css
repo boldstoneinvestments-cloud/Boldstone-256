@@ -1576,6 +1576,46 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   padding: 24px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.value-card::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 90px;
+  height: 70px;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.8);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.8);
+  border-top-right-radius: 14px;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(to right, transparent 0%, black 30%, black 100%) top / 100% 2px no-repeat,
+    linear-gradient(to bottom, black 0%, black 70%, transparent 100%) right / 2px 100% no-repeat;
+  mask:
+    linear-gradient(to right, transparent 0%, black 30%, black 100%) top / 100% 2px no-repeat,
+    linear-gradient(to bottom, black 0%, black 70%, transparent 100%) right / 2px 100% no-repeat;
+}
+
+.value-card::after {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 50px;
+  height: 65px;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.8);
+  border-left: 1.5px solid rgba(255, 255, 255, 0.8);
+  border-bottom-left-radius: 14px;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(to left, transparent 0%, black 30%, black 100%) bottom / 100% 2px no-repeat,
+    linear-gradient(to top, black 0%, black 70%, transparent 100%) left / 2px 100% no-repeat;
+  mask:
+    linear-gradient(to left, transparent 0%, black 30%, black 100%) bottom / 100% 2px no-repeat,
+    linear-gradient(to top, black 0%, black 70%, transparent 100%) left / 2px 100% no-repeat;
 }
 
 .value-icon {
