@@ -181,10 +181,10 @@ export default function About() {
 
           <div className="about-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '44px 28px' }}>
             {aboutCards.map((card, i) => (
-              <div key={i} className="offer-card" style={{ height: 'auto', minHeight: '280px' }}>
+              <div key={i} className="offer-card about-story-card" style={{ minHeight: '280px' }}>
                 <div className="offer-card-back" style={{ transform: i % 2 === 0 ? 'translate(-5px, 5px)' : 'translate(5px, 5px)' }} />
-                <div className="offer-card-inner" style={{ height: 'auto' }}>
-                  <div className="offer-card-content" style={{ paddingBottom: '28px' }}>
+                <div className="offer-card-inner">
+                  <div className="offer-card-content about-story-card-content">
                     <h4>{card.title}</h4>
                     {card.body.map((p, j) => <p key={j} style={{ marginTop: j === 0 ? '12px' : '8px' }}>{p}</p>)}
                   </div>
