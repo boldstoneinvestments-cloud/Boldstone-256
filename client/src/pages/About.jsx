@@ -181,7 +181,7 @@ export default function About() {
 
           <div className="about-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '44px 28px' }}>
             {aboutCards.map((card, i) => (
-              <div key={i} className="offer-card" style={{ height: 'auto', minHeight: '280px' }}>
+              <div key={i} className="offer-card about-story-card" style={{ minHeight: '280px' }}>
                 <div className="offer-card-back" style={{ transform: i % 2 === 0 ? 'translate(-5px, 5px)' : 'translate(5px, 5px)' }} />
                 <div className="offer-card-inner" style={{ height: 'auto' }}>
                   <div className="offer-card-content" style={{ paddingBottom: '28px' }}>
