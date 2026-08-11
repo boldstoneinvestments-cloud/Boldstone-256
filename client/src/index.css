@@ -1426,21 +1426,6 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   gap: 20px;
 }
 
-.about-story-card {
-  height: auto !important;
-  min-height: 280px;
-}
-
-.about-story-card .offer-card-inner {
-  position: relative;
-  inset: auto;
-  height: auto;
-}
-
-.about-story-card .offer-card-content {
-  padding-bottom: 28px;
-}
-
 .about-card {
   background: #fff;
   border: 1px solid #3dffc0;
@@ -1823,8 +1808,6 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .about-heading-center { font-size: 28px; }
   .about-story { border-left: none; padding-left: 0; border-top: 3px solid #0f8972; padding-top: 20px; }
   .about-cards { grid-template-columns: 1fr; }
-  .about-story-card { height: auto !important; min-height: unset; }
-  .about-story-card .offer-card-inner { position: relative; inset: auto; }
   .about-card { padding: 28px 22px; }
   .about-card h4 { font-size: 18px; }
   .mission-section { padding: 48px 0; }
