@@ -5,7 +5,7 @@ import Footer from './components/layout/Footer'
 import PaymentBar from './components/layout/PaymentBar'
 import Home from './pages/Home'
 import About from './pages/About'
-import Investors from './pages/Investors'
+import LeaseACoffeeFarm from './pages/LeaseACoffeeFarm'
 import Farmers from './pages/Farmers'
 import Partnership from './pages/Partnership'
 import Contact from './pages/Contact'
@@ -28,7 +28,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/investors" element={<Investors />} />
+          <Route path="/investors" element={<LeaseACoffeeFarm />} />
           <Route path="/farmers" element={<Farmers />} />
           <Route path="/partnership" element={<Partnership />} />
           <Route path="/contact" element={<Contact />} />

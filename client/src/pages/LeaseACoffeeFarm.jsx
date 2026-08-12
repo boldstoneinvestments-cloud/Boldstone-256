@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleCheck, faArrowRight, faRulerCombined, faMountain, faCloudRain, faLayerGroup, faLocationDot, faChartPie } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck, faArrowRight, faRulerCombined, faMountain, faCloudRain, faLayerGroup, faLocationDot, faChartPie, faBullhorn } from '@fortawesome/free-solid-svg-icons'
 import { MapContainer, TileLayer, Polygon, Tooltip, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import * as turf from '@turf/turf'
@@ -212,6 +212,25 @@ export default function Investors() {
 
   return (
     <div>
+
+      {/* ADVERT TICKER */}
+      <div className="advert-banner">
+        <div className="advert-ticker">
+          {[...Array(4)].map((_, i) => (
+            <span key={i} className="advert-ticker-item">
+              <span className="tk-badge"><FontAwesomeIcon icon={faBullhorn} /> News</span>
+              <span className="tk-text">
+                Boldstone Announces UGX 500 Million (US $140,000) Equity &amp; Debt Financing Plan to Build
+                Coffee Processing Infrastructure and Empower Smallholder Farmers in Uganda.
+              </span>
+              <a className="tk-link" href="https://www.boldstoneinvestments.com/blog/news-2/boldstone-to-raise-us-140-000-pre-seed-investment-6">
+                Read More →
+              </a>
+              {i < 3 && <span className="advert-sep">●</span>}
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* ── HERO ── */}
       <section

@@ -19,30 +19,6 @@ const tickerItem = (
   </span>
 )
 
-const partnerTypes = [
-  {
-    num: '01',
-    icon: <img src="https://habib11.odoo.com/web/image/361-51dd7123/influencer.webp" alt="Influencer" style={{ width: 28, height: 28, objectFit: 'contain' }} loading="lazy" />,
-    title: 'Influencers',
-    desc: 'Share Boldstone with your audience online through videos, posts and creative content. Tag us on Tiktok, Instagram and LinkedIn.',
-    link: 'Apply as an Influencer',
-  },
-  {
-    num: '02',
-    icon: <FontAwesomeIcon icon={faTractor} />,
-    title: 'Coffee Co-operatives',
-    desc: 'Give your co-operative or group members access to a digital tool that improves farming output through a coffee knowledge base and a dedicated community.',
-    link: 'Apply as a Coffee farm co-operative',
-  },
-  {
-    num: '03',
-    icon: <FontAwesomeIcon icon={faLandmark} />,
-    title: 'Institutions',
-    desc: 'Are you a Bank, SACCO, Fintech, Insurance Company, or Non Profit? Partner with Boldstone to extend your services to our community of coffee farmers.',
-    link: 'Apply as a Brand',
-  },
-]
-
 const howCards = [
   {
     icon: faCircleQuestion,
@@ -74,6 +50,24 @@ const faqs = [
     a: 'You need proof of identification as a business or individual and the value you would like to create with Boldstone.',
   },
 ]
+
+const diagonalCard = ({ image, imageLeft, title, desc, linkLabel }) => (
+  <div style={{ borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'row', minHeight: 480, position: 'relative' }}>
+    <div style={{ position: 'absolute', top: 0, bottom: 0, left: imageLeft, right: '-10%', backgroundImage: `url('${image}')`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+    <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 2, pointerEvents: 'none' }} preserveAspectRatio="none" viewBox="0 0 100 100">
+      <line x1="52" y1="0" x2="41.6" y2="100" stroke="rgba(107,158,138,0.5)" strokeWidth="0.8" />
+    </svg>
+    <div style={{ flex: '0 0 52%', padding: '36px 24px 32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', zIndex: 1, background: '#0d2a1e', clipPath: 'polygon(0 0, 100% 0, 80% 100%, 0 100%)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', flex: 1, paddingTop: 40 }}>
+        <h3 style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 32, lineHeight: 1.2 }}>{title}</h3>
+        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.8 }}>{desc}</p>
+      </div>
+      <a href="https://forms.gle/amtu1ouEKpt2kNYP7" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontSize: 13, fontWeight: 700, color: '#c9a84c', textDecoration: 'none', borderBottom: '1px solid rgba(201,168,76,0.4)', paddingBottom: 4, alignSelf: 'flex-start' }}>
+        {linkLabel} <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: 11 }} />
+      </a>
+    </div>
+  </div>
+)
 
 export default function Partnership() {
   const [openFaq, setOpenFaq] = useState(0)
@@ -123,21 +117,74 @@ export default function Partnership() {
       {/* PARTNERSHIP TYPES */}
       <section className="p-types-section">
         <div className="bs-wrap">
-          <p className="p-section-label">→ PARTNERSHIP TYPES</p>
-          <div className="p-types">
-            {partnerTypes.map((pt, i) => (
-              <div key={i} className="p-type">
-                <span className="pt-num">{pt.num}</span>
-                <div className="pt-icon">{pt.icon}</div>
-                <div className="pt-body">
-                  <h4>{pt.title}</h4>
-                  <p>{pt.desc}</p>
-                  <a href="https://forms.gle/amtu1ouEKpt2kNYP7">
-                    {pt.link} <FontAwesomeIcon icon={faArrowRight} />
-                  </a>
+
+          {/* Section header */}
+          <div style={{ marginBottom: 48, position: 'relative' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+              <div style={{ width: 32, height: 2, background: '#0f8972' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: '#0f8972' }}>Partnerships</span>
+            </div>
+            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#0d1f1c', marginBottom: 16, lineHeight: 1.1 }}>Partnership types</h2>
+            <p style={{ fontSize: 15, color: '#555', lineHeight: 1.7, maxWidth: 360 }}>Different partners. One growing ecosystem.<br />Choose how you'd like to collaborate with us.</p>
+            <div style={{ position: 'absolute', top: 0, right: 0, display: 'grid', gridTemplateColumns: 'repeat(6, 8px)', gap: 6, opacity: 0.25 }}>
+              {[...Array(30)].map((_, i) => <div key={i} style={{ width: 3, height: 3, borderRadius: '50%', background: '#0f8972' }} />)}
+            </div>
+          </div>
+
+          {/* Cards grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20, alignItems: 'stretch' }}>
+
+            {/* Card 01 — Influencers */}
+            <div style={{ borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'row', minHeight: 480, position: 'relative' }}>
+              <div style={{ position: 'absolute', top: 0, bottom: 0, left: '32%', right: '-10%', backgroundImage: 'url(https://address-restaurant2.odoo.com/web/image/2000-b4068ca5/ldy.webp)', backgroundSize: 'cover', backgroundPosition: 'center' }} />
+              <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 2, pointerEvents: 'none' }} preserveAspectRatio="none" viewBox="0 0 100 100">
+                <line x1="52" y1="0" x2="41.6" y2="100" stroke="rgba(107,158,138,0.5)" strokeWidth="0.8" />
+              </svg>
+              <div style={{ flex: '0 0 52%', padding: '36px 24px 32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', zIndex: 1, background: '#0d2a1e', clipPath: 'polygon(0 0, 100% 0, 80% 100%, 0 100%)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', flex: 1, paddingTop: 40 }}>
+                  <h3 style={{ fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 32, lineHeight: 1.2 }}>Influencers</h3>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.8 }}>Share Boldstone with your audience online through videos, posts and creative content.</p>
                 </div>
+                <a href="https://forms.gle/amtu1ouEKpt2kNYP7" style={{ display: 'inline-flex', alignItems: 'center', fontSize: 11, fontWeight: 700, color: '#c9a84c', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                  Apply as an Influencer
+                </a>
               </div>
-            ))}
+            </div>
+
+            {/* Card 02 — Coffee Co-operatives */}
+            <div style={{ borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'row', minHeight: 480, position: 'relative' }}>
+              <div style={{ position: 'absolute', top: 0, bottom: 0, left: '32%', right: '-10%', backgroundImage: "url('https://address-restaurant2.odoo.com/web/image/2002-f96f6be8/coffee_cherries.webp')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
+              <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 2, pointerEvents: 'none' }} preserveAspectRatio="none" viewBox="0 0 100 100">
+                <line x1="52" y1="0" x2="41.6" y2="100" stroke="rgba(107,158,138,0.5)" strokeWidth="0.8" />
+              </svg>
+              <div style={{ flex: '0 0 52%', padding: '36px 24px 32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', zIndex: 1, background: '#0d2a1e', clipPath: 'polygon(0 0, 100% 0, 80% 100%, 0 100%)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', flex: 1, paddingTop: 40 }}>
+                  <h3 style={{ fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 32, lineHeight: 1.2 }}>Coffee Co-operatives</h3>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.8 }}>Give your co-operative or group members access to a digital tool that improves farming output through a coffee knowledge base and a dedicated community.</p>
+                </div>
+                <a href="https://forms.gle/amtu1ouEKpt2kNYP7" style={{ display: 'inline-flex', alignItems: 'center', fontSize: 11, fontWeight: 700, color: '#c9a84c', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                  Apply as a Co-operative
+                </a>
+              </div>
+            </div>
+
+            {/* Card 03 — Institutions */}
+            <div style={{ borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'row', minHeight: 480, position: 'relative' }}>
+              <div style={{ position: 'absolute', top: 0, bottom: 0, left: '32%', right: '-10%', backgroundImage: "url('https://address-restaurant2.odoo.com/web/image/2004-6e5add86/ChatGPT%20Image%20Aug%2012%2C%202026%2C%2007_38_31%20PM.webp')", backgroundSize: '60%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
+              <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 2, pointerEvents: 'none' }} preserveAspectRatio="none" viewBox="0 0 100 100">
+                <line x1="52" y1="0" x2="41.6" y2="100" stroke="rgba(107,158,138,0.5)" strokeWidth="0.8" />
+              </svg>
+              <div style={{ flex: '0 0 52%', padding: '36px 24px 32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', zIndex: 1, background: '#0d2a1e', clipPath: 'polygon(0 0, 100% 0, 80% 100%, 0 100%)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', flex: 1, paddingTop: 40 }}>
+                  <h3 style={{ fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 32, lineHeight: 1.2 }}>Institutions</h3>
+                  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.8 }}>Are you a Bank, SACCO, Fintech, Insurance Company, or Non Profit? Partner with Boldstone to extend your services to our community of coffee farmers.</p>
+                </div>
+                <a href="https://forms.gle/amtu1ouEKpt2kNYP7" style={{ display: 'inline-flex', alignItems: 'center', fontSize: 11, fontWeight: 700, color: '#c9a84c', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                  Apply as an Institution
+                </a>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
