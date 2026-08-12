@@ -6,7 +6,6 @@ const links = [
   { to: '/farmers', label: 'For Farmers' },
   { to: '/investors', label: 'For Investors' },
   { to: '/partnership', label: 'Partnerships' },
-  { to: '/about', label: 'About Us' },
   { to: '/blog', label: 'Blog' },
 ]
 

@@ -70,20 +70,7 @@ export default function Footer() {
           <p style={{ fontSize: 14, fontWeight: 500, lineHeight: 1.8, color: '#fff', maxWidth: 280, margin: 0 }}>
             Boldstone Property Investments is a diversified alternative asset investment firm with specialist expertise in commercial coffee farming, processing and trade in Uganda and East Africa.
           </p>
-          {/* Socials — desktop only */}
-          {!isMobile && (
-            <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-              {socials.map(s => (
-                <a key={s.label} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label}
-                  style={{ width: 36, height: 36, borderRadius: '50%', background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', transition: 'opacity 0.2s', textDecoration: 'none' }}
-                  onMouseOver={e => e.currentTarget.style.opacity = '0.85'}
-                  onMouseOut={e => e.currentTarget.style.opacity = '1'}
-                >
-                  {s.icon}
-                </a>
-              ))}
-            </div>
-          )}
+
         </div>
 
         {/* Quick Links */}
@@ -133,6 +120,23 @@ export default function Footer() {
             ))}
           </div>
 
+          {/* Connect with us — desktop only, inside Get In Touch */}
+          {!isMobile && (
+            <div style={{ marginTop: 36 }}>
+              <p style={{ fontSize: 16, fontWeight: 800, letterSpacing: 2.5, textTransform: 'uppercase', color: '#000', marginBottom: 12 }}>Connect with us</p>
+              <div style={{ display: 'flex', gap: 10 }}>
+                {socials.map(s => (
+                  <a key={s.label} href={s.href} target="_blank" rel="noreferrer" aria-label={s.label}
+                    style={{ width: 36, height: 36, borderRadius: '50%', background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', transition: 'opacity 0.2s', textDecoration: 'none' }}
+                    onMouseOver={e => e.currentTarget.style.opacity = '0.85'}
+                    onMouseOut={e => e.currentTarget.style.opacity = '1'}
+                  >
+                    {s.icon}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
