@@ -1360,12 +1360,71 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 }
 .p-faq-item.open .p-faq-a { max-height: 200px; padding-bottom: 18px; }
 
+.p-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.p-card-hover {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.p-card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 48px rgba(13, 42, 30, 0.35);
+}
+
+.p-card-hover .p-card-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.07) 50%, transparent 100%);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.p-card-hover:hover .p-card-overlay::after {
+  left: 130%;
+}
+
+.p-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #c9a84c;
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.4);
+  padding-bottom: 3px;
+  transition: color 0.25s, gap 0.25s, border-color 0.25s;
+}
+
+.p-card-link:hover {
+  color: #fff;
+  gap: 14px;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
 /* PARTNERSHIP RESPONSIVE */
 @media (max-width: 900px) {
   .p-hero { margin: 12px; }
   .p-hero-content { padding: 40px 24px; }
   .p-how-grid { grid-template-columns: 1fr; }
   .p-faq-layout { grid-template-columns: 1fr; gap: 32px; }
+  .p-cards-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .p-cards-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 560px) {
