@@ -182,7 +182,7 @@ export default function About() {
           <div className="about-cards">
             {aboutCards.map((card, i) => (
               <div key={i} style={{ position: 'relative', display: 'grid' }}>
-                <div style={{ position: 'absolute', inset: 0, borderRadius: '18px', background: '#61766a', transform: i % 2 === 0 ? 'translate(5px, 5px)' : 'translate(-5px, 5px)', zIndex: 1 }} />
+                <div style={{ position: 'absolute', inset: 0, borderRadius: '18px', background: '#0f8972', transform: i % 2 === 0 ? 'translate(5px, 5px)' : 'translate(-5px, 5px)', zIndex: 1 }} />
                 <div className="offer-card-inner" style={{ position: 'relative', inset: 'unset', height: 'auto', zIndex: 2 }}>
                   <div className="offer-card-content" style={{ paddingBottom: '28px' }}>
                     <h4>{card.title}</h4>

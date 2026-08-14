@@ -1231,7 +1231,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   font-weight: 800;
   letter-spacing: 2.5px;
   text-transform: uppercase;
-  color: #0d2a1e;
+  color: #000;
   display: block;
   margin-bottom: 8px;
 }
