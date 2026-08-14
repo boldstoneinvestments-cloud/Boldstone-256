@@ -274,7 +274,7 @@ export default function Investors() {
       <section style={{
         padding: '56px 24px',
         position: 'relative',
-        backgroundImage: "url('https://address-restaurant2.odoo.com/web/image/2014-93409f38/back.jpg')",
+        backgroundImage: "url('https://address-restaurant2.odoo.com/web/image/2016-eafec619/green%20background.webp')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         overflow: 'hidden',
@@ -283,34 +283,24 @@ export default function Investors() {
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.06) 60%, rgba(255,255,255,0.14) 100%)',
-          backdropFilter: 'blur(28px) saturate(200%) brightness(1.08)',
-          WebkitBackdropFilter: 'blur(28px) saturate(200%) brightness(1.08)',
-          borderTop: '1.5px solid rgba(255,255,255,0.6)',
-          borderBottom: '1.5px solid rgba(255,255,255,0.12)',
-          borderLeft: '1.5px solid rgba(255,255,255,0.35)',
-          borderRight: '1.5px solid rgba(255,255,255,0.1)',
-          boxShadow: `
-            inset 0 2px 0 rgba(255,255,255,0.65),
-            inset 0 -1px 0 rgba(255,255,255,0.1),
-            inset 2px 0 0 rgba(255,255,255,0.3),
-            inset -2px 0 0 rgba(0,0,0,0.04),
-            0 20px 60px rgba(0,0,0,0.18),
-            0 4px 16px rgba(0,0,0,0.1)
-          `,
+          background: 'rgba(255,255,255,0.03)',
+          backdropFilter: 'blur(1px)',
+          WebkitBackdropFilter: 'blur(1px)',
+          borderTop: '1px solid rgba(255,255,255,0.15)',
+          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          borderLeft: '1px solid rgba(255,255,255,0.1)',
+          borderRight: '1px solid rgba(255,255,255,0.03)',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
           transform: 'perspective(1200px) rotateX(0.6deg)',
           transformOrigin: 'center top',
           zIndex: 0,
         }} />
-        {/* Top sheen */}
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '50%', background: 'linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 100%)', pointerEvents: 'none', zIndex: 1 }} />
-        {/* Bottom reflection */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '30%', background: 'linear-gradient(0deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0) 100%)', pointerEvents: 'none', zIndex: 1 }} />
+
         <div className="bs-wrap" style={{ maxWidth: 860, position: 'relative', zIndex: 2 }}>
-          <p style={{ fontSize: '15px', color: '#444', lineHeight: 1.85, marginBottom: '24px', textAlign: 'justify' }}>
+          <p style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, marginBottom: '24px', textAlign: 'justify' }}>
             At Boldstone, you are not simply leasing an acre of land—you are becoming part of a large, professionally managed single-origin coffee estate designed for traceability, long-term profitability, and environmental sustainability. We are establishing a large-scale coffee farm that combines commercial production with regenerative agroforestry, creating a coffee ecosystem that is resilient to climate change while preserving Uganda's natural environment. Every leased acre contributes to a unified coffee estate where production practices, quality standards, and environmental stewardship are managed consistently from planting through harvest.
           </p>
-          <p style={{ fontSize: '15px', color: '#444', lineHeight: 1.85, textAlign: 'justify' }}>
+          <p style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, textAlign: 'justify' }}>
             Lease one or more acres of coffee farmland through Boldstone and choose a farming plan that includes land access, quality coffee seedlings, indigenous tree species, planting, farm management, maintenance, and harvest support. Whether you are an individual, a family, a diaspora Ugandan, or a business looking to participate in agriculture, Boldstone makes sustainable coffee farming accessible without the need to own land or manage a farm yourself.
           </p>
         </div>
