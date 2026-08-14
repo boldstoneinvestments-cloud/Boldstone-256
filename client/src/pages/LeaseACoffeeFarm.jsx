@@ -252,18 +252,13 @@ export default function Investors() {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
             className="hero-label"
           >
-            Invest in Coffee · Grow the Future
+            Own a Coffee Farm in Uganda
           </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            Own a Coffee Farm in <span>Uganda</span>
-          </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
             style={{ textAlign: 'center' }}
           >
-            Invest in large-scale commercial coffee farming in Uganda — individually or as part of a group.
+            Grow Your Coffee in Uganda's Sustainable Single-Origin Coffee Estate
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
@@ -272,6 +267,57 @@ export default function Investors() {
             <Link to="/partnership" className="btn-primary">Get Started →</Link>
             <Link to="/about" className="btn-secondary">Learn More</Link>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ── INTRO TEXT ── */}
+      <section style={{
+        padding: '56px 24px',
+        position: 'relative',
+        background: 'linear-gradient(160deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.06) 60%, rgba(255,255,255,0.14) 100%)',
+        backdropFilter: 'blur(28px) saturate(200%) brightness(1.08)',
+        WebkitBackdropFilter: 'blur(28px) saturate(200%) brightness(1.08)',
+        borderTop: '1.5px solid rgba(255,255,255,0.6)',
+        borderBottom: '1.5px solid rgba(255,255,255,0.12)',
+        borderLeft: '1.5px solid rgba(255,255,255,0.35)',
+        borderRight: '1.5px solid rgba(255,255,255,0.1)',
+        boxShadow: `
+          inset 0 2px 0 rgba(255,255,255,0.65),
+          inset 0 -1px 0 rgba(255,255,255,0.1),
+          inset 2px 0 0 rgba(255,255,255,0.3),
+          inset -2px 0 0 rgba(0,0,0,0.04),
+          0 20px 60px rgba(0,0,0,0.18),
+          0 4px 16px rgba(0,0,0,0.1)
+        `,
+        transform: 'perspective(1200px) rotateX(0.6deg)',
+        transformOrigin: 'center top',
+        overflow: 'hidden',
+      }}>
+        {/* Glass sheen overlay */}
+        <div style={{
+          position: 'absolute',
+          top: 0, left: 0, right: 0,
+          height: '50%',
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 100%)',
+          pointerEvents: 'none',
+          zIndex: 1,
+        }} />
+        {/* Glass bottom reflection */}
+        <div style={{
+          position: 'absolute',
+          bottom: 0, left: 0, right: 0,
+          height: '30%',
+          background: 'linear-gradient(0deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0) 100%)',
+          pointerEvents: 'none',
+          zIndex: 1,
+        }} />
+        <div className="bs-wrap" style={{ maxWidth: 860, position: 'relative', zIndex: 2 }}>
+          <p style={{ fontSize: '15px', color: '#444', lineHeight: 1.85, marginBottom: '24px', textAlign: 'justify' }}>
+            At Boldstone, you are not simply leasing an acre of land—you are becoming part of a large, professionally managed single-origin coffee estate designed for traceability, long-term profitability, and environmental sustainability. We are establishing a large-scale coffee farm that combines commercial production with regenerative agroforestry, creating a coffee ecosystem that is resilient to climate change while preserving Uganda's natural environment. Every leased acre contributes to a unified coffee estate where production practices, quality standards, and environmental stewardship are managed consistently from planting through harvest.
+          </p>
+          <p style={{ fontSize: '15px', color: '#444', lineHeight: 1.85, textAlign: 'justify' }}>
+            Lease one or more acres of coffee farmland through Boldstone and choose a farming plan that includes land access, quality coffee seedlings, indigenous tree species, planting, farm management, maintenance, and harvest support. Whether you are an individual, a family, a diaspora Ugandan, or a business looking to participate in agriculture, Boldstone makes sustainable coffee farming accessible without the need to own land or manage a farm yourself.
+          </p>
         </div>
       </section>
 
