@@ -109,7 +109,7 @@ function CardsGrid() {
           transition={{ duration: 0.65, ease: 'easeOut', delay: i * 0.18 }}
         >
           <div className="p-card-img" style={{ position: 'absolute', top: 0, bottom: 0, left: '32%', right: '-10%', backgroundImage: card.img, backgroundSize: card.imgSize, backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} />
-          <div className="p-card-overlay" style={{ flex: '0 0 52%', padding: '36px 24px 32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', zIndex: 1, background: '#0d2a1e', clipPath: 'polygon(0 0, 100% 0, 80% 100%, 0 100%)' }}>
+          <div className="p-card-overlay" style={{ flex: '0 0 52%', padding: '36px 24px 32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', zIndex: 1, background: '#0f8972', clipPath: 'polygon(0 0, 100% 0, 80% 100%, 0 100%)' }}>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', flex: 1, paddingTop: 40 }}>
               <h3 style={{ fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 32, lineHeight: 1.2 }}>{card.title}</h3>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.8 }}>{card.desc}</p>
@@ -118,9 +118,7 @@ function CardsGrid() {
               {card.link} <FontAwesomeIcon icon={faArrowRight} />
             </a>
           </div>
-          <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 2, pointerEvents: 'none' }} viewBox="0 0 100 100" preserveAspectRatio="none">
-            <line x1="52" y1="0" x2="41.6" y2="100" stroke="rgba(107,158,138,0.7)" strokeWidth="0.4" vectorEffect="non-scaling-stroke" />
-          </svg>
+
         </motion.div>
       ))}
     </div>
@@ -193,14 +191,28 @@ export default function Partnership() {
       {/* HOW IT WORKS */}
       <section className="p-how-section">
         <div className="bs-wrap">
-          <p className="p-section-label">HOW IT WORKS</p>
-          <div className="p-how-grid">
-            {howCards.map((c, i) => (
-              <div key={i} className="p-how-card">
-                <h4><FontAwesomeIcon icon={c.icon} /> {c.title}</h4>
-                <p>{c.body}</p>
+          <div className="p-how-header">
+            <span className="p-how-label">HOW IT WORKS</span>
+          </div>
+
+          <div className="p-how-cards">
+            {/* Card 1 — number left */}
+            <div className="p-how-card">
+              <div className="p-how-num p-how-num--left" />
+              <div className="p-how-card-body">
+                <h3>{howCards[0].title}</h3>
+                <p>{howCards[0].body}</p>
               </div>
-            ))}
+            </div>
+
+            {/* Card 2 — number right */}
+            <div className="p-how-card p-how-card--reverse">
+              <div className="p-how-card-body">
+                <h3>{howCards[1].title}</h3>
+                <p>{howCards[1].body}</p>
+              </div>
+              <div className="p-how-num p-how-num--right" />
+            </div>
           </div>
         </div>
       </section>

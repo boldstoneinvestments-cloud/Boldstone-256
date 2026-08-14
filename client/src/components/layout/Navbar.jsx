@@ -5,8 +5,7 @@ const links = [
   { to: '/', label: 'Home' },
   { to: '/farmers', label: 'For Farmers' },
   { to: '/investors', label: 'Lease A Coffee Farm' },
-  { to: '/partnership', label: 'Partnerships' },
-  { to: '/blog', label: 'Blog' },
+  { to: '/about', label: 'About Us' },
 ]
 
 export default function Navbar() {
