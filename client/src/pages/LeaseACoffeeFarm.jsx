@@ -690,14 +690,6 @@ export default function Investors() {
               </div>
             ))}
           </div>
-
-          {/* Footer note */}
-          <div style={{ textAlign: 'center', marginTop: '32px', paddingTop: '24px', borderTop: '1px solid rgba(0,0,0,0.1)' }}>
-            <p style={{ fontSize: '0.85rem', color: '#666', margin: 0, display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center' }}>
-              <span style={{ fontSize: '1.2rem' }}>🛡️</span>
-              <span>All plans include long-term land security, sustainable farming practices, and our commitment to quality, transparency, and your success.</span>
-            </p>
-          </div>
         </div>
       </section>
 
