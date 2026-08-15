@@ -734,7 +734,7 @@ export default function Investors() {
                 e.target.style.color = '#0f8972'
               }}
             >
-              Compare all plan features <span style={{ marginLeft: '4px' }}>→</span>
+              Compare All Plans <span style={{ marginLeft: '4px' }}>→</span>
             </button>
           </div>
         </div>
