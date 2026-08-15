@@ -711,19 +711,31 @@ export default function Investors() {
               onClick={() => setShowComparison(true)}
               style={{
                 background: 'none',
-                border: 'none',
+                border: '2px solid #0f8972',
                 color: '#0f8972',
                 fontSize: '1rem',
                 fontWeight: 700,
                 cursor: 'pointer',
-                padding: '8px 16px',
-                textDecoration: 'underline',
-                transition: 'color 0.3s ease',
+                padding: '12px 28px',
+                textDecoration: 'none',
+                transition: 'all 0.3s ease',
+                borderRadius: '50px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
               }}
-              onMouseEnter={(e) => e.target.style.color = '#0a6b58'}
-              onMouseLeave={(e) => e.target.style.color = '#0f8972'}
+              onMouseEnter={(e) => {
+                e.target.style.background = '#f0faf7'
+                e.target.style.borderColor = '#0a6b58'
+                e.target.style.color = '#0a6b58'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'none'
+                e.target.style.borderColor = '#0f8972'
+                e.target.style.color = '#0f8972'
+              }}
             >
-              Compare All Plans →
+              Compare all plan features <span style={{ marginLeft: '4px' }}>→</span>
             </button>
           </div>
         </div>
