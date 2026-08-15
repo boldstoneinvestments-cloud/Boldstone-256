@@ -363,10 +363,7 @@ export default function Investors() {
 
         <div className="bs-wrap" style={{ maxWidth: 860, position: 'relative', zIndex: 2 }}>
           <p style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, marginBottom: '24px', textAlign: 'justify' }}>
-            At Boldstone, you are not simply leasing an acre of land—you are becoming part of a large, professionally managed single-origin coffee estate designed for traceability, long-term profitability, and environmental sustainability. We are establishing a large-scale coffee farm that combines commercial production with regenerative agroforestry, creating a coffee ecosystem that is resilient to climate change while preserving Uganda's natural environment. Every leased acre contributes to a unified coffee estate where production practices, quality standards, and environmental stewardship are managed consistently from planting through harvest.
-          </p>
-          <p style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, textAlign: 'justify' }}>
-            Lease one or more acres of coffee farmland through Boldstone and choose a farming plan that includes land access, quality coffee seedlings, indigenous tree species, planting, farm management, maintenance, and harvest support. Whether you are an individual, a family, a diaspora Ugandan, or a business looking to participate in agriculture, Boldstone makes sustainable coffee farming accessible without the need to own land or manage a farm yourself.
+            At Boldstone, you are not simply leasing an acre of land—you are becoming part of a large, professionally managed single-origin coffee estate designed for traceability, long-term profitability, and environmental sustainability.
           </p>
         </div>
       </section>
