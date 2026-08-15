@@ -591,8 +591,8 @@ export default function Investors() {
       <section className="farmer-plans">
         <div className="bs-wrap">
           <div className="plans-header">
-            <h1 className="section-label">INVESTMENT PLANS</h1>
-            <p>Choose the plan that fits your goals. Expand anytime.</p>
+            <h1 className="section-label">Choose Your Coffee Farming Plan</h1>
+            <p>Boldstone offers two simple subscription options designed around how you prefer to pay. Whether you want to spread the cost of establishing a coffee farm over time or pay upfront and begin immediately, both plans provide access to productive farmland, quality coffee seedlings, professional farm management, and ongoing agronomy support.</p>
           </div>
           <div className="plans-grid">
             {plans.map((plan, i) => (
@@ -600,12 +600,11 @@ export default function Investors() {
                 <div className="offer-card-back" />
                 <div className="offer-card-inner">
                   <div className="plan-card-content">
-                    <span className="plan-badge">★ {plan.badge}</span>
                     <p className="plan-name">{plan.name}</p>
                     
                     {/* Pricing */}
                     <div style={{ fontSize: '2rem', fontWeight: 900, lineHeight: 1, color: plan.featured ? '#fff' : '#0d1f1c', margin: '12px 0 4px' }}>
-                      <span style={{ fontSize: '2.5rem' }}>US${plan.priceYear1}</span>
+                      <span style={{ fontSize: '1rem' }}>US${plan.priceYear1}</span>
                       <span style={{ fontSize: '0.9rem', fontWeight: 400, color: plan.featured ? 'rgba(255,255,255,0.65)' : '#888' }}>
                         {plan.priceType === 'yearly' ? ' per year' : ' per month'}
                       </span>
@@ -614,7 +613,7 @@ export default function Investors() {
                       {plan.priceType === 'yearly' ? 'for the 1st year' : 'for the 1st year'}
                     </p>
                     <p style={{ fontSize: '0.9rem', fontWeight: 500, color: plan.featured ? 'rgba(255,255,255,0.7)' : '#666', margin: '0 0 16px 0' }}>
-                      then <span style={{ fontSize: '1.2rem', fontWeight: 900, color: plan.featured ? '#fff' : '#0d1f1c' }}>US${plan.priceYear2Plus}</span> 
+                      then <span style={{ fontSize: '1rem', fontWeight: 900, color: plan.featured ? '#fff' : '#0d1f1c' }}>US${plan.priceYear2Plus}</span> 
                       <span style={{ fontSize: '0.75rem' }}>{plan.priceType === 'yearly' ? '/year' : '/month'}</span>
                     </p>
 

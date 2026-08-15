@@ -824,7 +824,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 }
 
 .plan-name {
-  font-size: 11px;
+  font-size: 22px;
   font-weight: 800;
   letter-spacing: 2px;
   color: #0f8972;
@@ -1065,7 +1065,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .plans-header h1 { font-size: 18px; }
   .plans-header p { font-size: 13px; }
   .plan-card-content { padding: 16px 12px 16px 16px; }
-  .plan-name { font-size: 18px; }
+  .plan-name { font-size: 20px; }
   .plan-badge { font-size: 8px; padding: 3px 8px; }
 }
 
