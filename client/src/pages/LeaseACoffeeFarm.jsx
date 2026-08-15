@@ -778,31 +778,49 @@ export default function Investors() {
           zIndex: 0,
         }} />
 
-        <div className="bs-wrap" style={{ maxWidth: 860, position: 'relative', zIndex: 2 }}>
-          <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#0d1f1c', marginBottom: '24px', textAlign: 'center' }}>
+        <div className="bs-wrap" style={{ maxWidth: 1200, position: 'relative', zIndex: 2 }}>
+          <h2 style={{ fontSize: 'clamp(24px, 5vw, 32px)', fontWeight: 900, color: '#0d1f1c', marginBottom: '56px', textAlign: 'center' }}>
             Why Lease a Coffee Farm with Boldstone
           </h2>
           
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            <li style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, marginBottom: '18px' }}>
-              <strong>Single Origin & Sustainable Farms:</strong> Boldstone's aims to establish single origin, traceable and sustainable coffee agro-forestry farms. By being a part, you gain a premium price advantage due to sustainably grown coffee beans.
-            </li>
-            <li style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, marginBottom: '18px' }}>
-              <strong>Low Cost of Ownership:</strong> There is no land purchase required to start farming with Boldstone; meaning that 80%+ of your capital goes straight into farming. Save up to $4,000 by accessing productive agricultural land through an annual lease.
-            </li>
-            <li style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, marginBottom: '18px' }}>
-              <strong>Professional Farm Management:</strong> Our team understands the critical factors that determine a successful coffee farm, including soil health, irrigation and water management, nutrient requirements, pest and disease control, and climate-related risks. This expertise enables us to manage your coffee farm using proven agronomic practices that maximize plant health, productivity, and long-term yield potential.
-            </li>
-            <li style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, marginBottom: '18px' }}>
-              <strong>Quality Coffee Seedlings –</strong> We provide high-quality coffee seedlings sourced from our trusted and certified nursery beds to ensure strong establishment and long-term productivity. We aim for seedlings that have vigor, disease resistance, and suitability to local growing conditions, giving your farm a healthy start and improving its potential for consistent yields over the life of the coffee plantation.
-            </li>
-            <li style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, marginBottom: '18px' }}>
-              <strong>Transparent pricing –</strong> We have no hidden fees and unexpected charges. We provide transparent and straightforward pricing with clearly defined costs for land leasing, seedlings, and farm management services.
-            </li>
-            <li style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85 }}>
-              <strong>Scalable –</strong> Begin with a single acre and expand your coffee farm at your own pace. Boldstone's flexible leasing and farm management model allows you to increase your acreage over time as your confidence, capital, and production goals grow, making it easy to build a larger coffee enterprise without the need for a significant upfront land investment.
-            </li>
-          </ul>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+            {[
+              {
+                title: 'Single Origin & Sustainable Farms',
+                description: 'Boldstone\'s aims to establish single origin, traceable and sustainable coffee agro-forestry farms. By being a part, you gain a premium price advantage due to sustainably grown coffee beans.',
+              },
+              {
+                title: 'Low Cost of Ownership',
+                description: 'There is no land purchase required to start farming with Boldstone; meaning that 80%+ of your capital goes straight into farming. Save up to $4,000 by accessing productive agricultural land through an annual lease.',
+              },
+              {
+                title: 'Professional Farm Management',
+                description: 'Our team understands the critical factors that determine a successful coffee farm, including soil health, irrigation and water management, nutrient requirements, pest and disease control, and climate-related risks. This expertise enables us to manage your coffee farm using proven agronomic practices that maximize plant health, productivity, and long-term yield potential.',
+              },
+              {
+                title: 'Quality Coffee Seedlings',
+                description: 'We provide high-quality coffee seedlings sourced from our trusted and certified nursery beds to ensure strong establishment and long-term productivity. We aim for seedlings that have vigor, disease resistance, and suitability to local growing conditions, giving your farm a healthy start and improving its potential for consistent yields over the life of the coffee plantation.',
+              },
+              {
+                title: 'Transparent Pricing',
+                description: 'We have no hidden fees and unexpected charges. We provide transparent and straightforward pricing with clearly defined costs for land leasing, seedlings, and farm management services.',
+              },
+              {
+                title: 'Scalable',
+                description: 'Begin with a single acre and expand your coffee farm at your own pace. Boldstone\'s flexible leasing and farm management model allows you to increase your acreage over time as your confidence, capital, and production goals grow, making it easy to build a larger coffee enterprise without the need for a significant upfront land investment.',
+              },
+            ].map((item, idx) => (
+              <div key={idx} className="offer-card">
+                <div className="offer-card-back" />
+                <div className="offer-card-inner">
+                  <div className="offer-card-content">
+                    <h4>{item.title}</h4>
+                    <p>{item.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
