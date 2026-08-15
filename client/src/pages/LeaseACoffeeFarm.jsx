@@ -218,12 +218,26 @@ function FitBounds() {
 }
 
 // ── PAGE ──────────────────────────────────────────────────────────────────────
+const comparisonData = [
+  { feature: 'Payment', monthly: 'US$48/month', annual: 'US$480/year' },
+  { feature: 'Land Lease Included', monthly: 'Yes', annual: 'Yes' },
+  { feature: 'Coffee Seedlings Included', monthly: 'Yes', annual: 'Yes' },
+  { feature: 'Indigenous Tree Seedlings', monthly: 'Yes', annual: 'Yes' },
+  { feature: 'Farm Management Included', monthly: 'Yes', annual: 'Yes' },
+  { feature: 'Farm Establishment Begins', monthly: 'Month 7', annual: 'Immediately' },
+  { feature: 'Agronomy Support', monthly: 'Yes', annual: 'Yes' },
+  { feature: 'Farm Progress Updates', monthly: 'Yes', annual: 'Yes' },
+  { feature: 'Renewal After Year 1', monthly: 'US$18/month or US$180/year', annual: 'US$180/year' },
+  { feature: 'Best For', monthly: 'Salaried individuals, diaspora, first-time farmers', annual: 'Businesses, investors, and clients with available capital' },
+]
+
 export default function Investors() {
   const allParcels = useMemo(() => generateParcels(), [])
 
-  const [leased, setLeased]         = useState(new Set([1, 2, 5]))
-  const [selected, setSelected]     = useState(new Set())
-  const [successMsg, setSuccessMsg] = useState('')
+  const [leased, setLeased]           = useState(new Set([1, 2, 5]))
+  const [selected, setSelected]       = useState(new Set())
+  const [successMsg, setSuccessMsg]   = useState('')
+  const [showComparison, setShowComparison] = useState(false)
 
   const totalLeased   = leased.size
   const totalSelected = selected.size
@@ -690,8 +704,191 @@ export default function Investors() {
               </div>
             ))}
           </div>
+
+          {/* Compare All Plans Button */}
+          <div style={{ textAlign: 'center', marginTop: '40px' }}>
+            <button
+              onClick={() => setShowComparison(true)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#0f8972',
+                fontSize: '1rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                padding: '8px 16px',
+                textDecoration: 'underline',
+                transition: 'color 0.3s ease',
+              }}
+              onMouseEnter={(e) => e.target.style.color = '#0a6b58'}
+              onMouseLeave={(e) => e.target.style.color = '#0f8972'}
+            >
+              Compare All Plans →
+            </button>
+          </div>
         </div>
       </section>
+
+      {/* Comparison Modal */}
+      {showComparison && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0, 0, 0, 0.6)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '20px',
+        }}>
+          <div style={{
+            background: '#fff',
+            borderRadius: '12px',
+            maxWidth: '900px',
+            width: '100%',
+            maxHeight: '80vh',
+            overflow: 'auto',
+            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
+          }}>
+            {/* Modal Header */}
+            <div style={{
+              padding: '24px',
+              borderBottom: '1px solid #e5e7eb',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+              <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#0d1f1c', margin: 0 }}>
+                Plan Comparison
+              </h2>
+              <button
+                onClick={() => setShowComparison(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  color: '#999',
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Table */}
+            <div style={{ padding: '24px', overflowX: 'auto' }}>
+              <table style={{
+                width: '100%',
+                borderCollapse: 'collapse',
+              }}>
+                <thead>
+                  <tr style={{ borderBottom: '2px solid #0f8972' }}>
+                    <th style={{
+                      padding: '12px',
+                      textAlign: 'left',
+                      fontSize: '14px',
+                      fontWeight: 900,
+                      color: '#0d1f1c',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px',
+                    }}>
+                      Feature
+                    </th>
+                    <th style={{
+                      padding: '12px',
+                      textAlign: 'left',
+                      fontSize: '14px',
+                      fontWeight: 900,
+                      color: '#0d1f1c',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px',
+                    }}>
+                      Monthly Plan
+                    </th>
+                    <th style={{
+                      padding: '12px',
+                      textAlign: 'left',
+                      fontSize: '14px',
+                      fontWeight: 900,
+                      color: '#0d1f1c',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px',
+                    }}>
+                      Annual Plan
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {comparisonData.map((row, idx) => (
+                    <tr
+                      key={idx}
+                      style={{
+                        borderBottom: '1px solid #e5e7eb',
+                        background: idx % 2 === 0 ? '#f9fafb' : '#fff',
+                      }}
+                    >
+                      <td style={{
+                        padding: '14px 12px',
+                        fontSize: '14px',
+                        fontWeight: 600,
+                        color: '#0d1f1c',
+                      }}>
+                        {row.feature}
+                      </td>
+                      <td style={{
+                        padding: '14px 12px',
+                        fontSize: '14px',
+                        color: '#333',
+                      }}>
+                        {row.monthly}
+                      </td>
+                      <td style={{
+                        padding: '14px 12px',
+                        fontSize: '14px',
+                        color: '#333',
+                      }}>
+                        {row.annual}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Modal Footer */}
+            <div style={{
+              padding: '20px 24px',
+              borderTop: '1px solid #e5e7eb',
+              display: 'flex',
+              gap: '12px',
+              justifyContent: 'flex-end',
+            }}>
+              <button
+                onClick={() => setShowComparison(false)}
+                style={{
+                  padding: '10px 20px',
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  border: '1px solid #0f8972',
+                  background: 'none',
+                  color: '#0f8972',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = '#f0faf7'
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'none'
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   )
