@@ -339,7 +339,7 @@ export default function Investors() {
       <section style={{
         padding: '56px 24px',
         position: 'relative',
-        backgroundImage: "url('https://address-restaurant2.odoo.com/web/image/2016-eafec619/green%20background.webp')",
+        backgroundImage: "url('https://address-restaurant2.odoo.com/web/image/2021-f4893534/card%201.webp')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         overflow: 'hidden',
