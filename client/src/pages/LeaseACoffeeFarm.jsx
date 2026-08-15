@@ -146,7 +146,6 @@ const plans = [
     priceYear1: 48,
     priceYear2Plus: 18,
     description: 'Ideal for individuals, young professionals, individuals in the diaspora, and first-time coffee farmers who want to start with a manageable monthly commitment. You don\'t have to be a Ugandan to subscribe.',
-    context: 'This plan allows you to spread the cost of establishing a one-acre coffee farm across your first year of membership.',
     included: [
       'Annual lease of 1 acre of coffee farmland',
       'Land preparation and site establishment',
@@ -181,7 +180,6 @@ const plans = [
     priceYear2Plus: 180,
     priceType: 'yearly',
     description: 'Ideal for individuals and businesses with available capital who want their coffee farm established without waiting for a phased setup period.',
-    context: 'With the annual plan, you pay for land access, coffee seedlings, and farm management upfront, allowing Boldstone to begin establishing your coffee farm immediately.',
     included: [
       'Annual lease of 1 acre of coffee farmland',
       'Land preparation and farm establishment',
@@ -238,6 +236,8 @@ export default function Investors() {
   const [selected, setSelected]       = useState(new Set())
   const [successMsg, setSuccessMsg]   = useState('')
   const [showComparison, setShowComparison] = useState(false)
+  const [showStarterDetails, setShowStarterDetails] = useState(false)
+  const [showGrowthDetails, setShowGrowthDetails] = useState(false)
 
   const totalLeased   = leased.size
   const totalSelected = selected.size
@@ -535,7 +535,7 @@ export default function Investors() {
                       {/* Cost rows */}
                       <div className="rounded-xl overflow-hidden mb-4" style={{ border: '1px solid #f0f0f0' }}>
                         {[{
-                          label: 'Monthly', sub: 'per month',
+                          label: 'Monthly', sub: '/month',
                           amount: [...selected].reduce((s, id) => s + (allParcels.find(p => p.id === id)?.acres ?? 0), 0) * 15 * USD_TO_UGX,
                         }, {
                           label: 'Annual', sub: 'save 17%',
@@ -589,7 +589,6 @@ export default function Investors() {
         <div className="bs-wrap">
           <div className="plans-header">
             <h1 className="section-label">Choose Your Coffee Farming Plan</h1>
-            <p>Boldstone offers two simple subscription options designed around how you prefer to pay. Whether you want to spread the cost of establishing a coffee farm over time or pay upfront and begin immediately, both plans provide access to productive farmland, quality coffee seedlings, professional farm management, and ongoing agronomy support.</p>
           </div>
           <div className="plans-grid">
             {plans.map((plan, i) => (
@@ -603,7 +602,7 @@ export default function Investors() {
                     <div style={{ fontSize: '2rem', fontWeight: 900, lineHeight: 1, color: plan.featured ? '#fff' : '#0d1f1c', margin: '12px 0 4px' }}>
                       <span style={{ fontSize: '1rem' }}>US${plan.priceYear1}</span>
                       <span style={{ fontSize: '0.9rem', fontWeight: 400, color: plan.featured ? 'rgba(255,255,255,0.65)' : '#888' }}>
-                        {plan.priceType === 'yearly' ? ' per year' : ' per month'}
+                        {plan.priceType === 'yearly' ? '/year' : '/month'}
                       </span>
                     </div>
                     <p style={{ fontSize: '0.9rem', fontWeight: 500, color: plan.featured ? 'rgba(255,255,255,0.7)' : '#666', margin: '0 0 12px 0' }}>
@@ -618,13 +617,6 @@ export default function Investors() {
                     {plan.description && (
                       <p style={{ fontSize: '0.9rem', lineHeight: '1.5', color: plan.featured ? 'rgba(255,255,255,0.85)' : '#333', margin: '0 0 12px 0' }}>
                         {plan.description}
-                      </p>
-                    )}
-
-                    {/* Context */}
-                    {plan.context && (
-                      <p style={{ fontSize: '0.9rem', lineHeight: '1.5', color: plan.featured ? 'rgba(255,255,255,0.8)' : '#555', margin: '0 0 16px 0', fontStyle: 'italic' }}>
-                        {plan.context}
                       </p>
                     )}
 
@@ -645,52 +637,75 @@ export default function Investors() {
                       </ul>
                     </div>
 
-                    {/* How It Works */}
-                    <div style={{ marginBottom: '20px', paddingBottom: '16px', borderBottom: `1px solid ${plan.featured ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'}` }}>
-                      <p style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', tracking: '2px', color: plan.featured ? 'rgba(255,255,255,0.6)' : '#666', marginBottom: '12px' }}>
-                        How It Works
-                      </p>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                        {plan.howItWorks.map((item, j) => (
-                          <div key={j} style={{ display: 'flex', gap: '12px' }}>
-                            <div style={{ minWidth: '24px', height: '24px', borderRadius: '50%', background: plan.featured ? 'rgba(61,255,192,0.2)' : '#f0faf7', border: `2px solid ${plan.featured ? '#3dffc0' : '#0f8972'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 900, color: plan.featured ? '#3dffc0' : '#0f8972', flexShrink: 0 }}>
-                              {j + 1}
-                            </div>
-                            <div>
-                              <p style={{ fontSize: '0.8rem', fontWeight: 700, color: plan.featured ? 'rgba(255,255,255,0.9)' : '#0d1f1c', margin: '0 0 2px 0' }}>{item.title}</p>
-                              <p style={{ fontSize: '0.75rem', color: plan.featured ? 'rgba(255,255,255,0.7)' : '#666', margin: 0 }}>{item.desc}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Why Choose */}
-                    <div style={{ marginBottom: '20px' }}>
-                      <p style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', tracking: '2px', color: plan.featured ? 'rgba(255,255,255,0.6)' : '#666', marginBottom: '8px' }}>
-                        {plan.priceType === 'yearly' ? 'Immediate Benefits' : 'Why Choose the Monthly Plan?'}
-                      </p>
-                      <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                        {plan.whyChoose.map((reason, j) => (
-                          <li key={j} style={{ fontSize: '0.85rem', color: plan.featured ? 'rgba(255,255,255,0.85)' : '#333', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                            <span style={{ color: plan.featured ? '#3dffc0' : '#0f8972', fontWeight: 900, marginTop: '2px' }}>•</span>
-                            <span>{reason}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {/* Renewal Info */}
-                    {plan.renewal && (
-                      <div style={{ marginBottom: '20px', paddingTop: '16px', paddingBottom: '16px', borderTop: `1px solid ${plan.featured ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'}`, borderBottom: `1px solid ${plan.featured ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'}` }}>
+                    {/* Renewal section for Growth Plan */}
+                    {i === 1 && (
+                      <div style={{ marginBottom: '20px' }}>
                         <p style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', tracking: '2px', color: plan.featured ? 'rgba(255,255,255,0.6)' : '#666', marginBottom: '8px' }}>
                           Renewal
                         </p>
-                        <p style={{ fontSize: '0.85rem', color: plan.featured ? 'rgba(255,255,255,0.85)' : '#333', margin: 0, lineHeight: '1.5' }}>
-                          {plan.renewal}
+                        <p style={{ fontSize: '0.9rem', color: plan.featured ? 'rgba(255,255,255,0.85)' : '#333', lineHeight: '1.6', margin: 0 }}>
+                          After the first year, your subscription renews at US$180/year for continued land access, farm management, and agronomy support.
                         </p>
                       </div>
                     )}
+
+                    {/* Learn More Button */}
+                    <div style={{ marginTop: 'auto' }}>
+                    {i === 0 && (
+                      <button
+                        onClick={() => setShowStarterDetails(!showStarterDetails)}
+                        style={{
+                          width: 'fit-content',
+                          padding: '10px 16px',
+                          marginBottom: '20px',
+                          background: plan.featured ? 'rgba(61,255,192,0.15)' : '#f0faf7',
+                          border: `1.5px solid ${plan.featured ? '#3dffc0' : '#0f8972'}`,
+                          borderRadius: '8px',
+                          color: plan.featured ? '#3dffc0' : '#0f8972',
+                          fontSize: '0.9rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.background = plan.featured ? 'rgba(61,255,192,0.25)' : 'rgba(15,137,114,0.08)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.background = plan.featured ? 'rgba(61,255,192,0.15)' : '#f0faf7'
+                        }}
+                      >
+                        {showStarterDetails ? 'Show Less' : 'Learn More'} →
+                      </button>
+                    )}
+
+                    {/* Learn More Button for Growth Plan */}
+                    {i === 1 && (
+                      <button
+                        onClick={() => setShowGrowthDetails(!showGrowthDetails)}
+                        style={{
+                          width: 'fit-content',
+                          padding: '10px 16px',
+                          marginBottom: '20px',
+                          background: plan.featured ? 'rgba(61,255,192,0.15)' : '#f0faf7',
+                          border: `1.5px solid ${plan.featured ? '#3dffc0' : '#0f8972'}`,
+                          borderRadius: '8px',
+                          color: plan.featured ? '#3dffc0' : '#0f8972',
+                          fontSize: '0.9rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.background = plan.featured ? 'rgba(61,255,192,0.25)' : 'rgba(15,137,114,0.08)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.background = plan.featured ? 'rgba(61,255,192,0.15)' : '#f0faf7'
+                        }}
+                      >
+                        {showGrowthDetails ? 'Show Less' : 'Learn More'} →
+                      </button>
+                    )}
+                    </div>
 
                     <Link to="/partnership" className="plan-cta">
                       {plan.cta} <FontAwesomeIcon icon={faArrowRight} />
@@ -791,6 +806,239 @@ export default function Investors() {
         </div>
       </section>
 
+      {/* Starter Details Modal */}
+      {showStarterDetails && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '12px',
+          backdropFilter: 'blur(3px)',
+        }}>
+          <div style={{
+            background: '#fff',
+            borderRadius: '16px',
+            maxWidth: '650px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflow: 'hidden',
+            boxShadow: '0 20px 60px rgba(15, 137, 114, 0.15), 0 0 1px rgba(0, 0, 0, 0.1)',
+            border: '1px solid rgba(15, 137, 114, 0.1)',
+            display: 'flex',
+            flexDirection: 'column',
+          }}>
+            {/* Modal Header */}
+            <div style={{
+              padding: 'clamp(20px, 5vw, 32px)',
+              background: 'linear-gradient(135deg, #0a6b58 0%, #0f8972 100%)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderBottom: '1px solid rgba(15, 137, 114, 0.2)',
+              flexShrink: 0,
+            }}>
+              <div>
+                <p style={{ 
+                  fontSize: 'clamp(9px, 2.5vw, 11px)', 
+                  fontWeight: 800, 
+                  letterSpacing: '2px', 
+                  textTransform: 'uppercase', 
+                  color: '#7ecfc4', 
+                  margin: '0 0 8px 0' 
+                }}>
+                  Starter Plan
+                </p>
+                <h2 style={{ fontSize: 'clamp(20px, 6vw, 32px)', fontWeight: 900, color: '#fff', margin: 0 }}>
+                  How It Works
+                </h2>
+              </div>
+              <button
+                onClick={() => setShowStarterDetails(false)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  border: 'none',
+                  fontSize: 'clamp(20px, 4vw, 28px)',
+                  cursor: 'pointer',
+                  color: '#fff',
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                  flexShrink: 0,
+                  marginLeft: '12px',
+                  minWidth: '48px',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.25)'
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.15)'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Content */}
+            <div style={{ padding: 'clamp(16px, 4vw, 32px)', overflowY: 'auto', flex: 1 }}>
+              {/* How It Works */}
+              <div style={{ marginBottom: '32px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {plans[0].howItWorks.map((item, j) => (
+                    <div key={j} style={{ display: 'flex', gap: '12px' }}>
+                      <div style={{ minWidth: '32px', height: '32px', borderRadius: '50%', background: '#f0faf7', border: '2px solid #0f8972', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 900, color: '#0f8972', flexShrink: 0 }}>
+                        {j + 1}
+                      </div>
+                      <div>
+                        <p style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0d1f1c', margin: '0 0 4px 0' }}>{item.title}</p>
+                        <p style={{ fontSize: '0.9rem', color: '#555', margin: 0, lineHeight: '1.5' }}>{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Why Choose */}
+              <div style={{ marginBottom: '32px' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 900, color: '#0d1f1c', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                  Why Choose the Monthly Plan?
+                </h3>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {plans[0].whyChoose.map((reason, j) => (
+                    <li key={j} style={{ fontSize: '0.9rem', color: '#333', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                      <span style={{ color: '#0f8972', fontWeight: 900, marginTop: '2px', minWidth: '16px' }}>•</span>
+                      <span>{reason}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Renewal Info */}
+              {plans[0].renewal && (
+                <div>
+                  <h3 style={{ fontSize: '16px', fontWeight: 900, color: '#0d1f1c', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    After Year 1
+                  </h3>
+                  <p style={{ fontSize: '0.9rem', color: '#333', lineHeight: '1.6', margin: 0 }}>
+                    {plans[0].renewal}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Growth Plan Details Modal */}
+      {showGrowthDetails && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          padding: '12px',
+          backdropFilter: 'blur(3px)',
+        }}>
+          <div style={{
+            background: '#fff',
+            borderRadius: '16px',
+            maxWidth: '650px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflow: 'hidden',
+            boxShadow: '0 20px 60px rgba(15, 137, 114, 0.15), 0 0 1px rgba(0, 0, 0, 0.1)',
+            border: '1px solid rgba(15, 137, 114, 0.1)',
+            display: 'flex',
+            flexDirection: 'column',
+          }}>
+            {/* Modal Header */}
+            <div style={{
+              padding: 'clamp(20px, 5vw, 32px)',
+              background: 'linear-gradient(135deg, #0a6b58 0%, #0f8972 100%)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderBottom: '1px solid rgba(15, 137, 114, 0.2)',
+              flexShrink: 0,
+            }}>
+              <div>
+                <p style={{ 
+                  fontSize: 'clamp(9px, 2.5vw, 11px)', 
+                  fontWeight: 800, 
+                  letterSpacing: '2px', 
+                  textTransform: 'uppercase', 
+                  color: '#7ecfc4', 
+                  margin: '0 0 8px 0' 
+                }}>
+                  Growth Plan
+                </p>
+                <h2 style={{ fontSize: 'clamp(20px, 6vw, 32px)', fontWeight: 900, color: '#fff', margin: 0 }}>
+                  Immediate Benefits
+                </h2>
+              </div>
+              <button
+                onClick={() => setShowGrowthDetails(false)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  border: 'none',
+                  fontSize: 'clamp(20px, 4vw, 28px)',
+                  cursor: 'pointer',
+                  color: '#fff',
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                  flexShrink: 0,
+                  marginLeft: '12px',
+                  minWidth: '48px',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.25)'
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.15)'
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Content */}
+            <div style={{ padding: 'clamp(16px, 4vw, 32px)', overflowY: 'auto', flex: 1 }}>
+              <div style={{ marginBottom: '32px' }}>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {[
+                    'Farm establishment begins as soon as your subscription is confirmed',
+                    'Faster planting timeline',
+                    'Earlier crop development and production readiness',
+                    'Simplified annual payment with no monthly administration',
+                    'Best value for subscribers able to pay upfront',
+                  ].map((benefit, j) => (
+                    <li key={j} style={{ fontSize: '0.9rem', color: '#333', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                      <span style={{ color: '#0f8972', fontWeight: 900, marginTop: '2px', minWidth: '16px' }}>•</span>
+                      <span>{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Comparison Modal */}
       {showComparison && (
         <div style={{
@@ -807,7 +1055,7 @@ export default function Investors() {
           <div style={{
             background: '#fff',
             borderRadius: '16px',
-            maxWidth: '1000px',
+            maxWidth: '750px',
             width: '100%',
             maxHeight: '90vh',
             overflow: 'hidden',
