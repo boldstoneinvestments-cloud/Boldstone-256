@@ -740,6 +740,60 @@ export default function Investors() {
         </div>
       </section>
 
+      {/* Why Lease Section */}
+      <section style={{
+        padding: '56px 24px',
+        position: 'relative',
+        backgroundImage: "url('https://address-restaurant2.odoo.com/web/image/2019-9db78ec6/background%20image.webp')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        overflow: 'hidden',
+      }}>
+        {/* 3D Glass panel */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'rgba(255,255,255,0.03)',
+          backdropFilter: 'blur(1px)',
+          WebkitBackdropFilter: 'blur(1px)',
+          borderTop: '1px solid rgba(255,255,255,0.15)',
+          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          borderLeft: '1px solid rgba(255,255,255,0.1)',
+          borderRight: '1px solid rgba(255,255,255,0.03)',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
+          transform: 'perspective(1200px) rotateX(0.6deg)',
+          transformOrigin: 'center top',
+          zIndex: 0,
+        }} />
+
+        <div className="bs-wrap" style={{ maxWidth: 860, position: 'relative', zIndex: 2 }}>
+          <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#0d1f1c', marginBottom: '24px', textAlign: 'center' }}>
+            Why Lease a Coffee Farm with Boldstone
+          </h2>
+          
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+            <li style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, marginBottom: '18px' }}>
+              <strong>Single Origin & Sustainable Farms:</strong> Boldstone's aims to establish single origin, traceable and sustainable coffee agro-forestry farms. By being a part, you gain a premium price advantage due to sustainably grown coffee beans.
+            </li>
+            <li style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, marginBottom: '18px' }}>
+              <strong>Low Cost of Ownership:</strong> There is no land purchase required to start farming with Boldstone; meaning that 80%+ of your capital goes straight into farming. Save up to $4,000 by accessing productive agricultural land through an annual lease.
+            </li>
+            <li style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, marginBottom: '18px' }}>
+              <strong>Professional Farm Management:</strong> Our team understands the critical factors that determine a successful coffee farm, including soil health, irrigation and water management, nutrient requirements, pest and disease control, and climate-related risks. This expertise enables us to manage your coffee farm using proven agronomic practices that maximize plant health, productivity, and long-term yield potential.
+            </li>
+            <li style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, marginBottom: '18px' }}>
+              <strong>Quality Coffee Seedlings –</strong> We provide high-quality coffee seedlings sourced from our trusted and certified nursery beds to ensure strong establishment and long-term productivity. We aim for seedlings that have vigor, disease resistance, and suitability to local growing conditions, giving your farm a healthy start and improving its potential for consistent yields over the life of the coffee plantation.
+            </li>
+            <li style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, marginBottom: '18px' }}>
+              <strong>Transparent pricing –</strong> We have no hidden fees and unexpected charges. We provide transparent and straightforward pricing with clearly defined costs for land leasing, seedlings, and farm management services.
+            </li>
+            <li style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85 }}>
+              <strong>Scalable –</strong> Begin with a single acre and expand your coffee farm at your own pace. Boldstone's flexible leasing and farm management model allows you to increase your acreage over time as your confidence, capital, and production goals grow, making it easy to build a larger coffee enterprise without the need for a significant upfront land investment.
+            </li>
+          </ul>
+        </div>
+      </section>
+
       {/* Comparison Modal */}
       {showComparison && (
         <div style={{
