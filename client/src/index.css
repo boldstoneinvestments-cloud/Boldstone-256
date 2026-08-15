@@ -747,15 +747,18 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 
 .plans-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
   align-items: stretch;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .plan-card {
   display: grid;
   grid-template-rows: 1fr;
   transition: transform 0.35s ease;
+  height: 100%;
 }
 
 .plan-card:hover {
@@ -777,6 +780,8 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   transition: box-shadow 0.35s ease;
   z-index: 2;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .plan-card:hover .offer-card-inner {
@@ -796,6 +801,8 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   padding: 28px 24px 28px 28px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
 }
 
 .plan-badge {
@@ -1022,11 +1029,11 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .offer-card-inner::before { width: 80px; height: 60px; }
   .offer-card-inner::after { width: 44px; height: 58px; }
   .offer-card-back { transform: translate(4px, 4px); }
-  .plans-grid { grid-template-columns: 1fr; max-width: 500px; margin: 0 auto; }
 }
 
 @media (max-width: 768px) {
   .farmers-stats-inner { grid-template-columns: repeat(2, 1fr); }
+  .plans-grid { grid-template-columns: 1fr; max-width: 100%; }
 }
 
 @media (max-width: 767px) {
@@ -1043,7 +1050,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .why-left h2 { font-size: 26px; }
   .farmer-plans { padding: 52px 0; }
   .farmer-plans .plans-header h2 { font-size: 26px; }
-  .plans-grid { max-width: 100%; }
+  .plan-card-content { padding: 20px 16px 20px 20px; }
   .cta-inner { padding: 40px 24px; }
   .cta-inner h2 { font-size: 1.4rem; }
 }
@@ -1053,6 +1060,13 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .hero-content p { font-size: 0.9rem; }
   .hero-btns { flex-direction: column; align-items: center; }
   .stat .num { font-size: 1.8rem; }
+  .farmer-plans { padding: 40px 0; }
+  .plans-header { padding: 0 16px; }
+  .plans-header h1 { font-size: 18px; }
+  .plans-header p { font-size: 13px; }
+  .plan-card-content { padding: 16px 12px 16px 16px; }
+  .plan-name { font-size: 18px; }
+  .plan-badge { font-size: 8px; padding: 3px 8px; }
 }
 
 /* ════════════════════════════════

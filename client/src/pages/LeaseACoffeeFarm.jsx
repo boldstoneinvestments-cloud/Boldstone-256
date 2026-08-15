@@ -141,22 +141,73 @@ const fadeUp = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }
 
 const plans = [
   {
-    badge: 'MONTHLY', name: 'LEASE 1 ACRE MONTHLY', price: toUGX(15), period: '/ month',
-    desc: 'Flexible monthly lease. Cancel anytime.',
-    features: ['Lease 1 acre of coffee farm', 'Full farm management included', 'Monthly progress reports', 'Cancel anytime'],
-    featured: false, cta: 'Start Monthly',
+    badge: 'POPULAR CHOICE',
+    name: 'Starter Plan',
+    priceYear1: 48,
+    priceYear2Plus: 18,
+    description: 'Ideal for individuals, young professionals, individuals in the diaspora, and first-time coffee farmers who want to start with a manageable monthly commitment. You don\'t have to be a Ugandan to subscribe.',
+    context: 'This plan allows you to spread the cost of establishing a one-acre coffee farm across your first year of membership.',
+    included: [
+      'Annual lease of 1 acre of coffee farmland',
+      'Land preparation and site establishment',
+      'High-quality coffee seedlings',
+      'Indigenous shade tree seedlings',
+      'Planting and field layout',
+      'Farm maintenance during establishment',
+      'Agronomy supervision and technical support',
+      'Progress updates and farm records',
+      'Harvest preparation support',
+    ],
+    howItWorks: [
+      { step: '1–6', title: 'Months 1–6', desc: 'Your subscription builds the establishment fund for your coffee acre.' },
+      { step: '7', title: 'Month 7', desc: 'Boldstone begins preparing and planting your coffee farm.' },
+      { step: '7–12', title: 'Months 7–12', desc: 'Your farm is established and maintained while you continue your subscription.' },
+      { step: 'After', title: 'After Year 1', desc: 'Your subscription reduces to US$18/month or US$180/year to cover continued land access, farm management, and agronomy support.' },
+    ],
+    whyChoose: [
+      'Low upfront commitment',
+      'Predictable monthly payments',
+      'Accessible to salaried individuals and diaspora clients',
+      'Allows you to build a long-term agricultural asset gradually',
+      'Easy to expand by adding additional acres over time',
+    ],
+    featured: true,
+    cta: 'GET STARTED',
   },
   {
-    badge: 'MOST POPULAR', name: 'LEASE 1 ACRE ANNUALLY', price: toUGX(150), period: '/ year',
-    desc: `Best value for serious investors. Save ${toUGX(30)} compared to monthly.`,
-    features: ['Lease 1 acre of coffee farm', 'Full farm management included', 'Monthly progress reports', `Save ${toUGX(30)} vs monthly`, 'Priority investor support'],
-    featured: true, cta: 'Start Annual Plan',
-  },
-  {
-    badge: 'ONE-TIME', name: 'COFFEE SEEDLINGS', price: toUGX(200), period: 'one-time',
-    desc: 'Premium disease-resistant seedlings delivered and planted on your acre.',
-    features: ['Premium coffee seedlings', '25% below market price', 'Delivered & planted for you', 'Disease-resistant varieties'],
-    featured: false, cta: 'Order Seedlings',
+    badge: 'GROWTH PLAN',
+    name: 'Growth Plan',
+    priceYear1: 480,
+    priceYear2Plus: 180,
+    priceType: 'yearly',
+    description: 'Ideal for individuals and businesses with available capital who want their coffee farm established without waiting for a phased setup period.',
+    context: 'With the annual plan, you pay for land access, coffee seedlings, and farm management upfront, allowing Boldstone to begin establishing your coffee farm immediately.',
+    included: [
+      'Annual lease of 1 acre of coffee farmland',
+      'Land preparation and farm establishment',
+      'High-quality coffee seedlings',
+      'Planting and field layout',
+      'Ongoing farm maintenance',
+      'Agronomy supervision and technical support',
+      'Periodic farm reports and production updates',
+      'Harvest planning and coordination support',
+    ],
+    howItWorks: [
+      { step: '1', title: 'Immediate Start', desc: 'Farm establishment begins as soon as your subscription is confirmed.' },
+      { step: '2', title: 'Faster Planting', desc: 'Faster planting timeline with no waiting period.' },
+      { step: '3', title: 'Early Production', desc: 'Earlier crop development and production readiness.' },
+      { step: '4', title: 'Year 2 Renewal', desc: 'After the first year, your subscription renews at US$180/year for continued land access, farm management, and agronomy support.' },
+    ],
+    whyChoose: [
+      'Farm establishment begins as soon as your subscription is confirmed',
+      'Faster planting timeline',
+      'Earlier crop development and production readiness',
+      'Simplified annual payment with no monthly administration',
+      'Best value for subscribers able to pay upfront',
+    ],
+    renewal: 'After the first year, your subscription renews at US$180/year for continued land access, farm management, and agronomy support.',
+    featured: false,
+    cta: 'GET STARTED',
   },
 ]
 
@@ -526,9 +577,8 @@ export default function Investors() {
       <section className="farmer-plans">
         <div className="bs-wrap">
           <div className="plans-header">
-            <h1 className="section-label">INVESTOR PLANS</h1>
-            <h2>Choose your <span>plan.</span></h2>
-            <p>Start with a single acre and scale up. Every plan includes full farm management — we do the work, you own the coffee.</p>
+            <h1 className="section-label">INVESTMENT PLANS</h1>
+            <p>Choose the plan that fits your goals. Expand anytime.</p>
           </div>
           <div className="plans-grid">
             {plans.map((plan, i) => (
@@ -536,21 +586,102 @@ export default function Investors() {
                 <div className="offer-card-back" />
                 <div className="offer-card-inner">
                   <div className="plan-card-content">
-                    <span className="plan-badge">{plan.badge}</span>
+                    <span className="plan-badge">★ {plan.badge}</span>
                     <p className="plan-name">{plan.name}</p>
-                    <div style={{ fontSize: '2.2rem', fontWeight: 900, lineHeight: 1, color: plan.featured ? '#fff' : '#0d1f1c', margin: '8px 0 4px' }}>
-                      {plan.price} <span style={{ fontSize: '0.85rem', fontWeight: 400, color: plan.featured ? 'rgba(255,255,255,0.55)' : '#aaa' }}>{plan.period}</span>
+                    
+                    {/* Pricing */}
+                    <div style={{ fontSize: '2rem', fontWeight: 900, lineHeight: 1, color: plan.featured ? '#fff' : '#0d1f1c', margin: '12px 0 4px' }}>
+                      <span style={{ fontSize: '2.5rem' }}>US${plan.priceYear1}</span>
+                      <span style={{ fontSize: '0.9rem', fontWeight: 400, color: plan.featured ? 'rgba(255,255,255,0.65)' : '#888' }}>
+                        {plan.priceType === 'yearly' ? ' per year' : ' per month'}
+                      </span>
                     </div>
-                    <p className="plan-desc">{plan.desc}</p>
+                    <p style={{ fontSize: '0.9rem', fontWeight: 500, color: plan.featured ? 'rgba(255,255,255,0.7)' : '#666', margin: '0 0 12px 0' }}>
+                      {plan.priceType === 'yearly' ? 'for the 1st year' : 'for the 1st year'}
+                    </p>
+                    <p style={{ fontSize: '0.9rem', fontWeight: 500, color: plan.featured ? 'rgba(255,255,255,0.7)' : '#666', margin: '0 0 16px 0' }}>
+                      then <span style={{ fontSize: '1.2rem', fontWeight: 900, color: plan.featured ? '#fff' : '#0d1f1c' }}>US${plan.priceYear2Plus}</span> 
+                      <span style={{ fontSize: '0.75rem' }}>{plan.priceType === 'yearly' ? '/year' : '/month'}</span>
+                    </p>
+
+                    {/* Description */}
+                    {plan.description && (
+                      <p style={{ fontSize: '0.9rem', lineHeight: '1.5', color: plan.featured ? 'rgba(255,255,255,0.85)' : '#333', margin: '0 0 12px 0' }}>
+                        {plan.description}
+                      </p>
+                    )}
+
+                    {/* Context */}
+                    {plan.context && (
+                      <p style={{ fontSize: '0.9rem', lineHeight: '1.5', color: plan.featured ? 'rgba(255,255,255,0.8)' : '#555', margin: '0 0 16px 0', fontStyle: 'italic' }}>
+                        {plan.context}
+                      </p>
+                    )}
+
                     <div className="plan-divider" />
-                    <ul className="plan-features">
-                      {plan.features.map((f, j) => (
-                        <li key={j}>
-                          <FontAwesomeIcon icon={faCircleCheck} />
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
+
+                    {/* What's Included */}
+                    <div style={{ marginBottom: '20px' }}>
+                      <p style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', tracking: '2px', color: plan.featured ? 'rgba(255,255,255,0.6)' : '#666', marginBottom: '8px' }}>
+                        What's Included
+                      </p>
+                      <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {plan.included.map((item, j) => (
+                          <li key={j} style={{ fontSize: '0.85rem', color: plan.featured ? 'rgba(255,255,255,0.85)' : '#333', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                            <span style={{ color: plan.featured ? '#3dffc0' : '#0f8972', fontWeight: 900, marginTop: '2px' }}>•</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* How It Works */}
+                    <div style={{ marginBottom: '20px', paddingBottom: '16px', borderBottom: `1px solid ${plan.featured ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'}` }}>
+                      <p style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', tracking: '2px', color: plan.featured ? 'rgba(255,255,255,0.6)' : '#666', marginBottom: '12px' }}>
+                        How It Works
+                      </p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        {plan.howItWorks.map((item, j) => (
+                          <div key={j} style={{ display: 'flex', gap: '12px' }}>
+                            <div style={{ minWidth: '24px', height: '24px', borderRadius: '50%', background: plan.featured ? 'rgba(61,255,192,0.2)' : '#f0faf7', border: `2px solid ${plan.featured ? '#3dffc0' : '#0f8972'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.7rem', fontWeight: 900, color: plan.featured ? '#3dffc0' : '#0f8972', flexShrink: 0 }}>
+                              {j + 1}
+                            </div>
+                            <div>
+                              <p style={{ fontSize: '0.8rem', fontWeight: 700, color: plan.featured ? 'rgba(255,255,255,0.9)' : '#0d1f1c', margin: '0 0 2px 0' }}>{item.title}</p>
+                              <p style={{ fontSize: '0.75rem', color: plan.featured ? 'rgba(255,255,255,0.7)' : '#666', margin: 0 }}>{item.desc}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Why Choose */}
+                    <div style={{ marginBottom: '20px' }}>
+                      <p style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', tracking: '2px', color: plan.featured ? 'rgba(255,255,255,0.6)' : '#666', marginBottom: '8px' }}>
+                        {plan.priceType === 'yearly' ? 'Immediate Benefits' : 'Why Choose the Monthly Plan?'}
+                      </p>
+                      <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {plan.whyChoose.map((reason, j) => (
+                          <li key={j} style={{ fontSize: '0.85rem', color: plan.featured ? 'rgba(255,255,255,0.85)' : '#333', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                            <span style={{ color: plan.featured ? '#3dffc0' : '#0f8972', fontWeight: 900, marginTop: '2px' }}>•</span>
+                            <span>{reason}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Renewal Info */}
+                    {plan.renewal && (
+                      <div style={{ marginBottom: '20px', paddingTop: '16px', paddingBottom: '16px', borderTop: `1px solid ${plan.featured ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'}`, borderBottom: `1px solid ${plan.featured ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'}` }}>
+                        <p style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', tracking: '2px', color: plan.featured ? 'rgba(255,255,255,0.6)' : '#666', marginBottom: '8px' }}>
+                          Renewal
+                        </p>
+                        <p style={{ fontSize: '0.85rem', color: plan.featured ? 'rgba(255,255,255,0.85)' : '#333', margin: 0, lineHeight: '1.5' }}>
+                          {plan.renewal}
+                        </p>
+                      </div>
+                    )}
+
                     <Link to="/partnership" className="plan-cta">
                       {plan.cta} <FontAwesomeIcon icon={faArrowRight} />
                     </Link>
@@ -558,6 +689,14 @@ export default function Investors() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Footer note */}
+          <div style={{ textAlign: 'center', marginTop: '32px', paddingTop: '24px', borderTop: '1px solid rgba(0,0,0,0.1)' }}>
+            <p style={{ fontSize: '0.85rem', color: '#666', margin: 0, display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center' }}>
+              <span style={{ fontSize: '1.2rem' }}>🛡️</span>
+              <span>All plans include long-term land security, sustainable farming practices, and our commitment to quality, transparency, and your success.</span>
+            </p>
           </div>
         </div>
       </section>
