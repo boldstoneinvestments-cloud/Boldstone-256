@@ -1042,7 +1042,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .offer-card { height: 215px; }
   .offer-card:nth-child(3),
   .offer-card:nth-child(4),
-  .offer-card:nth-child(5) { height: 250px; }
+  .offer-card:nth-child(6) { height: 250px; }
   .offer-card:hover { transform: translateY(-3px); }
   .offer-card-back { transform: translate(4px, 4px); border-radius: 16px; }
   .offer-card-inner { border-radius: 16px; }
