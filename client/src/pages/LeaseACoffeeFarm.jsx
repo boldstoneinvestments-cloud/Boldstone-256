@@ -734,153 +734,254 @@ export default function Investors() {
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(0, 0, 0, 0.6)',
+          background: 'rgba(0, 0, 0, 0.7)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 1000,
-          padding: '20px',
+          padding: '12px',
+          backdropFilter: 'blur(3px)',
         }}>
           <div style={{
             background: '#fff',
-            borderRadius: '12px',
-            maxWidth: '900px',
+            borderRadius: '16px',
+            maxWidth: '1000px',
             width: '100%',
-            maxHeight: '80vh',
-            overflow: 'auto',
-            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
+            maxHeight: '90vh',
+            overflow: 'hidden',
+            boxShadow: '0 20px 60px rgba(15, 137, 114, 0.15), 0 0 1px rgba(0, 0, 0, 0.1)',
+            border: '1px solid rgba(15, 137, 114, 0.1)',
+            display: 'flex',
+            flexDirection: 'column',
           }}>
             {/* Modal Header */}
             <div style={{
-              padding: '24px',
-              borderBottom: '1px solid #e5e7eb',
+              padding: 'clamp(20px, 5vw, 32px)',
+              background: 'linear-gradient(135deg, #0a6b58 0%, #0f8972 100%)',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
+              borderBottom: '1px solid rgba(15, 137, 114, 0.2)',
+              flexShrink: 0,
             }}>
-              <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#0d1f1c', margin: 0 }}>
-                Plan Comparison
-              </h2>
+              <div>
+                <p style={{ 
+                  fontSize: 'clamp(9px, 2.5vw, 11px)', 
+                  fontWeight: 800, 
+                  letterSpacing: '2px', 
+                  textTransform: 'uppercase', 
+                  color: '#7ecfc4', 
+                  margin: '0 0 8px 0' 
+                }}>
+                  Side by Side
+                </p>
+                <h2 style={{ fontSize: 'clamp(20px, 6vw, 32px)', fontWeight: 900, color: '#fff', margin: 0 }}>
+                  Plan Comparison
+                </h2>
+              </div>
               <button
                 onClick={() => setShowComparison(false)}
                 style={{
-                  background: 'none',
+                  background: 'rgba(255, 255, 255, 0.15)',
                   border: 'none',
-                  fontSize: '24px',
+                  fontSize: 'clamp(20px, 4vw, 28px)',
                   cursor: 'pointer',
-                  color: '#999',
+                  color: '#fff',
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                  flexShrink: 0,
+                  marginLeft: '12px',
+                  minWidth: '48px',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.25)'
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.15)'
                 }}
               >
                 ✕
               </button>
             </div>
 
-            {/* Table */}
-            <div style={{ padding: '24px', overflowX: 'auto' }}>
+            {/* Table Container */}
+            <div style={{ 
+              padding: 'clamp(16px, 4vw, 32px)', 
+              overflowY: 'auto', 
+              overflowX: 'auto',
+              flex: 1,
+            }}>
               <table style={{
                 width: '100%',
                 borderCollapse: 'collapse',
-              }}>
+              }} className="comparison-table">
                 <thead>
-                  <tr style={{ borderBottom: '2px solid #0f8972' }}>
+                  <tr>
                     <th style={{
-                      padding: '12px',
+                      padding: 'clamp(12px, 2vw, 16px) clamp(12px, 3vw, 20px)',
                       textAlign: 'left',
-                      fontSize: '14px',
+                      fontSize: 'clamp(10px, 2.5vw, 12px)',
                       fontWeight: 900,
                       color: '#0d1f1c',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.5px',
+                      letterSpacing: '1px',
+                      background: '#f0faf7',
+                      borderBottom: '2px solid #0f8972',
+                      borderLeft: '1.5px solid #d1d5db',
+                      borderRight: '1.5px solid #d1d5db',
+                      borderTop: '1.5px solid #d1d5db',
+                      borderRadius: '8px 0 0 0',
+                      whiteSpace: 'nowrap',
                     }}>
                       Feature
                     </th>
                     <th style={{
-                      padding: '12px',
-                      textAlign: 'left',
-                      fontSize: '14px',
+                      padding: 'clamp(12px, 2vw, 16px) clamp(12px, 3vw, 20px)',
+                      textAlign: 'center',
+                      fontSize: 'clamp(10px, 2.5vw, 12px)',
                       fontWeight: 900,
-                      color: '#0d1f1c',
+                      color: '#0f8972',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.5px',
+                      letterSpacing: '1px',
+                      background: '#f0faf7',
+                      borderBottom: '2px solid #0f8972',
+                      borderLeft: '1.5px solid #d1d5db',
+                      borderRight: '1.5px solid #d1d5db',
+                      borderTop: '1.5px solid #d1d5db',
+                      position: 'relative',
+                      whiteSpace: 'nowrap',
                     }}>
-                      Monthly Plan
+                      Monthly
                     </th>
                     <th style={{
-                      padding: '12px',
-                      textAlign: 'left',
-                      fontSize: '14px',
+                      padding: 'clamp(12px, 2vw, 16px) clamp(12px, 3vw, 20px)',
+                      textAlign: 'center',
+                      fontSize: 'clamp(10px, 2.5vw, 12px)',
                       fontWeight: 900,
-                      color: '#0d1f1c',
+                      color: '#0f8972',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.5px',
+                      letterSpacing: '1px',
+                      background: 'linear-gradient(135deg, rgba(15, 137, 114, 0.08), rgba(61, 255, 192, 0.05))',
+                      borderBottom: '2px solid #0f8972',
+                      borderLeft: '1.5px solid #d1d5db',
+                      borderRight: '1.5px solid #d1d5db',
+                      borderTop: '1.5px solid #d1d5db',
+                      borderRadius: '0 8px 0 0',
+                      whiteSpace: 'nowrap',
                     }}>
-                      Annual Plan
+                      Annual
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {comparisonData.map((row, idx) => (
-                    <tr
-                      key={idx}
-                      style={{
-                        borderBottom: '1px solid #e5e7eb',
-                        background: idx % 2 === 0 ? '#f9fafb' : '#fff',
-                      }}
-                    >
-                      <td style={{
-                        padding: '14px 12px',
-                        fontSize: '14px',
-                        fontWeight: 600,
-                        color: '#0d1f1c',
-                      }}>
-                        {row.feature}
-                      </td>
-                      <td style={{
-                        padding: '14px 12px',
-                        fontSize: '14px',
-                        color: '#333',
-                      }}>
-                        {row.monthly}
-                      </td>
-                      <td style={{
-                        padding: '14px 12px',
-                        fontSize: '14px',
-                        color: '#333',
-                      }}>
-                        {row.annual}
-                      </td>
-                    </tr>
-                  ))}
+                  {comparisonData.map((row, idx) => {
+                    const isLastRow = idx === comparisonData.length - 1
+                    const isBoldRow = row.feature === 'Payment'
+                    return (
+                      <tr key={idx}>
+                        <td style={{
+                          padding: 'clamp(12px, 2vw, 16px) clamp(12px, 3vw, 20px)',
+                          fontSize: 'clamp(11px, 2.2vw, 14px)',
+                          fontWeight: isBoldRow ? 600 : 500,
+                          color: '#0d1f1c',
+                          background: idx % 2 === 0 ? '#ffffff' : '#f9fafb',
+                          borderBottom: '1.5px solid #d1d5db',
+                          borderLeft: '1.5px solid #d1d5db',
+                          borderRight: '1.5px solid #d1d5db',
+                          borderRadius: isLastRow ? '0 0 0 8px' : '0',
+                          minWidth: '140px',
+                        }}>
+                          {row.feature}
+                        </td>
+                        <td style={{
+                          padding: 'clamp(12px, 2vw, 16px) clamp(12px, 3vw, 20px)',
+                          fontSize: 'clamp(11px, 2.2vw, 14px)',
+                          fontWeight: isBoldRow ? 500 : 400,
+                          color: '#555',
+                          background: idx % 2 === 0 ? '#ffffff' : '#f9fafb',
+                          borderBottom: '1.5px solid #d1d5db',
+                          borderLeft: '1.5px solid #d1d5db',
+                          borderRight: '1.5px solid #d1d5db',
+                          textAlign: 'center',
+                          minWidth: '100px',
+                        }}>
+                          {row.monthly}
+                        </td>
+                        <td style={{
+                          padding: 'clamp(12px, 2vw, 16px) clamp(12px, 3vw, 20px)',
+                          fontSize: 'clamp(11px, 2.2vw, 14px)',
+                          fontWeight: isBoldRow ? 600 : 400,
+                          color: '#0f8972',
+                          background: idx % 2 === 0 
+                            ? 'rgba(15, 137, 114, 0.03)' 
+                            : 'rgba(15, 137, 114, 0.06)',
+                          borderBottom: '1.5px solid #d1d5db',
+                          borderLeft: '1.5px solid #d1d5db',
+                          borderRight: '1.5px solid #d1d5db',
+                          textAlign: 'center',
+                          borderRadius: isLastRow ? '0 0 8px 0' : '0',
+                          minWidth: '100px',
+                        }}>
+                          {row.annual}
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
+
+              {/* Info Text - appears after scrolling */}
+              <div style={{ padding: '24px 0 0 0', marginTop: '16px' }}>
+                <p style={{
+                  fontSize: 'clamp(12px, 2.5vw, 14px)',
+                  lineHeight: '1.6',
+                  color: '#555',
+                  margin: 0,
+                  fontWeight: 400,
+                }}>
+                  Both plans are designed to help you build a productive coffee farm without purchasing land, while benefiting from Boldstone's expertise in coffee agronomy, farm management, and market access.
+                </p>
+              </div>
             </div>
 
             {/* Modal Footer */}
             <div style={{
-              padding: '20px 24px',
+              padding: 'clamp(16px, 3vw, 24px) clamp(16px, 4vw, 32px)',
               borderTop: '1px solid #e5e7eb',
+              background: '#f9fafb',
               display: 'flex',
               gap: '12px',
               justifyContent: 'flex-end',
+              alignItems: 'center',
+              flexShrink: 0,
             }}>
               <button
                 onClick={() => setShowComparison(false)}
                 style={{
-                  padding: '10px 20px',
-                  fontSize: '14px',
+                  padding: 'clamp(10px, 2vw, 12px) clamp(16px, 4vw, 28px)',
+                  fontSize: 'clamp(12px, 2.5vw, 14px)',
                   fontWeight: 700,
-                  border: '1px solid #0f8972',
-                  background: 'none',
-                  color: '#0f8972',
-                  borderRadius: '6px',
+                  border: 'none',
+                  background: 'linear-gradient(135deg, #0a6b58, #0f8972)',
+                  color: '#fff',
+                  borderRadius: '8px',
                   cursor: 'pointer',
                   transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 12px rgba(15, 137, 114, 0.2)',
+                  whiteSpace: 'nowrap',
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.background = '#f0faf7'
+                  e.target.style.boxShadow = '0 6px 20px rgba(15, 137, 114, 0.3)'
+                  e.target.style.transform = 'translateY(-2px)'
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.background = 'none'
+                  e.target.style.boxShadow = '0 4px 12px rgba(15, 137, 114, 0.2)'
+                  e.target.style.transform = 'translateY(0)'
                 }}
               >
                 Close
