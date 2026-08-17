@@ -1022,6 +1022,11 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   box-shadow: 0 8px 28px rgba(0,0,0,0.25);
 }
 
+/* FARMERS PAGE - WHY SECTION OFFER CARDS (Desktop) */
+.why-section .offer-card {
+  height: 200px;
+}
+
 /* FARMERS RESPONSIVE */
 @media (max-width: 1024px) {
   .offer-grid { grid-template-columns: 1fr 1fr; gap: 44px 24px; }
@@ -1031,6 +1036,17 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .offer-card-inner::before { width: 80px; height: 60px; }
   .offer-card-inner::after { width: 44px; height: 58px; }
   .offer-card-back { transform: translate(4px, 4px); }
+  
+  /* FARMERS PAGE - WHY SECTION OFFER CARDS (Tablet) */
+  .why-section .offer-card {
+    height: 180px;
+  }
+  .why-section .offer-card:nth-child(3) {
+    height: 180px;
+  }
+  .why-section .offer-card:nth-child(4) {
+    height: 180px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1048,6 +1064,20 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .offer-card:hover { transform: translateY(-3px); }
   .offer-card-back { transform: translate(4px, 4px); border-radius: 16px; }
   .offer-card-inner { border-radius: 16px; }
+  
+  /* FARMERS PAGE - WHY SECTION OFFER CARDS (Mobile) */
+  .why-section .offer-card {
+    height: 170px;
+  }
+  .why-section .offer-card:nth-child(3) {
+    height: 170px;
+  }
+  .why-section .offer-card:nth-child(4) {
+    height: 170px;
+  }
+  .why-section .offer-card:nth-child(6) {
+    height: 170px;
+  }
   .offer-card-inner::before { top: 8px; right: 8px; width: 70px; height: 55px; border-top-right-radius: 12px; }
   .offer-card-inner::after { bottom: 8px; left: 8px; width: 40px; height: 52px; border-bottom-left-radius: 12px; }
   .offer-card-content { padding: 24px 20px 0 24px; }
