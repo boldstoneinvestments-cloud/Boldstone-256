@@ -78,5 +78,14 @@ app.post('/api/estate/invest', (req, res) => {
   })
 })
 
-const PORT = 3001
+// Serve static files from client/dist
+const path = require('path')
+app.use(express.static(path.join(__dirname, '../client/dist')))
+
+// Serve index.html for all non-API routes (React Router SPA support)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'))
+})
+
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => console.log(`Boldstone API running on http://localhost:${PORT}`))
