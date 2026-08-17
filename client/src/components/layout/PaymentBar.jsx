@@ -1,12 +1,12 @@
 const MAIN_METHODS = [
-  { label: 'Visa',         logo: './images/Visa logo.png' },
-  { label: 'Mastercard',  logo: './images/mastercard-logo.png' },
-  { label: 'Amex',        logo: './images/American_Express_logo.webp', raw: true },
-  { label: 'Google Pay',  logo: './images/google-pay logo.png' },
-  { label: 'Apple Pay',   logo: './images/Apple_Pay-Logo.wine.svg' },
-  { label: 'OPay',        logo: './images/opay logo.png' },
-  { label: 'MTN MoMo',    logo: './images/MTN MoMo.jpg',   raw: true },
-  { label: 'Airtel Money', logo: './images/Airtel Money.png' },
+  { label: 'Visa',         logo: '/images/Visa logo.png' },
+  { label: 'Mastercard',  logo: '/images/mastercard-logo.png' },
+  { label: 'Amex',        logo: '/images/American_Express_logo.webp', raw: true },
+  { label: 'Google Pay',  logo: '/images/google-pay logo.png' },
+  { label: 'Apple Pay',   logo: '/images/Apple_Pay-Logo.wine.svg' },
+  { label: 'OPay',        logo: '/images/opay logo.png' },
+  { label: 'MTN MoMo',    logo: '/images/MTN MoMo.jpg',   raw: true },
+  { label: 'Airtel Money', logo: '/images/Airtel Money.png' },
 ]
 
 const protect = { onContextMenu: e => e.preventDefault(), draggable: false }
