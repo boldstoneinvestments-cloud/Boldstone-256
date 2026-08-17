@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 const quickLinks = [
   { to: '/', label: 'Home' },
   { to: '/farmers', label: 'For Farmers' },
-  { to: '/investors', label: 'For Investors' },
+  { to: '/investors', label: 'Lease A Coffee Farm' },
   { to: '/partnership', label: 'Partnerships' },
   { to: '/about', label: 'About Us' },
   { to: '/blog', label: 'Blog' },
