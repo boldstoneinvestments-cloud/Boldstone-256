@@ -1,12 +1,21 @@
+import visaLogo from '../../assets/Visa logo.png'
+import mastercardLogo from '../../assets/mastercard-logo.png'
+import amexLogo from '../../assets/American_Express_logo.webp'
+import googlePayLogo from '../../assets/google-pay logo.png'
+import applePayLogo from '../../assets/Apple_Pay-Logo.wine.png'
+import opayLogo from '../../assets/opay logo.png'
+import mtnLogo from '../../assets/MTN MoMo.jpg'
+import airtelLogo from '../../assets/Airtel Money.png'
+
 const MAIN_METHODS = [
-  { label: 'Visa',         logo: '/images/Visa logo.png' },
-  { label: 'Mastercard',  logo: '/images/mastercard-logo.png' },
-  { label: 'Amex',        logo: '/images/American_Express_logo.webp', raw: true },
-  { label: 'Google Pay',  logo: '/images/google-pay logo.png' },
-  { label: 'Apple Pay',   logo: '/images/Apple_Pay-Logo.wine.svg' },
-  { label: 'OPay',        logo: '/images/opay logo.png' },
-  { label: 'MTN MoMo',    logo: '/images/MTN MoMo.jpg',   raw: true },
-  { label: 'Airtel Money', logo: '/images/Airtel Money.png' },
+  { label: 'Visa',         logo: visaLogo },
+  { label: 'Mastercard',  logo: mastercardLogo },
+  { label: 'Amex',        logo: amexLogo, raw: true },
+  { label: 'Google Pay',  logo: googlePayLogo },
+  { label: 'Apple Pay',   logo: applePayLogo },
+  { label: 'OPay',        logo: opayLogo },
+  { label: 'MTN MoMo',    logo: mtnLogo,   raw: true },
+  { label: 'Airtel Money', logo: airtelLogo },
 ]
 
 const protect = { onContextMenu: e => e.preventDefault(), draggable: false }
