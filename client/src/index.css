@@ -593,17 +593,9 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .offer-card {
   position: relative;
   width: 100%;
-  height: 245px;
+  height: 280px;
   transform: none;
   transition: transform 0.35s ease;
-}
-
-.offer-card:nth-child(3) {
-  height: 280px;
-}
-
-.offer-card:nth-child(4) {
-  height: 270px;
 }
 
 .offer-card:hover {
