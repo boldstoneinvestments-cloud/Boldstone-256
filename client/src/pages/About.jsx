@@ -12,7 +12,7 @@ const tickerItem = (
       Boldstone Announces UGX 500 Million (US $140,000) Equity &amp; Debt Financing Plan to Build
       Coffee Processing Infrastructure and Empower Smallholder Farmers in Uganda.
     </span>
-    <a className="tk-link" href="https://www.boldstoneinvestments.com/blog/news-2/boldstone-to-raise-us-140-000-pre-seed-investment-6">
+    <a className="tk-link" href="https://www.boldstoneinvestments.com/#/blog">
       Read More →
     </a>
   </span>

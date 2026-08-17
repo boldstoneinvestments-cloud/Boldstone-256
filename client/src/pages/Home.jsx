@@ -40,7 +40,7 @@ const tickerItem = (
     </span>
     <a
       className="tk-link"
-      href="https://www.boldstoneinvestments.com/blog/news-2/boldstone-to-raise-us-140-000-pre-seed-investment-6"
+      href="https://www.boldstoneinvestments.com/#/blog"
     >
       Read More →
     </a>
