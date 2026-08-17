@@ -143,8 +143,8 @@ const plans = [
   {
     badge: 'POPULAR CHOICE',
     name: 'Starter Plan',
-    priceYear1: 48,
-    priceYear2Plus: 18,
+    priceYear1: 49.99,
+    priceYear2Plus: 19.99,
     description: 'Ideal for individuals, young professionals, individuals in the diaspora, and first-time coffee farmers who want to start with a manageable monthly commitment. You don\'t have to be a Ugandan to subscribe.',
     included: [
       'Annual lease of 1 acre of coffee farmland',
@@ -217,7 +217,7 @@ function FitBounds() {
 
 // ── PAGE ──────────────────────────────────────────────────────────────────────
 const comparisonData = [
-  { feature: 'Payment', monthly: 'US$48/month', annual: 'US$480/year' },
+  { feature: 'Payment', monthly: 'US$49.99/month', annual: 'US$499/year' },
   { feature: 'Land Lease Included', monthly: 'Yes', annual: 'Yes' },
   { feature: 'Coffee Seedlings Included', monthly: 'Yes', annual: 'Yes' },
   { feature: 'Indigenous Tree Seedlings', monthly: 'Yes', annual: 'Yes' },
@@ -225,7 +225,7 @@ const comparisonData = [
   { feature: 'Farm Establishment Begins', monthly: 'Month 7', annual: 'Immediately' },
   { feature: 'Agronomy Support', monthly: 'Yes', annual: 'Yes' },
   { feature: 'Farm Progress Updates', monthly: 'Yes', annual: 'Yes' },
-  { feature: 'Renewal After Year 1', monthly: 'US$18/month or US$180/year', annual: 'US$180/year' },
+  { feature: 'Renewal After Year 1', monthly: 'US$19.99/month', annual: 'US$199/year' },
   { feature: 'Best For', monthly: 'Salaried individuals, diaspora, first-time farmers', annual: 'Businesses, investors, and clients with available capital' },
 ]
 
@@ -599,19 +599,45 @@ export default function Investors() {
                     <p className="plan-name">{plan.name}</p>
                     
                     {/* Pricing */}
-                    <div style={{ fontSize: '2rem', fontWeight: 900, lineHeight: 1, color: plan.featured ? '#fff' : '#0d1f1c', margin: '12px 0 4px' }}>
-                      <span style={{ fontSize: '1rem' }}>US${plan.priceYear1}</span>
-                      <span style={{ fontSize: '0.9rem', fontWeight: 400, color: plan.featured ? 'rgba(255,255,255,0.65)' : '#888' }}>
-                        {plan.priceType === 'yearly' ? '/year' : '/month'}
-                      </span>
-                    </div>
-                    <p style={{ fontSize: '0.9rem', fontWeight: 500, color: plan.featured ? 'rgba(255,255,255,0.7)' : '#666', margin: '0 0 12px 0' }}>
-                      {plan.priceType === 'yearly' ? 'for the 1st year' : 'for the 1st year'}
-                    </p>
-                    <p style={{ fontSize: '0.9rem', fontWeight: 500, color: plan.featured ? 'rgba(255,255,255,0.7)' : '#666', margin: '0 0 16px 0' }}>
-                      then <span style={{ fontSize: '1rem', fontWeight: 900, color: plan.featured ? '#fff' : '#0d1f1c' }}>US${plan.priceYear2Plus}</span> 
-                      <span style={{ fontSize: '0.75rem' }}>{plan.priceType === 'yearly' ? '/year' : '/month'}</span>
-                    </p>
+                    {i === 0 ? (
+                      <p style={{
+                        fontSize: '0.8rem',
+                        fontWeight: 700,
+                        lineHeight: 1.2,
+                        color: '#fff',
+                        margin: '12px 0 16px',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}>
+                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>
+                          US$49.99/month
+                        </span>
+                        {' '}for the 1st year, Renews at{' '}
+                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>
+                          US$19.99/month
+                        </span>
+                      </p>
+                    ) : (
+                      <p style={{
+                        fontSize: '0.8rem',
+                        fontWeight: 700,
+                        lineHeight: 1.2,
+                        color: plan.featured ? '#fff' : '#0d1f1c',
+                        margin: '12px 0 16px',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                      }}>
+                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: plan.featured ? '#fff' : '#0d1f1c' }}>
+                          US$499/year
+                        </span>
+                        {' '}for the 1st year, Renews at{' '}
+                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: plan.featured ? '#fff' : '#0d1f1c' }}>
+                          US$199/year
+                        </span>
+                      </p>
+                    )}
 
                     {/* Description */}
                     {plan.description && (
@@ -637,18 +663,7 @@ export default function Investors() {
                       </ul>
                     </div>
 
-                    {/* Renewal section for Growth Plan */}
-                    {i === 1 && (
-                      <div style={{ marginBottom: '20px' }}>
-                        <p style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', tracking: '2px', color: plan.featured ? 'rgba(255,255,255,0.6)' : '#666', marginBottom: '8px' }}>
-                          Renewal
-                        </p>
-                        <p style={{ fontSize: '0.9rem', color: plan.featured ? 'rgba(255,255,255,0.85)' : '#333', lineHeight: '1.6', margin: 0 }}>
-                          After the first year, your subscription renews at US$180/year for continued land access, farm management, and agronomy support.
-                        </p>
-                      </div>
-                    )}
-
+                    {/* Learn More Button */}
                     {/* Learn More Button */}
                     <div style={{ marginTop: 'auto' }}>
                     {i === 0 && (
@@ -753,7 +768,7 @@ export default function Investors() {
       </section>
 
       {/* Why Lease Section */}
-      <section style={{
+      <section className="lease-why-section" style={{
         padding: '56px 24px',
         position: 'relative',
         backgroundImage: "url('https://address-restaurant2.odoo.com/web/image/2019-9db78ec6/background%20image.webp')",
@@ -1238,7 +1253,7 @@ export default function Investors() {
                           textAlign: 'center',
                           minWidth: '100px',
                         }}>
-                          {row.monthly}
+                          {row.monthly === 'Yes' ? <span style={{fontWeight: 700, fontSize: '18px'}}>✓</span> : row.monthly}
                         </td>
                         <td style={{
                           padding: 'clamp(12px, 2vw, 16px) clamp(12px, 3vw, 20px)',
@@ -1255,7 +1270,7 @@ export default function Investors() {
                           borderRadius: isLastRow ? '0 0 8px 0' : '0',
                           minWidth: '100px',
                         }}>
-                          {row.annual}
+                          {row.annual === 'Yes' ? <span style={{fontWeight: 700, fontSize: '18px'}}>✓</span> : row.annual}
                         </td>
                       </tr>
                     )
