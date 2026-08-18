@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBullhorn, faShieldHalved, faPeopleGroup, faHeart, faComments, faArrowLeft,
@@ -157,6 +158,26 @@ export default function About() {
 
   return (
     <div>
+      <Helmet>
+        <title>About Boldstone Investments | Coffee Farming in Uganda</title>
+        <meta name="description" content="Learn how Boldstone is building sustainable coffee farming in Uganda through commercial agriculture, farmer partnerships, coffee processing, agronomy, technology, and global market access." />
+        <meta name="keywords" content="Boldstone Investments, Boldstone Uganda, Boldstone Investments Uganda, about Boldstone, Boldstone story, Boldstone coffee, coffee company Uganda, coffee farming company Uganda, coffee investment company Uganda, coffee agriculture Uganda, coffee farming Uganda, commercial coffee farming Uganda, large scale coffee farming Uganda, commercial agriculture Uganda, agricultural company Uganda, agribusiness Uganda, agribusiness company Uganda, agricultural investment Uganda, coffee industry Uganda, Uganda coffee industry, Uganda coffee sector, Uganda coffee market, Uganda coffee production, coffee production Uganda, coffee farmers Uganda, coffee farmer partnerships Uganda, coffee farming partnerships, coffee farmer support Uganda, smallholder coffee farmers Uganda, smallholder coffee farming Uganda, coffee cooperatives Uganda, coffee cooperative societies Uganda, coffee farmer cooperatives, coffee farming challenges Uganda, coffee land Uganda, agricultural land Uganda, farmland Uganda, coffee farm development Uganda, coffee estate Uganda, coffee estates Uganda, coffee plantation Uganda, coffee plantation development Uganda, coffee farm management Uganda, professional coffee farm management, sustainable coffee farming Uganda, sustainable agriculture Uganda, sustainable coffee production Uganda, regenerative agriculture Uganda, coffee agroforestry Uganda, coffee farming technology Uganda, digital agriculture Uganda, digital farming Uganda, agricultural technology Uganda, farmer digital platform Uganda, coffee farmer digital platform, coffee farming information Uganda, coffee farming knowledge, coffee market information Uganda, coffee market prices Uganda, coffee price information Uganda, coffee pest management Uganda, coffee disease management Uganda, coffee farming best practices Uganda, coffee agronomy Uganda, coffee agronomy support, coffee farmer education Uganda, coffee farmer training Uganda, coffee farming advisory services, agricultural advisory services Uganda, coffee value addition Uganda, coffee value chain Uganda, Uganda coffee value chain, coffee processing Uganda, coffee processing at source, coffee processing facilities Uganda, coffee hulling Uganda, coffee drying Uganda, coffee processing infrastructure, coffee value addition at source, coffee supply chain Uganda, coffee trade Uganda, coffee export Uganda, Uganda coffee exports, African coffee, African coffee production, African coffee exports, African coffee markets, coffee market access Uganda, local coffee markets, global coffee markets, coffee export market, coffee business Uganda, coffee enterprise Uganda, agricultural enterprise Uganda, sustainable agribusiness Uganda, agricultural innovation Uganda, coffee innovation Uganda, coffee technology company Uganda, agricultural technology company Uganda, farmer-first agriculture, farmer-first approach, farmer support platform, coffee ecosystem Uganda, coffee industry development Uganda, agricultural development Uganda, coffee farming opportunities Uganda, coffee investment opportunities Uganda, coffee farming investment Uganda, coffee estate investment Uganda, coffee land leasing Uganda, coffee farm leasing Uganda, agricultural land leasing Uganda, coffee farm partnership opportunities, coffee investor partnerships, coffee farmer investor partnerships, coffee industry partnerships Uganda, coffee business partnerships Uganda, coffee value chain partnerships, coffee market access partnerships, sustainable coffee business, sustainable coffee enterprise, professionally managed coffee farms, traceable coffee Uganda, single-origin coffee Uganda, single-origin coffee estate Uganda, traceable coffee farming, coffee sustainability Uganda, coffee quality Uganda, coffee production systems, coffee farm productivity, coffee yield improvement Uganda, coffee quality improvement, coffee farmer income Uganda, coffee farmer livelihoods, agricultural livelihoods Uganda, coffee farming profitability, coffee farming business Uganda, coffee farming for commercial production, African agricultural investment, Pan-African investment, African investment company, alternative asset investment Africa, asset backed investment Africa, African investment fund, Pan-African investment fund, sustainable investment Africa, impact investment Africa, agricultural investment Africa, coffee investment Africa, coffee industry investment Africa, coffee value chain investment Africa" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://www.boldstoneinvestments.com/about" />
+        
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Boldstone Investments" />
+        <meta property="og:title" content="Our Story | Boldstone Investments | Coffee Farming in Uganda" />
+        <meta property="og:description" content="Discover Boldstone's journey to build sustainable coffee farms, support smallholder farmers, add value at source, and connect African-grown coffee with local and global markets." />
+        <meta property="og:url" content="https://www.boldstoneinvestments.com/about" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Our Story | Boldstone Investments | Coffee Farming in Uganda" />
+        <meta name="twitter:description" content="Discover Boldstone's journey to build sustainable coffee farms, support smallholder farmers, add value at source, and connect African-grown coffee with local and global markets." />
+      </Helmet>
+
       {/* ADVERT TICKER */}
       <div className="advert-banner">
         <div className="advert-ticker">
