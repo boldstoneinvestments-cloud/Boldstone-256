@@ -28,7 +28,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/investors" element={<LeaseACoffeeFarm />} />
+          <Route path="/lease-a-coffee-farm" element={<LeaseACoffeeFarm />} />
           <Route path="/farmers" element={<Farmers />} />
           <Route path="/partnership" element={<Partnership />} />
           <Route path="/contact" element={<Contact />} />
@@ -37,7 +37,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      {!['/','/about','/blog','/contact','/partnership'].includes(useLocation().pathname) && <PaymentBar />}
+      {!['/','/about','/blog','/contact','/partnership','/lease-a-coffee-farm'].includes(useLocation().pathname) && <PaymentBar />}
       <Footer />
     </div>
   )
