@@ -601,39 +601,42 @@ export default function Investors() {
                     {/* Pricing */}
                     {i === 0 ? (
                       <p style={{
-                        fontSize: '0.8rem',
+                        fontSize: 'clamp(0.65rem, 2vw, 0.8rem)',
                         fontWeight: 700,
-                        lineHeight: 1.2,
+                        lineHeight: 1.5,
                         color: '#fff',
                         margin: '12px 0 16px',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
+                        wordWrap: 'break-word',
+                        overflowWrap: 'break-word',
+                        whiteSpace: 'normal',
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: '0.3rem',
                       }}>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>
+                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap' }}>
                           US$49.99/month
                         </span>
-                        {' '}for the 1st year, Renews at{' '}
-                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>
+                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#fff' }}>for the 1st year,</span>
+                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#fff' }}>Renews at</span>
+                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap' }}>
                           US$19.99/month
                         </span>
                       </p>
                     ) : (
                       <p style={{
-                        fontSize: '0.8rem',
+                        fontSize: 'clamp(0.65rem, 2vw, 0.8rem)',
                         fontWeight: 700,
-                        lineHeight: 1.2,
+                        lineHeight: 1.3,
                         color: plan.featured ? '#fff' : '#0d1f1c',
                         margin: '12px 0 16px',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
+                        wordWrap: 'break-word',
+                        overflowWrap: 'break-word',
                       }}>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: plan.featured ? '#fff' : '#0d1f1c' }}>
+                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: plan.featured ? '#fff' : '#0d1f1c' }}>
                           US$499/year
                         </span>
                         {' '}for the 1st year, Renews at{' '}
-                        <span style={{ fontSize: '0.8rem', fontWeight: 700, color: plan.featured ? '#fff' : '#0d1f1c' }}>
+                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: plan.featured ? '#fff' : '#0d1f1c' }}>
                           US$199/year
                         </span>
                       </p>
