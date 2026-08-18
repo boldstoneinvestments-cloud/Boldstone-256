@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faArrowRight, faRulerCombined, faMountain, faCloudRain, faLayerGroup, faLocationDot, faChartPie, faBullhorn } from '@fortawesome/free-solid-svg-icons'
 import { MapContainer, TileLayer, Polygon, Tooltip, useMap } from 'react-leaflet'
@@ -277,6 +278,25 @@ export default function Investors() {
 
   return (
     <div>
+      <Helmet>
+        <title>Lease a Coffee Farm in Uganda | Boldstone Investments</title>
+        <meta name="description" content="Lease a coffee farm in Uganda with Boldstone. Start with 1 acre through a professionally managed, sustainable single-origin coffee estate with agronomy support and farm management." />
+        <meta name="keywords" content="lease a coffee farm in Uganda, coffee farm lease Uganda, lease coffee farmland Uganda, coffee farm leasing, coffee land lease Uganda, coffee farming in Uganda, coffee farm investment Uganda, coffee farming investment, invest in coffee farming, coffee farm investment opportunities, coffee farming opportunities Uganda, own a coffee farm Uganda, start a coffee farm Uganda, start coffee farming in Uganda, coffee plantation Uganda, coffee plantation investment, coffee estate Uganda, coffee estate investment, coffee farm ownership, coffee farming partnership, coffee farm partnership Uganda, agricultural land lease Uganda, farmland lease Uganda, agricultural land investment Uganda, agricultural investment Uganda, agricultural investment opportunities Uganda, commercial coffee farming Uganda, commercial coffee farm, commercial coffee plantation, coffee farming business Uganda, coffee agriculture Uganda, Uganda coffee industry, Uganda coffee sector, Uganda coffee market, Uganda coffee value chain, coffee production Uganda, coffee cultivation Uganda, coffee growing Uganda, coffee farm development, coffee plantation development, coffee estate development, coffee land investment, coffee farmland investment, sustainable coffee farming, sustainable coffee farm Uganda, sustainable coffee investment, sustainable agriculture Uganda, sustainable coffee production, sustainable coffee plantation, sustainable coffee estate, single origin coffee Uganda, single origin coffee farm, single origin coffee estate, single origin coffee farming, traceable coffee Uganda, traceable coffee farming, traceable coffee estate, specialty coffee farming Uganda, premium coffee Uganda, sustainable coffee beans, coffee agroforestry Uganda, coffee agroforestry farming, agroforestry coffee farm, coffee farm management, professional coffee farm management, professionally managed coffee farm, professional agricultural management, coffee agronomy, coffee agronomy support, coffee farm agronomy, coffee farm maintenance, coffee farm establishment, coffee land preparation, coffee planting, coffee seedlings Uganda, quality coffee seedlings, certified coffee seedlings, coffee nursery Uganda, coffee seedling suppliers Uganda, coffee farm irrigation, coffee water management, coffee soil management, coffee soil health, coffee nutrient management, coffee pest management, coffee disease management, coffee climate risk management, coffee farm productivity, coffee yield improvement, coffee farm profitability, coffee farming profitability, coffee farm returns, coffee farming returns, coffee investment returns, long term coffee investment, long term coffee farming, agricultural income diversification, passive agricultural investment, managed coffee farm, managed agricultural investment, coffee farm management services, coffee farming services Uganda, coffee farm lease opportunities, coffee leasing opportunities, affordable coffee farm investment, low cost coffee farming, affordable agricultural investment, farmland access Uganda, productive agricultural land Uganda, agricultural land access, coffee farming for beginners, first time coffee farmer, coffee farming for individuals, coffee farming for businesses, coffee farming for diaspora, coffee investment for diaspora, coffee farming for international investors, coffee farming for Ugandans, coffee farm subscription, coffee farming plans, coffee farm leasing plans, one acre coffee farm, one acre coffee plantation, one acre coffee farm Uganda, one acre coffee investment, one acre agricultural investment, one acre farming opportunity, one acre coffee estate, scalable coffee farming, scalable coffee investment, expand coffee farm, coffee enterprise development, coffee business investment Uganda, coffee value addition Uganda, coffee processing Uganda, coffee trade Uganda, coffee export Uganda, coffee market access Uganda, sustainable agricultural enterprise, professionally managed agricultural land, professionally managed coffee estate, transparent agricultural investment, transparent coffee investment, flexible coffee farm leasing, coffee farming partnership opportunities, coffee estate partnership, coffee land partnership, coffee farmer investor partnership, coffee farming opportunities for individuals, coffee farming opportunities for companies, coffee farming opportunities for diaspora, agricultural opportunities in Uganda" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://www.boldstoneinvestments.com/lease-a-coffee-farm" />
+        
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Boldstone Investments" />
+        <meta property="og:title" content="Lease a Coffee Farm in Uganda | Boldstone Investments" />
+        <meta property="og:description" content="Start your coffee farming journey in Uganda with Boldstone. Lease an acre in a professionally managed, sustainable single-origin coffee estate with farm establishment, agronomy and ongoing management support." />
+        <meta property="og:url" content="https://www.boldstoneinvestments.com/lease-a-coffee-farm" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Lease a Coffee Farm in Uganda | Boldstone Investments" />
+        <meta name="twitter:description" content="Start your coffee farming journey in Uganda with Boldstone. Lease an acre in a professionally managed, sustainable single-origin coffee estate with farm establishment, agronomy and ongoing management support." />
+      </Helmet>
 
       {/* ADVERT TICKER */}
       <div className="advert-banner">
