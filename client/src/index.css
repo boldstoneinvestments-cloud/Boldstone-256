@@ -1953,29 +1953,50 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   grid-template-columns: 280px 1fr;
   gap: 48px;
   background: #fff;
-  border: 1px solid #3dffc0;
+  border: 1px solid rgba(15,137,114,0.35);
   border-radius: 24px;
   padding: 48px;
-  box-shadow: 0 0 8px rgba(61, 255, 192, 0.25), 0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(17,31,27,0.06);
   position: relative;
   overflow: hidden;
 }
 
 .profile-card::before {
-  content: '✦';
+  content: '';
   position: absolute;
-  top: 18px; right: 24px;
-  font-size: 20px; color: #3dffc0; opacity: 0.7;
-  animation: ab-sparkle 2.4s ease-in-out infinite;
+  top: 10px;
+  right: 10px;
+  width: 90px;
+  height: 70px;
+  border-top: 1.5px solid #0f8972;
+  border-right: 1.5px solid #0f8972;
+  border-top-right-radius: 14px;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(to right, transparent 0%, black 30%, black 100%) top / 100% 2px no-repeat,
+    linear-gradient(to bottom, black 0%, black 70%, transparent 100%) right / 2px 100% no-repeat;
+  mask:
+    linear-gradient(to right, transparent 0%, black 30%, black 100%) top / 100% 2px no-repeat,
+    linear-gradient(to bottom, black 0%, black 70%, transparent 100%) right / 2px 100% no-repeat;
 }
 
 .profile-card::after {
-  content: '✦';
+  content: '';
   position: absolute;
-  bottom: 18px; left: 20px;
-  font-size: 12px; color: #3dffc0; opacity: 0.5;
-  animation: ab-sparkle 3.1s ease-in-out infinite reverse;
+  bottom: 10px;
+  left: 10px;
+  width: 50px;
+  height: 65px;
+  border-bottom: 1.5px solid #0f8972;
+  border-left: 1.5px solid #0f8972;
+  border-bottom-left-radius: 14px;
   pointer-events: none;
+  -webkit-mask:
+    linear-gradient(to left, transparent 0%, black 30%, black 100%) bottom / 100% 2px no-repeat,
+    linear-gradient(to top, black 0%, black 70%, transparent 100%) left / 2px 100% no-repeat;
+  mask:
+    linear-gradient(to left, transparent 0%, black 30%, black 100%) bottom / 100% 2px no-repeat,
+    linear-gradient(to top, black 0%, black 70%, transparent 100%) left / 2px 100% no-repeat;
 }
 
 .profile-img {
@@ -1983,7 +2004,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   aspect-ratio: 1;
   border-radius: 20px;
   overflow: hidden;
-  border: 2px solid #3dffc0;
+  border: 2px solid rgba(15,137,114,0.35);
   align-self: start;
 }
 
