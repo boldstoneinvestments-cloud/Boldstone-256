@@ -1135,6 +1135,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .plan-name { font-size: 20px; }
   .plan-badge { font-size: 8px; padding: 3px 8px; }
   .plan-pricing { font-size: 16px !important; }
+  .plan-pricing span { font-size: 16px !important; }
 }
 
 /* ════════════════════════════════
