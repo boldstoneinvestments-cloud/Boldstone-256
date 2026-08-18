@@ -177,8 +177,8 @@ const plans = [
   {
     badge: 'GROWTH PLAN',
     name: 'Growth Plan',
-    priceYear1: 480,
-    priceYear2Plus: 180,
+    priceYear1: 569.99,
+    priceYear2Plus: 219.99,
     priceType: 'yearly',
     description: 'Ideal for individuals and businesses with available capital who want their coffee farm established without waiting for a phased setup period.',
     included: [
@@ -195,7 +195,7 @@ const plans = [
       { step: '1', title: 'Immediate Start', desc: 'Farm establishment begins as soon as your subscription is confirmed.' },
       { step: '2', title: 'Faster Planting', desc: 'Faster planting timeline with no waiting period.' },
       { step: '3', title: 'Early Production', desc: 'Earlier crop development and production readiness.' },
-      { step: '4', title: 'Year 2 Renewal', desc: 'After the first year, your subscription renews at US$180/year for continued land access, farm management, and agronomy support.' },
+      { step: '4', title: 'Year 2 Renewal', desc: 'After the first year, your subscription renews at US$219.99/year for continued land access, farm management, and agronomy support.' },
     ],
     whyChoose: [
       'Farm establishment begins as soon as your subscription is confirmed',
@@ -204,7 +204,7 @@ const plans = [
       'Simplified annual payment with no monthly administration',
       'Best value for subscribers able to pay upfront',
     ],
-    renewal: 'After the first year, your subscription renews at US$180/year for continued land access, farm management, and agronomy support.',
+    renewal: 'After the first year, your subscription renews at US$219.99/year for continued land access, farm management, and agronomy support.',
     featured: false,
     cta: 'GET STARTED',
   },
@@ -218,7 +218,7 @@ function FitBounds() {
 
 // ── PAGE ──────────────────────────────────────────────────────────────────────
 const comparisonData = [
-  { feature: 'Payment', monthly: 'US$49.99/month', annual: 'US$499/year' },
+  { feature: 'Payment', monthly: 'US$49.99/month', annual: 'US$569.99/year' },
   { feature: 'Land Lease Included', monthly: 'Yes', annual: 'Yes' },
   { feature: 'Coffee Seedlings Included', monthly: 'Yes', annual: 'Yes' },
   { feature: 'Indigenous Tree Seedlings', monthly: 'Yes', annual: 'Yes' },
@@ -226,8 +226,8 @@ const comparisonData = [
   { feature: 'Farm Establishment Begins', monthly: 'Month 7', annual: 'Immediately' },
   { feature: 'Agronomy Support', monthly: 'Yes', annual: 'Yes' },
   { feature: 'Farm Progress Updates', monthly: 'Yes', annual: 'Yes' },
-  { feature: 'Renewal After Year 1', monthly: 'US$19.99/month', annual: 'US$199/year' },
-  { feature: 'Best For', monthly: 'Salaried individuals, diaspora, first-time farmers', annual: 'Businesses, investors, and clients with available capital' },
+  { feature: 'Renewal After Year 1', monthly: 'US$19.99/month', annual: 'US$219.99/year' },
+  { feature: 'Best For', monthly: 'Salaried individuals and first-time farmers', annual: 'Businesses, investors, diaspora and clients with available capital' },
 ]
 
 export default function Investors() {
@@ -383,7 +383,7 @@ export default function Investors() {
 
         <div className="bs-wrap" style={{ maxWidth: 860, position: 'relative', zIndex: 2 }}>
           <p style={{ fontSize: '15px', color: '#0d1f1c', lineHeight: 1.85, marginBottom: '24px', textAlign: 'justify' }}>
-            At Boldstone, you are not simply leasing an acre of land—you are becoming part of a large, professionally managed single-origin coffee estate designed for traceability, long-term profitability, and environmental sustainability.
+            At Boldstone, You're not simply owning a coffee farm—you are becoming part of a large, professionally managed single-origin coffee estate designed for traceability, long-term profitability, and environmental sustainability.
           </p>
         </div>
       </section>
@@ -624,7 +624,7 @@ export default function Investors() {
                         fontSize: 'clamp(0.65rem, 2vw, 0.8rem)',
                         fontWeight: 700,
                         lineHeight: 1.5,
-                        color: '#fff',
+                        color: '#0d1f1c',
                         margin: '12px 0 16px',
                         wordWrap: 'break-word',
                         overflowWrap: 'break-word',
@@ -633,12 +633,12 @@ export default function Investors() {
                         flexWrap: 'wrap',
                         gap: '0.3rem',
                       }}>
-                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap' }}>
+                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#0d1f1c', whiteSpace: 'nowrap' }}>
                           US$49.99/month
                         </span>
-                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#fff' }}>for the 1st year,</span>
-                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#fff' }}>Renews at</span>
-                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap' }}>
+                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#0d1f1c' }}>for the 1st year,</span>
+                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#0d1f1c' }}>Renews at</span>
+                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#0d1f1c', whiteSpace: 'nowrap' }}>
                           US$19.99/month
                         </span>
                       </p>
@@ -647,24 +647,24 @@ export default function Investors() {
                         fontSize: 'clamp(0.65rem, 2vw, 0.8rem)',
                         fontWeight: 700,
                         lineHeight: 1.3,
-                        color: plan.featured ? '#fff' : '#0d1f1c',
+                        color: '#0d1f1c',
                         margin: '12px 0 16px',
                         wordWrap: 'break-word',
                         overflowWrap: 'break-word',
                       }}>
-                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: plan.featured ? '#fff' : '#0d1f1c' }}>
-                          US$499/year
+                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#0d1f1c' }}>
+                          US$569.99/year
                         </span>
                         {' '}for the 1st year, Renews at{' '}
-                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: plan.featured ? '#fff' : '#0d1f1c' }}>
-                          US$199/year
+                        <span style={{ fontSize: 'clamp(0.65rem, 2vw, 0.8rem)', fontWeight: 700, color: '#0d1f1c' }}>
+                          US$219.99/year
                         </span>
                       </p>
                     )}
 
                     {/* Description */}
                     {plan.description && (
-                      <p style={{ fontSize: '0.9rem', lineHeight: '1.5', color: plan.featured ? 'rgba(255,255,255,0.85)' : '#333', margin: '0 0 12px 0' }}>
+                      <p style={{ fontSize: '0.9rem', lineHeight: '1.5', color: '#333', margin: '0 0 12px 0' }}>
                         {plan.description}
                       </p>
                     )}
@@ -673,13 +673,13 @@ export default function Investors() {
 
                     {/* What's Included */}
                     <div style={{ marginBottom: '20px' }}>
-                      <p style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', tracking: '2px', color: plan.featured ? 'rgba(255,255,255,0.6)' : '#666', marginBottom: '8px' }}>
+                      <p style={{ fontSize: '0.8rem', fontWeight: 900, textTransform: 'uppercase', tracking: '2px', color: '#666', marginBottom: '8px' }}>
                         What's Included
                       </p>
                       <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
                         {plan.included.map((item, j) => (
-                          <li key={j} style={{ fontSize: '0.85rem', color: plan.featured ? 'rgba(255,255,255,0.85)' : '#333', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                            <span style={{ color: plan.featured ? '#3dffc0' : '#0f8972', fontWeight: 900, marginTop: '2px' }}>•</span>
+                          <li key={j} style={{ fontSize: '0.85rem', color: '#333', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                            <span style={{ color: '#0f8972', fontWeight: 900, marginTop: '2px' }}>•</span>
                             <span>{item}</span>
                           </li>
                         ))}
@@ -696,20 +696,20 @@ export default function Investors() {
                           width: 'fit-content',
                           padding: '10px 16px',
                           marginBottom: '20px',
-                          background: plan.featured ? 'rgba(61,255,192,0.15)' : '#f0faf7',
-                          border: `1.5px solid ${plan.featured ? '#3dffc0' : '#0f8972'}`,
+                          background: '#f0faf7',
+                          border: '1.5px solid #0f8972',
                           borderRadius: '8px',
-                          color: plan.featured ? '#3dffc0' : '#0f8972',
+                          color: '#0f8972',
                           fontSize: '0.9rem',
                           fontWeight: 700,
                           cursor: 'pointer',
                           transition: 'all 0.3s ease',
                         }}
                         onMouseEnter={(e) => {
-                          e.target.style.background = plan.featured ? 'rgba(61,255,192,0.25)' : 'rgba(15,137,114,0.08)'
+                          e.target.style.background = 'rgba(15,137,114,0.08)'
                         }}
                         onMouseLeave={(e) => {
-                          e.target.style.background = plan.featured ? 'rgba(61,255,192,0.15)' : '#f0faf7'
+                          e.target.style.background = '#f0faf7'
                         }}
                       >
                         {showStarterDetails ? 'Show Less' : 'Learn More'} →

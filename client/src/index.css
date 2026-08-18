@@ -794,8 +794,8 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 }
 
 .plan-card.featured .offer-card-inner {
-  background: #0f8972;
-  border-color: #0f8972;
+  background: #fff;
+  border-color: rgba(15,137,114,0.35);
 }
 
 .plan-card-content {
@@ -820,8 +820,8 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 }
 
 .plan-card.featured .plan-badge {
-  background: rgba(255,255,255,0.2);
-  color: #fff;
+  background: rgba(15,137,114,0.1);
+  color: #0f8972;
 }
 
 .plan-name {
@@ -832,7 +832,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   margin-bottom: 6px;
 }
 
-.plan-card.featured .plan-name { color: rgba(255,255,255,0.75); }
+.plan-card.featured .plan-name { color: #0f8972; }
 
 .plan-desc {
   font-size: 12.5px;
@@ -841,7 +841,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   margin: 12px 0 24px;
 }
 
-.plan-card.featured .plan-desc { color: rgba(255,255,255,0.7); }
+.plan-card.featured .plan-desc { color: #777; }
 
 .plan-divider {
   height: 1px;
@@ -849,7 +849,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   margin-bottom: 20px;
 }
 
-.plan-card.featured .plan-divider { background: rgba(255,255,255,0.15); }
+.plan-card.featured .plan-divider { background: #f0f0f0; }
 
 .plan-features {
   list-style: none;
@@ -868,7 +868,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   align-items: flex-start;
 }
 
-.plan-card.featured .plan-features li { color: rgba(255,255,255,0.85); }
+.plan-card.featured .plan-features li { color: #444; }
 
 .plan-features li svg {
   color: #0f8972;
@@ -877,7 +877,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   margin-top: 3px;
 }
 
-.plan-card.featured .plan-features li svg { color: #a0ddd4; }
+.plan-card.featured .plan-features li svg { color: #0f8972; }
 
 .plan-cta {
   display: flex;
@@ -898,14 +898,14 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .plan-cta:hover { background: #0d7a65; transform: translateY(-1px); }
 
 .plan-card.featured .plan-cta {
-  background: #fff;
-  color: #0f8972;
+  background: #0f8972;
+  color: #fff;
 }
 
 /* Override offer-card-inner corner accents for featured plan */
 .plan-card.featured .offer-card-inner::before,
 .plan-card.featured .offer-card-inner::after {
-  border-color: rgba(255,255,255,0.4);
+  border-color: rgba(15,137,114,0.15);
 }
 
 /* STATS */
