@@ -146,7 +146,7 @@ const plans = [
     name: 'Starter Plan',
     priceYear1: 49.99,
     priceYear2Plus: 19.99,
-    description: 'Ideal for individuals, young professionals, individuals in the diaspora, and first-time coffee farmers who want to start with a manageable monthly commitment. You don\'t have to be a Ugandan to subscribe.',
+    description: 'Ideal for individuals, young professionals, and first-time coffee farmers who want to start with a manageable monthly commitment. You don\'t have to be a Ugandan to subscribe.',
     included: [
       'Annual lease of 1 acre of coffee farmland',
       'Land preparation and site establishment',
@@ -180,7 +180,7 @@ const plans = [
     priceYear1: 569.99,
     priceYear2Plus: 219.99,
     priceType: 'yearly',
-    description: 'Ideal for individuals and businesses with available capital who want their coffee farm established without waiting for a phased setup period.',
+    description: 'Ideal for individuals, businesses, individuals in the diaspora, and clients with available capital who want their coffee farm established without waiting for a phased setup period.',
     included: [
       'Annual lease of 1 acre of coffee farmland',
       'Land preparation and farm establishment',
@@ -227,7 +227,7 @@ const comparisonData = [
   { feature: 'Agronomy Support', monthly: 'Yes', annual: 'Yes' },
   { feature: 'Farm Progress Updates', monthly: 'Yes', annual: 'Yes' },
   { feature: 'Renewal After Year 1', monthly: 'US$19.99/month', annual: 'US$219.99/year' },
-  { feature: 'Best For', monthly: 'Salaried individuals and first-time farmers', annual: 'Businesses, investors, diaspora and clients with available capital' },
+  { feature: 'Best For', monthly: 'Salaried individuals and first-time farmers', annual: 'Businesses, investors, individuals in the diaspora and clients with available capital' },
 ]
 
 export default function Investors() {

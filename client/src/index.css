@@ -902,12 +902,6 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   color: #fff;
 }
 
-/* Override offer-card-inner corner accents for featured plan */
-.plan-card.featured .offer-card-inner::before,
-.plan-card.featured .offer-card-inner::after {
-  border-color: rgba(15,137,114,0.15);
-}
-
 /* STATS */
 .stats-header {
   text-align: center;
