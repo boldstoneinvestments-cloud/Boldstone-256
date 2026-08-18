@@ -22,10 +22,16 @@ export default function Contact() {
     if (!agreed) return setErr('Please agree to the privacy policy and terms of service.')
     setErr('')
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch('https://formsubmit.co/ajax/boldstone.investments@gmail.com', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+          _captcha: 'false',
+        }),
       })
       if (!res.ok) throw new Error()
       setSent(true)

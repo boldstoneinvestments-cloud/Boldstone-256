@@ -17,19 +17,20 @@ const transporter = nodemailer.createTransport({
 })
 
 app.post('/api/contact', async (req, res) => {
-  const { name, email, phone, message } = req.body
+  const { name, email, subject, message } = req.body
   if (!name || !email || !message) return res.status(400).json({ error: 'Missing required fields' })
 
   try {
     await transporter.sendMail({
       from: `"${name}" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_TO,
-      subject: `New Contact Message from ${name}`,
+      subject: subject ? `[Boldstone] ${subject}` : `New Contact Message from ${name}`,
+      replyTo: email,
       html: `
         <h2>New message from Boldstone Contact Form</h2>
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
+        <p><strong>Subject:</strong> ${subject || 'N/A'}</p>
         <hr/>
         <p><strong>Message:</strong></p>
         <p>${message}</p>
