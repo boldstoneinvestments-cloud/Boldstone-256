@@ -600,7 +600,7 @@ export default function Investors() {
                     
                     {/* Pricing */}
                     {i === 0 ? (
-                      <p style={{
+                      <p className="plan-pricing" style={{
                         fontSize: 'clamp(0.65rem, 2vw, 0.8rem)',
                         fontWeight: 700,
                         lineHeight: 1.5,
@@ -623,7 +623,7 @@ export default function Investors() {
                         </span>
                       </p>
                     ) : (
-                      <p style={{
+                      <p className="plan-pricing" style={{
                         fontSize: 'clamp(0.65rem, 2vw, 0.8rem)',
                         fontWeight: 700,
                         lineHeight: 1.3,
