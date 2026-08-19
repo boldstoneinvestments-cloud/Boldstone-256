@@ -37,7 +37,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      {!['/','/about','/blog','/contact','/partnership','/lease-a-coffee-farm'].includes(useLocation().pathname) && <PaymentBar />}
+      {!['/','/about','/blog','/blog/','/contact','/partnership','/lease-a-coffee-farm'].includes(useLocation().pathname) && <PaymentBar />}
       <Footer />
     </div>
   )
