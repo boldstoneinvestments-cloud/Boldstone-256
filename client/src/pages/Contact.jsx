@@ -53,22 +53,19 @@ export default function Contact() {
   return (
     <>
       <Helmet>
-        <title>Contact Boldstone | Coffee Investment in Uganda</title>
-        <meta name="description" content="Get in touch with Boldstone Investments. Contact us for coffee farming opportunities, partnership inquiries, or questions about investing in Uganda's coffee economy." />
+        <title>Contact Boldstone Investments | Coffee &amp; Agriculture Uganda</title>
+        <meta name="description" content="Contact Boldstone Investments in Fort Portal, Uganda for coffee farming, investment, partnerships, coffee opportunities, farmer support and general enquiries." />
+        <meta name="keywords" content="Boldstone contact, contact Boldstone Investments, Boldstone Investments contact, Boldstone Uganda contact, Boldstone Investments Uganda, Boldstone Fort Portal, Boldstone Fort Portal Uganda, coffee company Fort Portal, coffee investment Uganda, coffee farming Uganda, coffee investment company Uganda, agricultural investment Uganda, agribusiness Uganda, coffee farming opportunities Uganda, coffee investment opportunities Uganda, coffee partnerships Uganda, coffee partnership opportunities Uganda, coffee farmer support Uganda, coffee farming support, agricultural partnerships Uganda, agricultural business Uganda, coffee business Uganda, Uganda coffee industry, Uganda coffee company, coffee companies Uganda, coffee investors Uganda, coffee investment firm Uganda, agricultural investment company Uganda, coffee farm investment Uganda, coffee farm leasing Uganda, lease a coffee farm Uganda, coffee estate Uganda, coffee plantation Uganda, commercial coffee farming Uganda, sustainable coffee farming Uganda, coffee processing Uganda, coffee value addition Uganda, coffee value chain Uganda, coffee market Uganda, Uganda coffee market, coffee trade Uganda, coffee export Uganda, farmer partnerships Uganda, landowner partnerships Uganda, investment partnerships Uganda, business partnerships Uganda, coffee opportunities Uganda, farming opportunities Uganda, coffee farmer network Uganda, coffee farming technology Uganda, digital agriculture Uganda, coffee agronomy Uganda, coffee farm management Uganda, coffee investor enquiries, coffee farming enquiries Uganda, coffee investment enquiries Uganda, business enquiry Uganda, investment enquiry Uganda, partnership enquiry Uganda, coffee partnership enquiry, farmer support enquiry, Boldstone office Uganda, Boldstone phone number, Boldstone email, Boldstone contact information" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://www.boldstoneinvestments.com/contact" />
-        
-        {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Boldstone Investments" />
-        <meta property="og:title" content="Contact Boldstone | Coffee Investment in Uganda" />
-        <meta property="og:description" content="Get in touch with Boldstone Investments. Contact us for coffee farming opportunities, partnership inquiries, or questions about investing in Uganda's coffee economy." />
+        <meta property="og:title" content="Contact Boldstone Investments | Coffee &amp; Agriculture Uganda" />
+        <meta property="og:description" content="Get in touch with Boldstone Investments in Fort Portal, Uganda for coffee farming, investment, partnerships, agricultural opportunities, farmer support and general enquiries." />
         <meta property="og:url" content="https://www.boldstoneinvestments.com/contact" />
-        
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Contact Boldstone | Coffee Investment in Uganda" />
-        <meta name="twitter:description" content="Get in touch with Boldstone Investments. Contact us for coffee farming opportunities, partnership inquiries, or questions about investing in Uganda's coffee economy." />
+        <meta name="twitter:title" content="Contact Boldstone Investments | Coffee &amp; Agriculture Uganda" />
+        <meta name="twitter:description" content="Get in touch with Boldstone Investments in Fort Portal, Uganda for coffee farming, investment, partnerships, agricultural opportunities, farmer support and general enquiries." />
       </Helmet>
 
       <div style={{
@@ -288,6 +285,7 @@ export default function Contact() {
       <style>{`
         ::placeholder { color: rgba(255,255,255,0.2) !important; }
       `}</style>
+      </div>
     </>
   )
 }
