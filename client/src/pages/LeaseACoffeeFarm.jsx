@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleCheck, faArrowRight, faRulerCombined, faMountain, faCloudRain, faLayerGroup, faLocationDot, faChartPie, faBullhorn } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck, faArrowRight, faRulerCombined, faMountain, faCloudRain, faLayerGroup, faLocationDot, faChartPie, faBullhorn, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { MapContainer, TileLayer, Polygon, Tooltip, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import * as turf from '@turf/turf'
@@ -230,6 +230,41 @@ const comparisonData = [
   { feature: 'Best For', monthly: 'Salaried individuals and first-time farmers', annual: 'Businesses, investors, individuals in the diaspora and clients with available capital' },
 ]
 
+const leaseFaqs = [
+  {
+    q: 'What exactly am I subscribing to?',
+    a: 'Your subscription gives you access to one acre or more acres of coffee farmland within Boldstone’s professionally managed single-origin agroforestry estate. The subscription includes land leasing, coffee seedling establishment, farm management, agronomy supervision, and ongoing maintenance according to your selected plan. You are not purchasing land; you are participating in a managed coffee farming program designed to build a productive long-term agricultural asset.',
+  },
+  {
+    q: 'Where is the farm located?',
+    a: 'Boldstone’s coffee estate is located in Kyenjojo District in Western Uganda, one of the country’s leading coffee-growing regions. The area is known for fertile soils, favorable rainfall patterns, and strong Robusta coffee production. The farm is being developed as a large-scale, traceable, and sustainable agroforestry estate, allowing every subscriber’s acre to be integrated into a unified coffee production system.',
+  },
+  {
+    q: 'How does the Monthly Subscription Plan work?',
+    a: 'The Monthly Subscription Plan is designed for people who want to start coffee farming with a manageable monthly commitment. During the first six months, your payments contribute toward land preparation, seedling procurement, and farm establishment. From Month 7, Boldstone begins establishing your one-acre coffee farm while your subscription continues through the remainder of the first year. After Year 1, the subscription reduces to US$18 per month or US$180 per year for continued land access, farm management, and agronomy support.',
+  },
+  {
+    q: 'What makes Boldstone’s farming model sustainable?',
+    a: 'Boldstone is developing a regenerative agroforestry coffee estate that integrates native shade tree species such as Albizia coriaria and Cordia africana with coffee production. The farm follows an interleaved planting design aligned with Uganda’s Ministry of Agriculture, Animal Industry and Fisheries (MAAIF) guidelines, helping regulate microclimates, improve soil health, retain moisture, enhance biodiversity, and reduce heat-related pest pressure. This approach supports long-term coffee productivity while restoring the surrounding ecosystem.',
+  },
+  {
+    q: 'Can I pay with a credit or debit card, and will I receive an invoice?',
+    a: 'Yes. Boldstone accepts major international credit and debit cards, and subscribers receive a digital invoice and payment confirmation for every transaction. Monthly subscriptions are billed automatically on a recurring basis unless cancelled according to the subscription terms. Annual subscribers receive a comprehensive invoice showing the costs of land leasing, seedlings, and farm management services included in their plan.',
+  },
+  {
+    q: 'Can I visit my coffee farm or receive updates?',
+    a: 'Absolutely. Subscribers are welcome to visit the farm by appointment, and Boldstone provides periodic farm updates, including photographs, planting progress, agronomy activities, and seasonal production reports. Our goal is to ensure that both local and international subscribers remain connected to their coffee farm even if they are unable to visit regularly.',
+  },
+  {
+    q: 'What happens after the coffee is harvested?',
+    a: 'Boldstone provides harvest coordination, post-harvest handling support, and market linkage services through its coffee network. Because the farm operates as a single-origin and traceable estate, coffee from subscriber acres can be managed within a unified quality system designed for premium domestic and international markets. Detailed harvesting and revenue arrangements are outlined in the subscriber agreement.',
+  },
+  {
+    q: 'Can I lease additional acres or renew my subscription in future years?',
+    a: 'Yes. You may expand your coffee farm by leasing additional acres, subject to land availability, making the platform suitable for individuals, families, diaspora investors, and businesses. Both the Monthly and Annual plans are designed for long-term participation, and subscriptions can be renewed annually to continue receiving land access, farm management, agronomy support, and ongoing maintenance as your coffee farm matures and grows.',
+  },
+]
+
 export default function Investors() {
   const allParcels = useMemo(() => generateParcels(), [])
 
@@ -239,6 +274,7 @@ export default function Investors() {
   const [showComparison, setShowComparison] = useState(false)
   const [showStarterDetails, setShowStarterDetails] = useState(false)
   const [showGrowthDetails, setShowGrowthDetails] = useState(false)
+  const [openFaq, setOpenFaq] = useState(0)
 
   const totalLeased   = leased.size
   const totalSelected = selected.size
@@ -642,6 +678,39 @@ export default function Investors() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs */}
+      <section className="p-faqs-section lease-faqs-section">
+        <div className="bs-wrap">
+          <div className="p-faq-layout">
+            <div>
+              <p className="p-faq-big-label">FAQs</p>
+              <h2 className="p-faq-heading">Questions About Leasing a Coffee Farm?</h2>
+              <p className="p-faq-sub">Find answers to common questions about our coffee farming plans.</p>
+            </div>
+            <div className="p-faq-right">
+              {leaseFaqs.map((faq, i) => (
+                <div
+                  key={faq.q}
+                  className={`p-faq-item${openFaq === i ? ' open' : ''}`}
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') setOpenFaq(openFaq === i ? null : i)
+                  }}
+                >
+                  <div className="p-faq-q">
+                    <span>{faq.q}</span>
+                    <div className="p-faq-icon"><FontAwesomeIcon icon={faPlus} /></div>
+                  </div>
+                  <div className="p-faq-a">{faq.a}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
