@@ -171,11 +171,12 @@ export default function About() {
         <meta property="og:title" content="Our Story | Boldstone Investments | Coffee Farming in Uganda" />
         <meta property="og:description" content="Discover Boldstone's journey to build sustainable coffee farms, support smallholder farmers, add value at source, and connect African-grown coffee with local and global markets." />
         <meta property="og:url" content="https://www.boldstoneinvestments.com/about" />
-        
+        <meta property="og:image" content="https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Our Story | Boldstone Investments | Coffee Farming in Uganda" />
         <meta name="twitter:description" content="Discover Boldstone's journey to build sustainable coffee farms, support smallholder farmers, add value at source, and connect African-grown coffee with local and global markets." />
+        <meta name="twitter:image" content="https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp" />
       </Helmet>
 
       {/* ADVERT TICKER */}
