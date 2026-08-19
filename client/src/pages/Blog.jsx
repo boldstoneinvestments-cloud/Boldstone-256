@@ -20,7 +20,7 @@ const hardcodedPosts = [
     category: 'News',
     author: 'Boldstone',
     date: 'June 17, 2026',
-    image: 'https://address-restaurant2.odoo.com/web/image/1948-db6cb14d/Land%20aerial%20view.webp',
+    image: 'https://address-restaurant2.odoo.com/web/image/2031-8f550bf9/coffee%20machine.webp',
     excerpt: 'Boldstone Announces US $140K (UGX 500M) Equity and Debt Financing Plan to Build Coffee Processing Infrastructure in Uganda.',
     body: [
       'Boldstone Property Investments LLC today announced its 2026-2027 plan to finance the establishment of coffee processing infrastructure in Kyenjojo District, Uganda. Boldstone is raising money in order to set up coffee processing infrastructure that will enable it to dry, hull and purchase coffee beans from thousands of smallholder farmers in Uganda. The investment will also enable the establishment of Boldstone\'s coffee digital infrastructure, extend small recoverable loans to verified smallholder farmers and help the business accomplish the incorporation in the USA as a Delaware C-Corp.',
