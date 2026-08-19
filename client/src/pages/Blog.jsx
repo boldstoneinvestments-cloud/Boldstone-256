@@ -195,12 +195,12 @@ export default function Blog() {
         <meta property="og:title" content="Boldstone Blog | Uganda Coffee Industry News & Insights" />
         <meta property="og:description" content="Stories, news and insights from Uganda's coffee industry and Boldstone Investments, covering coffee farming, investment, processing, markets, agriculture and African coffee." />
         <meta property="og:url" content="https://www.boldstoneinvestments.com/blog" />
-        <meta property="og:image" content="https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp" />
+        <meta property="og:image" content="https://address-restaurant2.odoo.com/web/image/1948-db6cb14d/Land%20aerial%20view.webp" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Boldstone Blog | Uganda Coffee Industry News & Insights" />
         <meta name="twitter:description" content="Stories, news and insights from Uganda's coffee industry and Boldstone Investments, covering coffee farming, investment, processing, markets, agriculture and African coffee." />
-        <meta name="twitter:image" content="https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp" />
+        <meta name="twitter:image" content="https://address-restaurant2.odoo.com/web/image/1948-db6cb14d/Land%20aerial%20view.webp" />
       </Helmet>
       <style>{css}</style>
       <div className="blog-inner">

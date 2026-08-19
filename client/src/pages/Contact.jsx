@@ -63,9 +63,9 @@ export default function Contact() {
         <meta property="og:title" content="Contact Boldstone Investments | Coffee &amp; Agriculture Uganda" />
         <meta property="og:description" content="Get in touch with Boldstone Investments in Fort Portal, Uganda for coffee farming, investment, partnerships, agricultural opportunities, farmer support and general enquiries." />
         <meta property="og:url" content="https://www.boldstoneinvestments.com/contact" />
-        <meta property="og:image" content="https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp" />
+        <meta property="og:image" content="https://address-restaurant2.odoo.com/web/image/1984-0a7897c7/Image%20plant.webp" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp" />
+        <meta name="twitter:image" content="https://address-restaurant2.odoo.com/web/image/1984-0a7897c7/Image%20plant.webp" />
         <meta name="twitter:title" content="Contact Boldstone Investments | Coffee &amp; Agriculture Uganda" />
         <meta name="twitter:description" content="Get in touch with Boldstone Investments in Fort Portal, Uganda for coffee farming, investment, partnerships, agricultural opportunities, farmer support and general enquiries." />
       </Helmet>

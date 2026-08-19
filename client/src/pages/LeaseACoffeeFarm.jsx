@@ -342,12 +342,12 @@ export default function Investors() {
         <meta property="og:title" content="Lease a Coffee Farm in Uganda | Boldstone Investments" />
         <meta property="og:description" content="Start your coffee farming journey in Uganda with Boldstone. Lease an acre in a professionally managed, sustainable single-origin coffee estate with farm establishment, agronomy and ongoing management support." />
         <meta property="og:url" content="https://www.boldstoneinvestments.com/lease-a-coffee-farm" />
-        <meta property="og:image" content="https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp" />
+        <meta property="og:image" content="https://address-restaurant2.odoo.com/web/image/1948-db6cb14d/Land%20aerial%20view.webp" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Lease a Coffee Farm in Uganda | Boldstone Investments" />
         <meta name="twitter:description" content="Start your coffee farming journey in Uganda with Boldstone. Lease an acre in a professionally managed, sustainable single-origin coffee estate with farm establishment, agronomy and ongoing management support." />
-        <meta name="twitter:image" content="https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp" />
+        <meta name="twitter:image" content="https://address-restaurant2.odoo.com/web/image/1948-db6cb14d/Land%20aerial%20view.webp" />
       </Helmet>
 
       {/* ADVERT TICKER */}

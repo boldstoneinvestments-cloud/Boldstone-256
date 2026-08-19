@@ -65,7 +65,6 @@ export default function Home() {
         <meta property="og:description" content="Invest in Uganda's coffee economy with Boldstone Investments. Partner in commercial coffee farming, processing, trade, and sustainable agricultural value creation." />
         <meta property="og:url" content="https://www.boldstoneinvestments.com/" />
         <meta property="og:image" content="https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp" />
-        
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Boldstone Investments | Coffee Investment in Uganda" />

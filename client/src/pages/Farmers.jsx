@@ -111,12 +111,12 @@ export default function Farmers() {
         <meta property="og:title" content="Coffee Farming Support in Uganda | Boldstone Farmers" />
         <meta property="og:description" content="Grow more and earn more with Boldstone. Access coffee market prices, agronomy support, farmer training, direct market access, farm tips, rewards, and opportunities in Uganda." />
         <meta property="og:url" content="https://www.boldstoneinvestments.com/farmers" />
-        <meta property="og:image" content="https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp" />
+        <meta property="og:image" content="https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Coffee Farming Support in Uganda | Boldstone Farmers" />
         <meta name="twitter:description" content="Grow more and earn more with Boldstone. Access coffee market prices, agronomy support, farmer training, direct market access, farm tips, rewards, and opportunities in Uganda." />
-        <meta name="twitter:image" content="https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp" />
+        <meta name="twitter:image" content="https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp" />
       </Helmet>
 
       {/* ADVERT TICKER BANNER */}

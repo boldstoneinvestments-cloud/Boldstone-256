@@ -144,12 +144,12 @@ export default function Partnership() {
         <meta property="og:title" content="Coffee Partnership Opportunities in Uganda | Boldstone" />
         <meta property="og:description" content="Join Boldstone's growing coffee ecosystem. Partner with us as a cooperative, SACCO, bank, fintech, insurer, NGO, institution, or influencer to create opportunities across Uganda's coffee value chain." />
         <meta property="og:url" content="https://www.boldstoneinvestments.com/partnership" />
-        <meta property="og:image" content="https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp" />
+        <meta property="og:image" content="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=80" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Coffee Partnership Opportunities in Uganda | Boldstone" />
         <meta name="twitter:description" content="Join Boldstone's growing coffee ecosystem. Partner with us as a cooperative, SACCO, bank, fintech, insurer, NGO, institution, or influencer to create opportunities across Uganda's coffee value chain." />
-        <meta name="twitter:image" content="https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp" />
+        <meta name="twitter:image" content="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=80" />
       </Helmet>
 
       {/* ADVERT TICKER */}
