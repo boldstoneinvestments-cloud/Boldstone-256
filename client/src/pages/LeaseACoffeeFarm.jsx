@@ -1,9 +1,9 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleCheck, faArrowRight, faRulerCombined, faMountain, faCloudRain, faLayerGroup, faLocationDot, faChartPie, faBullhorn, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck, faArrowRight, faRulerCombined, faMountain, faCloudRain, faLayerGroup, faLocationDot, faChartPie, faBullhorn, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { MapContainer, TileLayer, Polygon, Tooltip, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import * as turf from '@turf/turf'
@@ -275,6 +275,21 @@ export default function Investors() {
   const [showStarterDetails, setShowStarterDetails] = useState(false)
   const [showGrowthDetails, setShowGrowthDetails] = useState(false)
   const [openFaq, setOpenFaq] = useState(0)
+  const faqAnswerRefs = useRef([])
+
+  useEffect(() => {
+    const syncFaqHeights = () => {
+      faqAnswerRefs.current.forEach((answer, index) => {
+        if (!answer) return
+        answer.style.maxHeight = openFaq === index ? `${answer.scrollHeight}px` : '0px'
+      })
+    }
+
+    syncFaqHeights()
+    window.addEventListener('resize', syncFaqHeights)
+
+    return () => window.removeEventListener('resize', syncFaqHeights)
+  }, [openFaq])
 
   const totalLeased   = leased.size
   const totalSelected = selected.size
@@ -687,9 +702,7 @@ export default function Investors() {
         <div className="bs-wrap">
           <div className="p-faq-layout">
             <div>
-              <p className="p-faq-big-label">FAQs</p>
-              <h2 className="p-faq-heading">Questions About Leasing a Coffee Farm?</h2>
-              <p className="p-faq-sub">Find answers to common questions about our coffee farming plans.</p>
+              <h2 className="p-faq-heading">FAQs</h2>
             </div>
             <div className="p-faq-right">
               {leaseFaqs.map((faq, i) => (
@@ -705,9 +718,15 @@ export default function Investors() {
                 >
                   <div className="p-faq-q">
                     <span>{faq.q}</span>
-                    <div className="p-faq-icon"><FontAwesomeIcon icon={faPlus} /></div>
+                    <div className="p-faq-icon"><FontAwesomeIcon icon={faChevronDown} /></div>
                   </div>
-                  <div className="p-faq-a">{faq.a}</div>
+                  <div
+                    ref={(element) => { faqAnswerRefs.current[i] = element }}
+                    className="p-faq-a"
+                    style={{ maxHeight: openFaq === i ? `${faqAnswerRefs.current[i]?.scrollHeight || 0}px` : '0px' }}
+                  >
+                    {faq.a}
+                  </div>
                 </div>
               ))}
             </div>

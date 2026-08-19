@@ -1094,8 +1094,28 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
     height: 170px;
   }
 
+  .lease-why-section .offer-card {
+    height: auto;
+  }
+  .lease-why-section .offer-card:nth-child(3),
+  .lease-why-section .offer-card:nth-child(4),
+  .lease-why-section .offer-card:nth-child(6) {
+    height: auto;
+  }
+  .lease-why-section .offer-card .offer-card-inner {
+    position: relative;
+    inset: unset;
+  }
+  .lease-why-section .offer-card .offer-card-back {
+    display: none;
+  }
+
   .lease-why-section .offer-card:nth-child(3) .offer-card-content {
-    padding: 18px 16px 0 18px;
+    padding: 18px 16px 18px 18px;
+  }
+
+  .lease-why-section .offer-card .offer-card-content {
+    padding: 20px 16px 20px 20px;
   }
 
   .lease-why-section .offer-card .offer-card-content p {
@@ -1542,7 +1562,10 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   color: #fff;
   transform: rotate(45deg);
 }
-.p-faq-item.open .p-faq-a { max-height: 200px; padding-bottom: 18px; }
+.p-faq-item.open .p-faq-a {
+  max-height: none;
+  padding-bottom: 18px;
+}
 
 .lease-faqs-section {
   background: #fff;
@@ -1565,7 +1588,11 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 }
 
 .lease-faqs-section .p-faq-q span {
-  color: #0f8972;
+  color: #000;
+}
+
+.lease-faqs-section .p-faq-item.open .p-faq-q span {
+  color: #000;
 }
 
 .lease-faqs-section .p-faq-a {
@@ -1642,6 +1669,11 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .p-hero-content { padding: 32px 16px; }
   .p-hero-content h1 { font-size: 1.4rem; }
   .p-faq-heading { font-size: 1.3rem; }
+  .p-faq-item { padding: 0 14px; }
+  .p-faq-q { align-items: flex-start; }
+  .p-faq-q span { font-size: 13px; line-height: 1.5; }
+  .p-faq-a { font-size: 12.5px; line-height: 1.7; padding-bottom: 16px !important; }
+  .p-faq-item.open .p-faq-a { padding-bottom: 16px !important; }
   .p-how-card { flex-direction: row; min-height: 200px; }
   .p-how-num { flex: 0 0 90px; }
   .p-how-num--left::after {
