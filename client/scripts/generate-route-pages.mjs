@@ -12,7 +12,7 @@ const shareImage = 'https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d
 const pages = {
   '/': {
     title: 'Boldstone Investments | Coffee Investment in Uganda',
-    description: "Invest in Uganda's coffee economy with Boldstone Investments. Partner in commercial coffee farming, processing, trade, and sustainable agricultural value creation.",
+    description: "The coffee industry in Uganda is a $2.2B market opportunity. We partner with forward thinking farmers, individuals and companies to invest in commercial coffee farming and trade in Uganda.",
     image: 'https://address-restaurant2.odoo.com/web/image/1918-fe8aa66d/cfe.webp',
   },
   '/about': {
@@ -22,30 +22,30 @@ const pages = {
   },
   '/lease-a-coffee-farm': {
     title: 'Lease a Coffee Farm in Uganda | Boldstone Investments',
-    description: 'Lease a coffee farm in Uganda with Boldstone. Start with 1 acre through a professionally managed, sustainable single-origin coffee estate with agronomy support and farm management.',
+    description: "At Boldstone, You're not simply owning a coffee farm—you are becoming part of a large, professionally managed single-origin coffee estate designed for traceability, long-term profitability, and environmental sustainability.",
     image: 'https://address-restaurant2.odoo.com/web/image/1948-db6cb14d/Land%20aerial%20view.webp',
   },
   '/farmers': {
     title: 'Coffee Farming Support in Uganda | Boldstone Farmers',
-    description: 'Get coffee farming support in Uganda with Boldstone. Access live market prices, agronomy advice, farmer training, direct market access, farm tips, rewards, and growth opportunities.',
+    description: "Coffee farming is hard enough to keep chasing for the right traders to purchase your coffee or the best agronomical support to ensure that your coffee farms are most productive. Boldstone's digital platform helps you to access the right farming advise, mentor, market prices while selling your coffee at the very best possible time and price.",
     image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
   },
   '/partnership': {
     title: 'Coffee Partnership Opportunities in Uganda | Boldstone',
-    description: "Partner with Boldstone to grow Uganda's coffee ecosystem. Explore partnership opportunities for coffee cooperatives, SACCOs, banks, fintechs, insurers, NGOs, and influencers.",
+    description: "Boldstone Partnership Program — Partner With Boldstone to build a stronger coffee ecosystem in Uganda. Coffee is more than a crop — it's a high-value export asset bringing in $2.2B annually. Whether you are a co-operative, SACCO, bank, NGO, or influencer, there's a place for you in our ecosystem.",
     image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=80',
   },
   '/contact': {
     title: 'Contact Boldstone Investments | Coffee & Agriculture Uganda',
-    description: 'Contact Boldstone Investments in Fort Portal, Uganda for coffee farming, investment, partnerships, coffee opportunities, farmer support and general enquiries.',
-    socialDescription: 'Get in touch with Boldstone Investments in Fort Portal, Uganda for coffee farming, investment, partnerships, agricultural opportunities, farmer support and general enquiries.',
+    description: 'Contact Boldstone Investments in Uganda for coffee farming, investment, partnerships, coffee opportunities, farmer support and general enquiries.',
+    socialDescription: 'Get in touch with Boldstone Investments in Uganda for coffee farming, investment, partnerships, agricultural opportunities, farmer support and general enquiries.',
     image: 'https://address-restaurant2.odoo.com/web/image/1984-0a7897c7/Image%20plant.webp',
     keywords: 'Boldstone contact, contact Boldstone Investments, Boldstone Investments contact, Boldstone Uganda contact, Boldstone Investments Uganda, Boldstone Fort Portal, Boldstone Fort Portal Uganda, coffee company Fort Portal, coffee investment Uganda, coffee farming Uganda, coffee investment company Uganda, agricultural investment Uganda, agribusiness Uganda, coffee farming opportunities Uganda, coffee investment opportunities Uganda, coffee partnerships Uganda, coffee partnership opportunities Uganda, coffee farmer support Uganda, coffee farming support, agricultural partnerships Uganda, agricultural business Uganda, coffee business Uganda, Uganda coffee industry, Uganda coffee company, coffee companies Uganda, coffee investors Uganda, coffee investment firm Uganda, agricultural investment company Uganda, coffee farm investment Uganda, coffee farm leasing Uganda, lease a coffee farm Uganda, coffee estate Uganda, coffee plantation Uganda, commercial coffee farming Uganda, sustainable coffee farming Uganda, coffee processing Uganda, coffee value addition Uganda, coffee value chain Uganda, coffee market Uganda, Uganda coffee market, coffee trade Uganda, coffee export Uganda, farmer partnerships Uganda, landowner partnerships Uganda, investment partnerships Uganda, business partnerships Uganda, coffee opportunities Uganda, farming opportunities Uganda, coffee farmer network Uganda, coffee farming technology Uganda, digital agriculture Uganda, coffee agronomy Uganda, coffee farm management Uganda, coffee investor enquiries, coffee farming enquiries Uganda, coffee investment enquiries Uganda, business enquiry Uganda, investment enquiry Uganda, partnership enquiry Uganda, coffee partnership enquiry, farmer support enquiry, Boldstone office Uganda, Boldstone phone number, Boldstone email, Boldstone contact information',
   },
   '/blog': {
     title: 'Boldstone Blog | Uganda Coffee Industry News & Insights',
     description: "Read Boldstone news, insights and updates on Uganda's coffee industry, coffee farming, investment, processing, agriculture, markets and the future of African coffee.",
-    image: 'https://address-restaurant2.odoo.com/web/image/1948-db6cb14d/Land%20aerial%20view.webp',
+    image: 'https://address-restaurant2.odoo.com/web/image/2031-8f550bf9/coffee%20machine.webp',
   },
   '/team': {
     title: 'Boldstone Team | Meet Our Leadership & Coffee Experts',
