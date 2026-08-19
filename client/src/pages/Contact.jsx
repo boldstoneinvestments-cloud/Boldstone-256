@@ -51,29 +51,7 @@ export default function Contact() {
   }
 
   return (
-    <div style={{
-      minHeight: '100vh', fontFamily: "'Inter','Segoe UI',sans-serif",
-      background: '#0a1628',
-      position: 'relative', overflow: 'hidden', paddingBottom: isMobile ? 40 : 0,
-    }}>
-      <Helmet>
-        <title>Contact Boldstone | Coffee Investment in Uganda</title>
-        <meta name="description" content="Get in touch with Boldstone Investments. Contact us for coffee farming opportunities, partnership inquiries, or questions about investing in Uganda's coffee economy." />
-        <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://www.boldstoneinvestments.com/contact" />
-        
-        {/* Open Graph */}
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Boldstone Investments" />
-        <meta property="og:title" content="Contact Boldstone | Coffee Investment in Uganda" />
-        <meta property="og:description" content="Get in touch with Boldstone Investments. Contact us for coffee farming opportunities, partnership inquiries, or questions about investing in Uganda's coffee economy." />
-        <meta property="og:url" content="https://www.boldstoneinvestments.com/contact" />
-        
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Contact Boldstone | Coffee Investment in Uganda" />
-        <meta name="twitter:description" content="Get in touch with Boldstone Investments. Contact us for coffee farming opportunities, partnership inquiries, or questions about investing in Uganda's coffee economy." />
-      </Helmet>
+    <>
       <Helmet>
         <title>Contact Boldstone | Coffee Investment in Uganda</title>
         <meta name="description" content="Get in touch with Boldstone Investments. Contact us for coffee farming opportunities, partnership inquiries, or questions about investing in Uganda's coffee economy." />
@@ -93,11 +71,11 @@ export default function Contact() {
         <meta name="twitter:description" content="Get in touch with Boldstone Investments. Contact us for coffee farming opportunities, partnership inquiries, or questions about investing in Uganda's coffee economy." />
       </Helmet>
 
-    <div style={{
-      minHeight: '100vh', fontFamily: "'Inter','Segoe UI',sans-serif",
-      background: '#0a1628',
-      position: 'relative', overflow: 'hidden', paddingBottom: isMobile ? 40 : 0,
-    }}>
+      <div style={{
+        minHeight: '100vh', fontFamily: "'Inter','Segoe UI',sans-serif",
+        background: '#0a1628',
+        position: 'relative', overflow: 'hidden', paddingBottom: isMobile ? 40 : 0,
+      }}>
 
       {/* ── dot pattern overlay ── */}
       <div style={{
@@ -310,6 +288,6 @@ export default function Contact() {
       <style>{`
         ::placeholder { color: rgba(255,255,255,0.2) !important; }
       `}</style>
-    </div>
+    </>
   )
 }

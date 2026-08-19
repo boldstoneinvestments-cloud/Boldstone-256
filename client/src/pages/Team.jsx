@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async'
 
 export default function Team() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <>
       <Helmet>
         <title>Boldstone Team | Meet Our Leadership & Coffee Experts</title>
         <meta name="description" content="Meet the Boldstone team of coffee experts, entrepreneurs, and strategists dedicated to building sustainable coffee farming and value chains in Uganda." />
@@ -21,6 +21,9 @@ export default function Team() {
         <meta name="twitter:title" content="Boldstone Team | Meet Our Leadership & Coffee Experts" />
         <meta name="twitter:description" content="Meet the Boldstone team of coffee experts, entrepreneurs, and strategists dedicated to building sustainable coffee farming and value chains in Uganda." />
       </Helmet>
-      <p className="text-gray-400 text-sm">Team page — coming soon</p>
-    </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-400 text-sm">Team page — coming soon</p>
+      </div>
+    </>
   )
+}
