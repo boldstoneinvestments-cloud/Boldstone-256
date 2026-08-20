@@ -1,10 +1,10 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBullhorn, faTractor, faLandmark, faArrowRight,
-  faCircleQuestion, faGears, faPlus,
+  faCircleQuestion, faGears, faPlus, faChevronDown,
 } from '@fortawesome/free-solid-svg-icons'
 
 const tickerItem = (
@@ -128,6 +128,19 @@ function CardsGrid() {
 
 export default function Partnership() {
   const [openFaq, setOpenFaq] = useState(0)
+  const faqAnswerRefs = useRef([])
+
+  useEffect(() => {
+    const syncFaqHeights = () => {
+      faqAnswerRefs.current.forEach((answer, index) => {
+        if (!answer) return
+        answer.style.maxHeight = openFaq === index ? `${answer.scrollHeight}px` : '0px'
+      })
+    }
+    syncFaqHeights()
+    window.addEventListener('resize', syncFaqHeights)
+    return () => window.removeEventListener('resize', syncFaqHeights)
+  }, [openFaq])
 
   return (
     <div>
@@ -240,26 +253,35 @@ export default function Partnership() {
       </section>
 
       {/* FAQ */}
-      <section className="p-faqs-section">
+      <section className="p-faqs-section lease-faqs-section">
         <div className="bs-wrap">
           <div className="p-faq-layout">
-            <div className="p-faq-left">
-              <p className="p-faq-big-label">FAQs</p>
-              <p className="p-faq-heading">Got Questions? We've Got Answers.</p>
-              <p className="p-faq-sub">Everything you need to know about partnering with Boldstone.</p>
+            <div>
+              <h2 className="p-faq-heading">FAQs</h2>
             </div>
             <div className="p-faq-right">
               {faqs.map((faq, i) => (
                 <div
-                  key={i}
+                  key={faq.q}
                   className={`p-faq-item${openFaq === i ? ' open' : ''}`}
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') setOpenFaq(openFaq === i ? null : i)
+                  }}
                 >
                   <div className="p-faq-q">
                     <span>{faq.q}</span>
-                    <div className="p-faq-icon"><FontAwesomeIcon icon={faPlus} /></div>
+                    <div className="p-faq-icon"><FontAwesomeIcon icon={faChevronDown} /></div>
                   </div>
-                  <div className="p-faq-a">{faq.a}</div>
+                  <div
+                    ref={(element) => { faqAnswerRefs.current[i] = element }}
+                    className="p-faq-a"
+                    style={{ maxHeight: openFaq === i ? `${faqAnswerRefs.current[i]?.scrollHeight || 0}px` : '0px' }}
+                  >
+                    {faq.a}
+                  </div>
                 </div>
               ))}
             </div>

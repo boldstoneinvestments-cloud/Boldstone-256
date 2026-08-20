@@ -12,6 +12,8 @@ import Contact from './pages/Contact'
 import Blog from './pages/Blog'
 import AdminBlog from './pages/AdminBlog'
 import NotFound from './pages/NotFound'
+import Terms from './pages/Terms'
+import Privacy from './pages/Privacy'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -34,10 +36,12 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/admin/blog" element={<AdminBlog />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      {!['/','/about','/blog','/blog/','/contact','/partnership','/lease-a-coffee-farm'].includes(useLocation().pathname) && <PaymentBar />}
+      {!['/','/about','/blog','/blog/','/contact','/partnership','/lease-a-coffee-farm','/terms','/privacy'].includes(useLocation().pathname) && <PaymentBar />}
       <Footer />
     </div>
   )

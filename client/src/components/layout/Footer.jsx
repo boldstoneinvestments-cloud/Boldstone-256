@@ -167,14 +167,18 @@ export default function Footer() {
             © {new Date().getFullYear()} Boldstone Property Investments LLC. All rights reserved.
           </p>
           <div style={{ display: 'flex', gap: 24 }}>
-            {['Privacy Policy', 'Terms of Use'].map(label => (
-              <a key={label} href="#" style={{ fontSize: 14, fontWeight: 500, color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }}
-                onMouseOver={e => e.currentTarget.style.color = '#000'}
-                onMouseOut={e => e.currentTarget.style.color = '#fff'}
-              >
-                {label}
-              </a>
-            ))}
+            <NavLink to="/privacy" style={{ fontSize: 14, fontWeight: 500, color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }}
+              onMouseOver={e => e.currentTarget.style.color = '#000'}
+              onMouseOut={e => e.currentTarget.style.color = '#fff'}
+            >
+              Privacy Policy
+            </NavLink>
+            <NavLink to="/terms" style={{ fontSize: 14, fontWeight: 500, color: '#fff', textDecoration: 'none', transition: 'color 0.2s' }}
+              onMouseOver={e => e.currentTarget.style.color = '#000'}
+              onMouseOut={e => e.currentTarget.style.color = '#fff'}
+            >
+              Terms of Use
+            </NavLink>
           </div>
         </div>
       </div>
