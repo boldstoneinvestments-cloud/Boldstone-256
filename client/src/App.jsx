@@ -41,7 +41,8 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      {!['/','/about','/blog','/blog/','/contact','/partnership','/lease-a-coffee-farm','/terms','/privacy'].includes(useLocation().pathname) && <PaymentBar />}
+      {(() => { const p = useLocation().pathname.replace(/\/+$/, ''); return !['','/about','/blog','/contact','/partnership','/lease-a-coffee-farm','/terms','/privacy'].includes(p || '/') })()
+        && <PaymentBar />}
       <Footer />
     </div>
   )
