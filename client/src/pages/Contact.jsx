@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPhone, faEnvelope, faLocationDot, faPaperPlane, faUser, faFile, faPencil } from '@fortawesome/free-solid-svg-icons'
@@ -261,9 +262,9 @@ export default function Contact() {
                 />
                 <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6 }}>
                   I agree to the{' '}
-                  <a href="#" style={{ color: '#0f8972', textDecoration: 'none' }}>privacy policy</a>
+                  <Link to="/privacy" style={{ color: '#0f8972', textDecoration: 'none' }}>privacy policy</Link>
                   {' '}and{' '}
-                  <a href="#" style={{ color: '#0f8972', textDecoration: 'none' }}>terms of service</a>.
+                  <Link to="/terms" style={{ color: '#0f8972', textDecoration: 'none' }}>terms of service</Link>.
                 </span>
               </label>
 
