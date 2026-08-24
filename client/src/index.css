@@ -2129,9 +2129,9 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-  .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .team-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .team-section .offer-card {
-    height: clamp(430px, 54vw, 560px) !important;
+    height: clamp(360px, 40vw, 420px) !important;
     min-height: 0;
   }
   .team-section .offer-card .offer-card-inner {
