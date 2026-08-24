@@ -2126,21 +2126,14 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .team-grid { grid-template-columns: repeat(3, 1fr); }
   .values-grid { grid-template-columns: repeat(2, 1fr); }
   .profile-card { gap: 36px; padding: 40px; }
-}
-
-@media (min-width: 768px) and (max-width: 1024px) {
-  .team-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-auto-rows: clamp(360px, 41vw, 430px);
-  }
-  .team-section .offer-card {
-    height: 100% !important;
-    min-height: 0;
-  }
+  .team-section .offer-card { height: auto !important; }
+  .team-section .offer-card .offer-card-back { display: none !important; }
   .team-section .offer-card .offer-card-inner {
-    position: absolute !important;
-    inset: 0 !important;
-    height: 100% !important;
+    position: relative !important;
+    inset: unset !important;
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -2158,21 +2151,6 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .team-section { padding: 40px 0; }
   .team-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .team-label { font-size: 24px; }
-  .team-section .offer-card,
-  .team-section .offer-card:nth-child(3),
-  .team-section .offer-card:nth-child(4),
-  .team-section .offer-card:nth-child(6) {
-    height: auto !important;
-    min-height: 280px;
-  }
-  .team-section .offer-card .offer-card-inner {
-    position: relative !important;
-    inset: unset !important;
-    height: auto !important;
-    display: flex;
-    flex-direction: column;
-  }
-  .team-section .offer-card .offer-card-back { display: none; }
   .profile-section { padding: 40px 0; }
   .profile-card { grid-template-columns: 1fr; padding: 24px 20px; gap: 24px; text-align: center; }
   .profile-img { width: 140px; margin: 0 auto; }
