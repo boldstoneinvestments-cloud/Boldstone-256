@@ -261,16 +261,13 @@ export default function About() {
             </h2>
             <div className="team-grid">
               {team.map((member) => (
-                <div key={member.id} className="offer-card" style={{ height: 'auto', minHeight: '320px', cursor: 'pointer' }} onClick={() => showProfile(member.id)}>
-                  <div className="offer-card-back" style={{ transform: team.indexOf(member) % 2 === 0 ? 'translate(-5px, 5px)' : 'translate(5px, 5px)' }} />
-                  <div className="offer-card-inner" style={{ position: 'relative', inset: 'unset', height: 'auto', borderRadius: '18px', border: '1px solid rgba(15,137,114,0.35)', boxShadow: '0 2px 8px rgba(17,31,27,0.06)', overflow: 'hidden', background: '#fff', display: 'flex', flexDirection: 'column' }}>
-                    <div className="team-img">
-                      <img src={member.img} alt={member.name} loading="lazy" style={member.imgStyle} />
-                    </div>
-                    <div className="team-card-body">
-                      <h4><span className="team-name">{member.name}</span></h4>
-                      <p className="team-position">{member.position}</p>
-                    </div>
+                <div key={member.id} className="team-member-card" onClick={() => showProfile(member.id)}>
+                  <div className="team-img">
+                    <img src={member.img} alt={member.name} loading="lazy" style={member.imgStyle} />
+                  </div>
+                  <div className="team-card-body">
+                    <h4><span className="team-name">{member.name}</span></h4>
+                    <p className="team-position">{member.position}</p>
                   </div>
                 </div>
               ))}

@@ -1963,6 +1963,23 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   gap: 12px;
 }
 
+.team-member-card {
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 137, 114, 0.35);
+  box-shadow: 0 2px 8px rgba(17, 31, 27, 0.06);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.team-member-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 14px rgba(17, 31, 27, 0.09);
+}
+
 .team-card {
   background: #fff;
   border: 1px solid #3dffc0;
@@ -2126,15 +2143,6 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .team-grid { grid-template-columns: repeat(3, 1fr); }
   .values-grid { grid-template-columns: repeat(2, 1fr); }
   .profile-card { gap: 36px; padding: 40px; }
-  .team-section .offer-card { height: auto !important; }
-  .team-section .offer-card .offer-card-back { display: none !important; }
-  .team-section .offer-card .offer-card-inner {
-    position: relative !important;
-    inset: unset !important;
-    height: auto !important;
-    display: flex;
-    flex-direction: column;
-  }
 }
 
 @media (max-width: 767px) {
