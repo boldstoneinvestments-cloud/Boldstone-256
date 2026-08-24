@@ -65,6 +65,32 @@ const css = `
     gap: 6px;
   }
 
+  /* ── TABLET ── */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .pb-inner {
+      flex-direction: row;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      padding: 12px 20px;
+    }
+    .pb-title {
+      font-size: 0.85rem;
+    }
+    .pb-logos {
+      gap: 5px;
+    }
+    .pb-logos .pb-badge-wrap {
+      height: 38px;
+      min-width: 40px;
+      padding: 3px 7px;
+    }
+    .pb-logos .pb-badge-raw {
+      height: 38px;
+      max-width: 48px;
+    }
+  }
+
   /* ── MOBILE ── */
   .pb-mobile-logos {
     display: flex;
@@ -93,6 +119,7 @@ function Badge({ method, small }) {
     return (
       <img
         src={method.logo} alt={method.label} title={method.label}
+        className="pb-badge-raw"
         {...protect}
         style={{ ...protectStyle, height: h, width: 'auto', maxWidth: '52px', objectFit: 'contain', display: 'block', borderRadius: '6px', flexShrink: 0 }}
       />
@@ -101,6 +128,7 @@ function Badge({ method, small }) {
   return (
     <div
       title={method.label}
+      className="pb-badge-wrap"
       style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '7px', padding: small ? '3px 6px' : '4px 8px', display: 'flex', alignItems: 'center', justifyContent: 'center', height: h, minWidth: small ? '36px' : '44px', flexShrink: 0, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
     >
       <img
@@ -121,7 +149,7 @@ export default function PaymentBar() {
           <p className="pb-title">
             Secure &amp; Encrypted Payments
           </p>
-          {/* Desktop: wrapping logos */}
+          {/* Desktop + Tablet: wrapping logos */}
           <div className="pb-logos">
             {MAIN_METHODS.map(m => <Badge key={m.label} method={m} />)}
           </div>

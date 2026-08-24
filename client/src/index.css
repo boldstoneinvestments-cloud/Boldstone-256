@@ -1051,6 +1051,11 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .offer-card-inner::before { width: 80px; height: 60px; }
   .offer-card-inner::after { width: 44px; height: 58px; }
   .offer-card-back { transform: translate(4px, 4px); }
+
+  /* Restore team card design at tablet */
+  .team-section .offer-card { height: auto; min-height: 320px; }
+  .team-section .offer-card:nth-child(3),
+  .team-section .offer-card:nth-child(4) { height: auto; }
   
   /* FARMERS PAGE - WHY SECTION OFFER CARDS (Tablet) */
   .why-section .offer-card {
@@ -1062,6 +1067,10 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .why-section .offer-card:nth-child(4) {
     height: 180px;
   }
+}
+
+@media (max-width: 1024px) {
+  .plan-card { max-height: none; }
 }
 
 @media (max-width: 768px) {
@@ -1662,10 +1671,16 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .p-how-cards { max-width: 100%; }
   .p-faq-layout { grid-template-columns: 1fr; gap: 32px; }
   .p-cards-grid { grid-template-columns: 1fr 1fr; }
+  .p-card-wrap { min-height: 400px !important; }
+  .p-card-img { left: 38% !important; }
+  .p-card-overlay { flex: 0 0 58% !important; clip-path: polygon(0 0, 100% 0, 76% 100%, 0 100%) !important; }
 }
 
 @media (max-width: 768px) {
   .p-cards-grid { grid-template-columns: 1fr; }
+  .p-card-wrap { min-height: 360px !important; }
+  .p-card-img { left: 35% !important; }
+  .p-card-overlay { flex: 0 0 55% !important; clip-path: polygon(0 0, 100% 0, 78% 100%, 0 100%) !important; }
   .p-how-num { flex: 0 0 120px; }
   .p-how-num-text { font-size: 36px; }
 }
@@ -2112,7 +2127,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .mission-section { padding: 48px 0; }
   .mission-card { padding: 40px 24px; }
   .mission-title { font-size: 28px; }
-  .values-grid { grid-template-columns: 1fr; }
+  .values-grid { grid-template-columns: repeat(2, 1fr); }
   .team-section { padding: 40px 0; }
   .team-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .team-label { font-size: 24px; }
@@ -2125,6 +2140,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 }
 
 @media (max-width: 480px) {
+  .values-grid { grid-template-columns: 1fr; }
   .team-grid { grid-template-columns: 1fr; }
   .profile-name { font-size: 22px; }
   .profile-card { padding: 20px 16px; }
