@@ -1066,10 +1066,6 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
     display: flex;
     flex-direction: column;
   }
-  .team-section .offer-card .offer-card-back {
-    display: none;
-  }
-  
   /* FARMERS PAGE - WHY SECTION OFFER CARDS (Tablet) */
   .why-section .offer-card {
     height: 180px;
@@ -2130,6 +2126,10 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .team-grid { grid-template-columns: repeat(3, 1fr); }
   .values-grid { grid-template-columns: repeat(2, 1fr); }
   .profile-card { gap: 36px; padding: 40px; }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 767px) {
