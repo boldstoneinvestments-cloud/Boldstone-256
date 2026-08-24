@@ -41,7 +41,7 @@ const tickerItem = (
     </span>
     <a
       className="tk-link"
-      href="https://www.boldstoneinvestments.com/#/blog"
+      href="https://www.boldstoneinvestments.com/blog"
     >
       Read More →
     </a>
