@@ -79,7 +79,7 @@ const team = [
   { id: 'patrick', name: 'Patrick Muhereza', position: 'Head of Coffee Business', img: 'https://address-restaurant2.odoo.com/web/image/1808-671600b8/Pato1.webp' },
   { id: 'nelson', name: 'Nelson Gumisiriza', position: 'Investor', img: 'https://photo.odoo.com/web/image/1148-8abdf1ec/nel.webp', imgStyle: { objectPosition: 'center top' } },
   { id: 'jonathan', name: 'Jonathan Byaruhanga', position: 'Head of Agronomy', img: 'https://address-restaurant2.odoo.com/web/image/1884-ccb07d63/ChatGPT%20Image%20Jul%2010%2C%202026%2C%2001_35_24%20PM.webp' },
-  { id: 'okwiri', name: 'Okwiiri Expedito', position: 'Head of International Partnerships', img: 'https://boldstone.odoo.com/web/image/429-43daa88a/Screenshot%202025-12-02%20095443.webp' },
+  { id: 'okwiri', name: 'Okwiiri Expedito', position: 'Head of International Partnerships', img: 'https://boldstone.odoo.com/web/image/429-43daa88a/Screenshot%202025-12-02%20095443.webp', imgStyle: { objectPosition: 'center top' } },
   { id: 'sabira', name: 'Sabira Ssemata', position: 'Backend Software Engineer', img: 'https://address-restaurant2.odoo.com/web/image/1888-df4ef49b/Sabira.webp' },
   { id: 'habib', name: 'Habib Tumwesige', position: 'Frontend Software Engineer', img: 'https://address-restaurant2.odoo.com/web/image/1982-2595a3af/Habib%20Salah.webp' },
 ]
@@ -260,9 +260,9 @@ export default function About() {
               The Boldstone team is united by a common belief that through hard work and relentless innovation; it is possible to build a world class company that makes its people, clients and the planet a better place.
             </h2>
             <div className="team-grid">
-              {team.map((member, i) => (
+              {team.map((member) => (
                 <div key={member.id} className="team-member-card" onClick={() => showProfile(member.id)}>
-                  <div className="team-member-card-back" style={{ transform: i % 2 === 0 ? 'translate(-5px, 5px)' : 'translate(5px, 5px)' }} />
+                  <div className="team-member-card-back" />
                   <div className="team-member-card-inner">
                     <div className="team-img">
                       <img src={member.img} alt={member.name} loading="lazy" style={member.imgStyle} />

@@ -1968,6 +1968,8 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   width: 100%;
   cursor: pointer;
   transition: transform 0.35s ease;
+  padding-bottom: 8px;
+  padding-right: 8px;
 }
 
 .team-member-card:hover {
@@ -1976,8 +1978,10 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 
 .team-member-card-back {
   position: absolute;
-  inset: 0;
-  transform: translate(5px, 5px);
+  bottom: 0;
+  right: 0;
+  left: 8px;
+  top: 8px;
   border-radius: 18px;
   background: #0f8972;
   z-index: 1;
