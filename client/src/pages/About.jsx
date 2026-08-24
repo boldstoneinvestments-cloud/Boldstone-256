@@ -260,14 +260,17 @@ export default function About() {
               The Boldstone team is united by a common belief that through hard work and relentless innovation; it is possible to build a world class company that makes its people, clients and the planet a better place.
             </h2>
             <div className="team-grid">
-              {team.map((member) => (
+              {team.map((member, i) => (
                 <div key={member.id} className="team-member-card" onClick={() => showProfile(member.id)}>
-                  <div className="team-img">
-                    <img src={member.img} alt={member.name} loading="lazy" style={member.imgStyle} />
-                  </div>
-                  <div className="team-card-body">
-                    <h4><span className="team-name">{member.name}</span></h4>
-                    <p className="team-position">{member.position}</p>
+                  <div className="team-member-card-back" style={{ transform: i % 2 === 0 ? 'translate(-5px, 5px)' : 'translate(5px, 5px)' }} />
+                  <div className="team-member-card-inner">
+                    <div className="team-img">
+                      <img src={member.img} alt={member.name} loading="lazy" style={member.imgStyle} />
+                    </div>
+                    <div className="team-card-body">
+                      <h4><span className="team-name">{member.name}</span></h4>
+                      <p className="team-position">{member.position}</p>
+                    </div>
                   </div>
                 </div>
               ))}

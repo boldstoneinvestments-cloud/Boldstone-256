@@ -1964,20 +1964,78 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 }
 
 .team-member-card {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.35s ease;
+}
+
+.team-member-card:hover {
+  transform: translateY(-5px);
+}
+
+.team-member-card-back {
+  position: absolute;
+  inset: 0;
+  transform: translate(5px, 5px);
+  border-radius: 18px;
+  background: #0f8972;
+  z-index: 1;
+}
+
+.team-member-card-inner {
+  position: relative;
+  z-index: 2;
   background: #fff;
   border-radius: 18px;
   border: 1px solid rgba(15, 137, 114, 0.35);
   box-shadow: 0 2px 8px rgba(17, 31, 27, 0.06);
   overflow: hidden;
-  cursor: pointer;
   display: flex;
   flex-direction: column;
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  transition: box-shadow 0.35s ease;
 }
 
-.team-member-card:hover {
-  transform: translateY(-5px);
+.team-member-card:hover .team-member-card-inner {
   box-shadow: 0 4px 14px rgba(17, 31, 27, 0.09);
+}
+
+.team-member-card-inner::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 90px;
+  height: 70px;
+  border-top: 1.5px solid #0f8972;
+  border-right: 1.5px solid #0f8972;
+  border-top-right-radius: 14px;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(to right, transparent 0%, black 30%, black 100%) top / 100% 2px no-repeat,
+    linear-gradient(to bottom, black 0%, black 70%, transparent 100%) right / 2px 100% no-repeat;
+  mask:
+    linear-gradient(to right, transparent 0%, black 30%, black 100%) top / 100% 2px no-repeat,
+    linear-gradient(to bottom, black 0%, black 70%, transparent 100%) right / 2px 100% no-repeat;
+}
+
+.team-member-card-inner::after {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 50px;
+  height: 65px;
+  border-bottom: 1.5px solid #0f8972;
+  border-left: 1.5px solid #0f8972;
+  border-bottom-left-radius: 14px;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(to left, transparent 0%, black 30%, black 100%) bottom / 100% 2px no-repeat,
+    linear-gradient(to top, black 0%, black 70%, transparent 100%) left / 2px 100% no-repeat;
+  mask:
+    linear-gradient(to left, transparent 0%, black 30%, black 100%) bottom / 100% 2px no-repeat,
+    linear-gradient(to top, black 0%, black 70%, transparent 100%) left / 2px 100% no-repeat;
 }
 
 .team-card {
