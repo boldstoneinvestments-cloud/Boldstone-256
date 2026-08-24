@@ -1052,20 +1052,6 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .offer-card-inner::after { width: 44px; height: 58px; }
   .offer-card-back { transform: translate(4px, 4px); }
 
-  /* Restore team card design at tablet */
-  .team-section .offer-card,
-  .team-section .offer-card:nth-child(3),
-  .team-section .offer-card:nth-child(4) {
-    height: auto !important;
-    min-height: 320px;
-  }
-  .team-section .offer-card .offer-card-inner {
-    position: relative !important;
-    inset: unset !important;
-    height: auto !important;
-    display: flex;
-    flex-direction: column;
-  }
   /* FARMERS PAGE - WHY SECTION OFFER CARDS (Tablet) */
   .why-section .offer-card {
     height: 180px;
@@ -1960,28 +1946,25 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .team-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 20px;
 }
 
 .team-member-card {
   position: relative;
-  width: 100%;
   cursor: pointer;
   transition: transform 0.35s ease;
-  padding-bottom: 8px;
-  padding-right: 8px;
+  /* space for the shadow to show without overflow */
+  padding: 0 6px 6px 0;
 }
 
-.team-member-card:hover {
-  transform: translateY(-5px);
-}
+.team-member-card:hover { transform: translateY(-5px); }
 
 .team-member-card-back {
   position: absolute;
-  bottom: 0;
+  top: 6px;
+  left: 6px;
   right: 0;
-  left: 8px;
-  top: 8px;
+  bottom: 0;
   border-radius: 18px;
   background: #0f8972;
   z-index: 1;
@@ -2007,14 +1990,13 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .team-member-card-inner::before {
   content: '';
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 90px;
-  height: 70px;
+  top: 10px; right: 10px;
+  width: 90px; height: 70px;
   border-top: 1.5px solid #0f8972;
   border-right: 1.5px solid #0f8972;
   border-top-right-radius: 14px;
   pointer-events: none;
+  z-index: 3;
   -webkit-mask:
     linear-gradient(to right, transparent 0%, black 30%, black 100%) top / 100% 2px no-repeat,
     linear-gradient(to bottom, black 0%, black 70%, transparent 100%) right / 2px 100% no-repeat;
@@ -2026,14 +2008,13 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .team-member-card-inner::after {
   content: '';
   position: absolute;
-  bottom: 10px;
-  left: 10px;
-  width: 50px;
-  height: 65px;
+  bottom: 10px; left: 10px;
+  width: 50px; height: 65px;
   border-bottom: 1.5px solid #0f8972;
   border-left: 1.5px solid #0f8972;
   border-bottom-left-radius: 14px;
   pointer-events: none;
+  z-index: 3;
   -webkit-mask:
     linear-gradient(to left, transparent 0%, black 30%, black 100%) bottom / 100% 2px no-repeat,
     linear-gradient(to top, black 0%, black 70%, transparent 100%) left / 2px 100% no-repeat;
@@ -2041,38 +2022,6 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
     linear-gradient(to left, transparent 0%, black 30%, black 100%) bottom / 100% 2px no-repeat,
     linear-gradient(to top, black 0%, black 70%, transparent 100%) left / 2px 100% no-repeat;
 }
-
-.team-card {
-  background: #fff;
-  border: 1px solid #3dffc0;
-  border-radius: 16px;
-  overflow: hidden;
-  position: relative;
-  box-shadow: 0 0 8px rgba(61, 255, 192, 0.25), 0 4px 16px rgba(0, 0, 0, 0.06);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-}
-
-.team-card::before {
-  content: '✦';
-  position: absolute;
-  top: 14px; right: 14px;
-  font-size: 16px; color: #3dffc0; opacity: 0.7;
-  animation: ab-sparkle 2.4s ease-in-out infinite;
-  z-index: 2;
-}
-
-.team-card::after {
-  content: '✦';
-  position: absolute;
-  bottom: 60px; left: 14px;
-  font-size: 10px; color: #3dffc0; opacity: 0.5;
-  animation: ab-sparkle 3.1s ease-in-out infinite reverse;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.team-card:hover { transform: translateY(-1px); border-color: #00ffb3; }
 
 .team-img { width: 100%; aspect-ratio: 1 / 1; overflow: hidden; }
 .team-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
@@ -2087,7 +2036,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   transition: color 0.2s;
 }
 
-.team-card:hover .team-name { color: #0f8972; }
+.team-member-card:hover .team-name { color: #0f8972; }
 
 .team-position { font-size: 13px; color: #555; margin: 4px 0 0; }
 
