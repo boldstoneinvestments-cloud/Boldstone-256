@@ -33,7 +33,7 @@ const tickerItem = (
   <span className="advert-ticker-item">
     <span className="tk-badge"><FontAwesomeIcon icon={faBullhorn} /> News</span>
     <span className="tk-text">Boldstone Announces UGX 500 Million (US $140,000) Equity &amp; Debt Financing Plan to Build Coffee Processing Infrastructure and Empower Smallholder Farmers in Uganda.</span>
-    <a className="tk-link" href="https://www.boldstoneinvestments.com/#/blog">Read More →</a>
+    <a className="tk-link" href="https://www.boldstoneinvestments.com/blog">Read More →</a>
   </span>
 )
 

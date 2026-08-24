@@ -360,7 +360,7 @@ export default function Investors() {
                 Boldstone Announces UGX 500 Million (US $140,000) Equity &amp; Debt Financing Plan to Build
                 Coffee Processing Infrastructure and Empower Smallholder Farmers in Uganda.
               </span>
-              <a className="tk-link" href="https://www.boldstoneinvestments.com/#/blog">
+              <a className="tk-link" href="https://www.boldstoneinvestments.com/blog">
                 Read More →
               </a>
               {i < 3 && <span className="advert-sep">●</span>}
