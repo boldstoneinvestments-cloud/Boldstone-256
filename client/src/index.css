@@ -1923,8 +1923,11 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   padding: 72px 0;
   background: #fff;
   background-image: repeating-linear-gradient(
-    -45deg, transparent, transparent 40px,
-    rgba(15, 137, 114, 0.04) 40px, rgba(15, 137, 114, 0.04) 41px
+    -45deg,
+    transparent,
+    transparent 40px,
+    rgba(15, 137, 114, 0.04) 40px,
+    rgba(15, 137, 114, 0.04) 41px
   );
 }
 
@@ -1943,21 +1946,28 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   margin-bottom: 40px;
 }
 
+/* ========================================
+   TEAM GRID - DESKTOP
+======================================== */
+
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 20px;
+  width: 100%;
 }
 
 .team-member-card {
   position: relative;
   cursor: pointer;
   transition: transform 0.35s ease;
-  /* space for the shadow to show without overflow */
   padding: 0 6px 6px 0;
+  min-width: 0;
 }
 
-.team-member-card:hover { transform: translateY(-5px); }
+.team-member-card:hover {
+  transform: translateY(-5px);
+}
 
 .team-member-card-back {
   position: absolute;
@@ -1990,43 +2000,104 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .team-member-card-inner::before {
   content: '';
   position: absolute;
-  top: 10px; right: 10px;
-  width: 90px; height: 70px;
+  top: 10px;
+  right: 10px;
+  width: 90px;
+  height: 70px;
   border-top: 1.5px solid #0f8972;
   border-right: 1.5px solid #0f8972;
   border-top-right-radius: 14px;
   pointer-events: none;
   z-index: 3;
+
   -webkit-mask:
-    linear-gradient(to right, transparent 0%, black 30%, black 100%) top / 100% 2px no-repeat,
-    linear-gradient(to bottom, black 0%, black 70%, transparent 100%) right / 2px 100% no-repeat;
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 30%,
+      black 100%
+    ) top / 100% 2px no-repeat,
+    linear-gradient(
+      to bottom,
+      black 0%,
+      black 70%,
+      transparent 100%
+    ) right / 2px 100% no-repeat;
+
   mask:
-    linear-gradient(to right, transparent 0%, black 30%, black 100%) top / 100% 2px no-repeat,
-    linear-gradient(to bottom, black 0%, black 70%, transparent 100%) right / 2px 100% no-repeat;
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 30%,
+      black 100%
+    ) top / 100% 2px no-repeat,
+    linear-gradient(
+      to bottom,
+      black 0%,
+      black 70%,
+      transparent 100%
+    ) right / 2px 100% no-repeat;
 }
 
 .team-member-card-inner::after {
   content: '';
   position: absolute;
-  bottom: 10px; left: 10px;
-  width: 50px; height: 65px;
+  bottom: 10px;
+  left: 10px;
+  width: 50px;
+  height: 65px;
   border-bottom: 1.5px solid #0f8972;
   border-left: 1.5px solid #0f8972;
   border-bottom-left-radius: 14px;
   pointer-events: none;
   z-index: 3;
+
   -webkit-mask:
-    linear-gradient(to left, transparent 0%, black 30%, black 100%) bottom / 100% 2px no-repeat,
-    linear-gradient(to top, black 0%, black 70%, transparent 100%) left / 2px 100% no-repeat;
+    linear-gradient(
+      to left,
+      transparent 0%,
+      black 30%,
+      black 100%
+    ) bottom / 100% 2px no-repeat,
+    linear-gradient(
+      to top,
+      black 0%,
+      black 70%,
+      transparent 100%
+    ) left / 2px 100% no-repeat;
+
   mask:
-    linear-gradient(to left, transparent 0%, black 30%, black 100%) bottom / 100% 2px no-repeat,
-    linear-gradient(to top, black 0%, black 70%, transparent 100%) left / 2px 100% no-repeat;
+    linear-gradient(
+      to left,
+      transparent 0%,
+      black 30%,
+      black 100%
+    ) bottom / 100% 2px no-repeat,
+    linear-gradient(
+      to top,
+      black 0%,
+      black 70%,
+      transparent 100%
+    ) left / 2px 100% no-repeat;
 }
 
-.team-img { width: 100%; aspect-ratio: 1 / 1; overflow: hidden; }
-.team-img img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.team-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
 
-.team-card-body { padding: 16px 20px 20px; }
+.team-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.team-card-body {
+  padding: 16px 20px 20px;
+}
 
 .team-name {
   font-size: 16px;
@@ -2036,9 +2107,16 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   transition: color 0.2s;
 }
 
-.team-member-card:hover .team-name { color: #0f8972; }
+.team-member-card:hover .team-name {
+  color: #0f8972;
+}
 
-.team-position { font-size: 13px; color: #555; margin: 4px 0 0; }
+.team-position {
+  font-size: 13px;
+  color: #555;
+  margin: 4px 0 0;
+}
+
 
 /* PROFILE */
 .profile-section {
@@ -2149,17 +2227,40 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 
 .linkedin-link:hover { opacity: 0.75; }
 
-/* ================================
+/*=================================
    ABOUT RESPONSIVE
 ================================ */
 
 /* TABLET — iPad Air 2 and similar tablets */
-@media (min-width: 768px) and (max-width: 1024px) {
+@media screen and (min-width: 768px) and (max-width: 1100px) {
 
   .team-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     gap: 24px;
   }
+
+  .team-member-card {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .team-member-card-inner {
+    width: 100%;
+  }
+
+  .team-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+
+}
+
+
+/* ========================================
+   ABOUT TABLET
+======================================== */
+
+@media screen and (min-width: 768px) and (max-width: 1100px) {
 
   .values-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2173,8 +2274,11 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 }
 
 
-/* MOBILE — Tablets below 768px / phones */
-@media (max-width: 767px) {
+/* ========================================
+   MOBILE
+======================================== */
+
+@media screen and (max-width: 767px) {
 
   .about-section {
     padding: 48px 0;
@@ -2225,12 +2329,16 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   }
 
   .team-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 16px;
   }
 
   .team-label {
     font-size: 24px;
+  }
+
+  .team-member-card {
+    min-width: 0;
   }
 
   .profile-section {
@@ -2264,15 +2372,18 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 }
 
 
-/* SMALL PHONES */
-@media (max-width: 480px) {
+/* ========================================
+   SMALL PHONES
+======================================== */
+
+@media screen and (max-width: 480px) {
 
   .values-grid {
     grid-template-columns: 1fr;
   }
 
   .team-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 
   .profile-name {
