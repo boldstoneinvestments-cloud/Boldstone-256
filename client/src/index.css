@@ -2149,41 +2149,144 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 
 .linkedin-link:hover { opacity: 0.75; }
 
-/* ABOUT RESPONSIVE */
-@media (max-width: 1024px) {
-  .team-grid { grid-template-columns: repeat(3, 1fr); }
-  .values-grid { grid-template-columns: repeat(2, 1fr); }
-  .profile-card { gap: 36px; padding: 40px; }
+/* ================================
+   ABOUT RESPONSIVE
+================================ */
+
+/* TABLET — iPad Air 2 and similar tablets */
+@media (min-width: 768px) and (max-width: 1024px) {
+
+  .team-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .values-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-card {
+    gap: 36px;
+    padding: 40px;
+  }
+
 }
 
+
+/* MOBILE — Tablets below 768px / phones */
 @media (max-width: 767px) {
-  .about-section { padding: 48px 0; }
-  .about-heading-center { font-size: 28px; }
-  .about-story { border-left: none; padding-left: 0; border-top: 3px solid #0f8972; padding-top: 20px; }
-  .about-cards { grid-template-columns: 1fr; gap: 16px; }
-  .about-card { padding: 28px 22px; }
-  .about-card h4 { font-size: 18px; }
-  .mission-section { padding: 48px 0; }
-  .mission-card { padding: 40px 24px; }
-  .mission-title { font-size: 28px; }
-  .values-grid { grid-template-columns: repeat(2, 1fr); }
-  .team-section { padding: 40px 0; }
-  .team-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .team-label { font-size: 24px; }
-  .profile-section { padding: 40px 0; }
-  .profile-card { grid-template-columns: 1fr; padding: 24px 20px; gap: 24px; text-align: center; }
-  .profile-img { width: 140px; margin: 0 auto; }
-  .profile-name { font-size: 26px; }
-  .linkedin-link { justify-content: center; }
-  .back-link { margin-bottom: 24px; }
+
+  .about-section {
+    padding: 48px 0;
+  }
+
+  .about-heading-center {
+    font-size: 28px;
+  }
+
+  .about-story {
+    border-left: none;
+    padding-left: 0;
+    border-top: 3px solid #0f8972;
+    padding-top: 20px;
+  }
+
+  .about-cards {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .about-card {
+    padding: 28px 22px;
+  }
+
+  .about-card h4 {
+    font-size: 18px;
+  }
+
+  .mission-section {
+    padding: 48px 0;
+  }
+
+  .mission-card {
+    padding: 40px 24px;
+  }
+
+  .mission-title {
+    font-size: 28px;
+  }
+
+  .values-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .team-section {
+    padding: 40px 0;
+  }
+
+  .team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .team-label {
+    font-size: 24px;
+  }
+
+  .profile-section {
+    padding: 40px 0;
+  }
+
+  .profile-card {
+    grid-template-columns: 1fr;
+    padding: 24px 20px;
+    gap: 24px;
+    text-align: center;
+  }
+
+  .profile-img {
+    width: 140px;
+    margin: 0 auto;
+  }
+
+  .profile-name {
+    font-size: 26px;
+  }
+
+  .linkedin-link {
+    justify-content: center;
+  }
+
+  .back-link {
+    margin-bottom: 24px;
+  }
+
 }
 
+
+/* SMALL PHONES */
 @media (max-width: 480px) {
-  .values-grid { grid-template-columns: 1fr; }
-  .team-grid { grid-template-columns: 1fr; }
-  .profile-name { font-size: 22px; }
-  .profile-card { padding: 20px 16px; }
-  .profile-img { width: 120px; }
+
+  .values-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-name {
+    font-size: 22px;
+  }
+
+  .profile-card {
+    padding: 20px 16px;
+  }
+
+  .profile-img {
+    width: 120px;
+  }
+
 }
 
 /* ── PAYMENT BAR ── */
