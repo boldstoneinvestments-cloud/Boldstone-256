@@ -79,7 +79,7 @@ const team = [
   { id: 'patrick', name: 'Patrick Muhereza', position: 'Head of Coffee Business', img: 'https://address-restaurant2.odoo.com/web/image/1808-671600b8/Pato1.webp' },
   { id: 'nelson', name: 'Nelson Gumisiriza', position: 'Investor', img: 'https://photo.odoo.com/web/image/1148-8abdf1ec/nel.webp', imgStyle: { objectPosition: 'center top' } },
   { id: 'jonathan', name: 'Jonathan Byaruhanga', position: 'Head of Agronomy', img: 'https://address-restaurant2.odoo.com/web/image/1884-ccb07d63/ChatGPT%20Image%20Jul%2010%2C%202026%2C%2001_35_24%20PM.webp' },
-  { id: 'okwiri', name: 'Okwiiri Expedito', position: 'Head of International Partnerships', img: 'https://boldstone.odoo.com/web/image/429-43daa88a/Screenshot%202025-12-02%20095443.webp', imgStyle: { objectPosition: 'center top' } },
+  { id: 'okwiri', name: 'Okwiiri Expedito', position: 'Head of International Partnerships', img: 'https://address-restaurant2.odoo.com/web/image/2046-44bce706/Okwiiri.webp', imgStyle: { objectPosition: 'center top' } },
   { id: 'sabira', name: 'Sabira Ssemata', position: 'Backend Software Engineer', img: 'https://address-restaurant2.odoo.com/web/image/1888-df4ef49b/Sabira.webp' },
   { id: 'habib', name: 'Habib Tumwesige', position: 'Frontend Software Engineer', img: 'https://address-restaurant2.odoo.com/web/image/1982-2595a3af/Habib%20Salah.webp' },
 ]
@@ -115,7 +115,7 @@ const profiles = {
   okwiri: {
     name: 'Okwiiri Expedito',
     role: 'Co-Founder & Head of International Partnerships',
-    img: 'https://boldstone.odoo.com/web/image/429-43daa88a/Screenshot%202025-12-02%20095443.webp',
+    img: 'https://address-restaurant2.odoo.com/web/image/2046-44bce706/Okwiiri.webp',
     imgStyle: { objectPosition: 'center top' },
     bio: ["Expedito leads Boldstone's trade partnerships, building strategic relationships with coffee traders, exporters, roasters, and market players who connect Ugandan coffee with international markets. With a strong understanding of coffee supply chains, trade dynamics, and buyer requirements, he works to create reliable partnerships that enhance market access for our coffee. Expedito focuses on connecting Boldstone's locally grown and sourced coffee with local and global coffee networks, strengthening direct trade opportunities, and positioning Boldstone as a source of quality, traceable coffee."],
     linkedin: 'https://www.linkedin.com/in/okwiiri-expedito-9b7726259/',
