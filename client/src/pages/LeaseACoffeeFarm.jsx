@@ -441,7 +441,7 @@ export default function Investors() {
       </section>
 
       {/* ── PLANS ── */}
-      <section className="farmer-plans">
+      <section className="farmer-plans lease-plans">
         <div className="bs-wrap">
           <div className="plans-header">
             <h1 className="section-label">Choose Your Coffee Farming Plan</h1>

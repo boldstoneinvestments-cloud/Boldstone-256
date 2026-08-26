@@ -1062,6 +1062,19 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .why-section .offer-card:nth-child(4) {
     height: 180px;
   }
+
+  .lease-plans .plan-card {
+    height: auto;
+    max-height: none;
+  }
+
+  .lease-plans .plan-card .offer-card-inner {
+    height: 100%;
+  }
+
+  .lease-plans .plan-cta {
+    width: 100%;
+  }
 }
 
 @media (max-width: 1024px) {
