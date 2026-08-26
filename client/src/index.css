@@ -1062,6 +1062,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .why-section .offer-card:nth-child(4) {
     height: 180px;
   }
+}
 
  /* ========================================
    TABLET — LEASE PLAN CARDS
@@ -2510,8 +2511,4 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 }
 @media (min-width: 641px) {
   .show-mobile { display: none !important; }
-}
-
-
-
 }
