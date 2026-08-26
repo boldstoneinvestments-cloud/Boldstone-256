@@ -1072,7 +1072,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 
   .lease-plans .plan-card {
     height: auto !important;
-    min-height: 800px !important;
+    min-height: 750px !important;
     max-height: none !important;
     min-width: 0 !important;
     width: 100% !important;
@@ -2514,3 +2514,4 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 
 
 
+}
