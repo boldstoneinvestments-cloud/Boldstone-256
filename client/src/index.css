@@ -1063,24 +1063,60 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
     height: 180px;
   }
 
+ /* ========================================
+   TABLET — LEASE PLAN CARDS
+   iPad Air 2 / Tablets
+======================================== */
+
+@media screen and (min-width: 768px) and (max-width: 1100px) {
+
   .lease-plans .plan-card {
-    height: auto;
-    max-height: none;
-    min-height: 800px;
-    min-width: 0;
+    height: auto !important;
+    min-height: 800px !important;
+    max-height: none !important;
+    min-width: 0 !important;
+    width: 100% !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    box-sizing: border-box !important;
+    overflow: visible !important;
   }
 
   .lease-plans .plan-card .offer-card-inner {
-    height: 100%;
-    min-height: 0;
-    min-width: 0;
+    height: auto !important;
+    min-height: 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .lease-plans .plan-card .offer-card-content {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    width: 100% !important;
+
+    box-sizing: border-box !important;
   }
 
   .lease-plans .plan-cta {
-    width: 100%;
-    flex-shrink: 0;
-    box-sizing: border-box;
+    width: 100% !important;
+    max-width: 100% !important;
+
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+
+    box-sizing: border-box !important;
+
+    margin-top: auto !important;
   }
+
 }
 
 @media (max-width: 1024px) {
