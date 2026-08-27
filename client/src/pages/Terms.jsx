@@ -276,7 +276,7 @@ export default function Terms() {
         <title>Terms of Use | Boldstone Property Investments</title>
         <meta name="description" content="Read the Terms of Use governing your access to and use of the Boldstone Property Investments website and services." />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://www.boldstoneinvestments.com/terms" />
+        <link rel="canonical" href="https://www.boldstoneinvestments.com/terms/" />
       </Helmet>
 
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '64px 24px 80px' }}>
