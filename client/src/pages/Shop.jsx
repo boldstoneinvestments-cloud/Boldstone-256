@@ -147,9 +147,101 @@ function ProductCard({ product, onOrder }) {
   )
 }
 
+const BACKEND = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
+function OrderDrawer({ order, onClose }) {
+  const [form, setForm] = useState({ name: '', phone: '', email: '', location: '', notes: '' })
+  const [status, setStatus] = useState('idle') // idle | loading | success | error
+
+  const handle = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
+
+  const submit = async e => {
+    e.preventDefault()
+    setStatus('loading')
+    try {
+      const res = await fetch(`${BACKEND}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          product: order.productName,
+          quantity: order.qty,
+          location: form.location,
+          notes: form.notes,
+        }),
+      })
+      if (!res.ok) throw new Error()
+      setStatus('success')
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  return (
+    <div className="drawer-backdrop" onClick={onClose}>
+      <div className="drawer" onClick={e => e.stopPropagation()}>
+        <button className="drawer-close" onClick={onClose}>✕</button>
+
+        {status === 'success' ? (
+          <div className="drawer-success">
+            <div className="drawer-success-icon">✓</div>
+            <h3>Order Placed!</h3>
+            <p>Thank you, <strong>{form.name}</strong>. We'll contact you within 24 hours to confirm your order of <strong>{order.qty} × {order.productName}</strong>.</p>
+            <button className="drawer-done-btn" onClick={onClose}>Done</button>
+          </div>
+        ) : (
+          <>
+            <div className="drawer-header">
+              <span className="drawer-eyebrow">Place Order</span>
+              <h2 className="drawer-title">{order.productName}</h2>
+              <p className="drawer-subtitle">Qty: <strong>{order.qty}</strong> · UGX {order.unitPrice.toLocaleString()} {order.unit}</p>
+            </div>
+
+            <form className="drawer-form" onSubmit={submit}>
+              {status === 'error' && (
+                <div className="drawer-alert-error">Failed to place order. Please try again.</div>
+              )}
+              <div className="drawer-row">
+                <div className="drawer-field">
+                  <label>Full Name *</label>
+                  <input name="name" type="text" placeholder="Your full name" value={form.name} onChange={handle} required />
+                </div>
+                <div className="drawer-field">
+                  <label>Phone Number *</label>
+                  <input name="phone" type="tel" placeholder="+256 7XX XXX XXX" value={form.phone} onChange={handle} required />
+                </div>
+              </div>
+              <div className="drawer-field">
+                <label>Email Address *</label>
+                <input name="email" type="email" placeholder="your@email.com" value={form.email} onChange={handle} required />
+              </div>
+              <div className="drawer-field">
+                <label>Delivery Location *</label>
+                <input name="location" type="text" placeholder="Town, district or full address" value={form.location} onChange={handle} required />
+              </div>
+              <div className="drawer-field">
+                <label>Additional Notes</label>
+                <textarea name="notes" rows={3} placeholder="Any special requirements..." value={form.notes} onChange={handle} />
+              </div>
+              <button type="submit" className="drawer-submit-btn" disabled={status === 'loading'}>
+                {status === 'loading' ? 'Placing Order…' : 'Confirm Order →'}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function Shop() {
+  const [drawerOrder, setDrawerOrder] = useState(null)
+
   const onOrder = (product, qty, variety) => {
-    // order handling placeholder
+    const productName = variety ? `${product.name} — ${variety}` : product.name
+    setDrawerOrder({ productName, qty, unitPrice: product.price, unit: product.unit })
   }
 
   return (
@@ -194,6 +286,8 @@ export default function Shop() {
 
 
       </div>
+
+      {drawerOrder && <OrderDrawer order={drawerOrder} onClose={() => setDrawerOrder(null)} />}
     </>
   )
 }
