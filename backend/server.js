@@ -1,24 +1,36 @@
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
-const mysql = require('mysql2/promise')
+const { Pool } = require('pg')
 
 const app = express()
 
-app.use(cors())
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:5173']
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true)
+    callback(new Error('Not allowed by CORS'))
+  },
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}))
 app.use(express.json())
 
 if (!process.env.DATABASE_URL) {
   console.warn('WARNING: DATABASE_URL is not set. Database features will be unavailable.')
 }
 
-const db = process.env.DATABASE_URL ? mysql.createPool(process.env.DATABASE_URL) : null
+const db = process.env.DATABASE_URL ? new Pool({ connectionString: process.env.DATABASE_URL }) : null
 
 async function initDB() {
   if (!db) return
   await db.query(`
     CREATE TABLE IF NOT EXISTS orders (
-      id INT AUTO_INCREMENT PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       phone VARCHAR(50) NOT NULL,
       email VARCHAR(255),
@@ -26,7 +38,7 @@ async function initDB() {
       quantity INT NOT NULL,
       location VARCHAR(255) NOT NULL,
       notes TEXT,
-      status ENUM('Pending','Confirmed','Delivered') DEFAULT 'Pending',
+      status VARCHAR(20) DEFAULT 'Pending' CHECK (status IN ('Pending','Confirmed','Delivered')),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `)
@@ -53,11 +65,11 @@ app.post('/api/orders', async (req, res) => {
     return res.status(400).json({ error: 'Missing required fields' })
   }
   try {
-    const [result] = await db.query(
-      'INSERT INTO orders (name, phone, email, product, quantity, location, notes) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    const result = await db.query(
+      'INSERT INTO orders (name, phone, email, product, quantity, location, notes) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id',
       [name, phone, email || null, product, quantity, location, notes || null]
     )
-    res.status(201).json({ id: result.insertId, message: 'Order placed successfully' })
+    res.status(201).json({ id: result.rows[0].id, message: 'Order placed successfully' })
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
@@ -67,8 +79,8 @@ app.post('/api/orders', async (req, res) => {
 app.get('/api/orders', async (req, res) => {
   if (!db) return res.status(503).json({ error: 'Database not configured' })
   try {
-    const [rows] = await db.query('SELECT * FROM orders ORDER BY created_at DESC')
-    res.json(rows)
+    const result = await db.query('SELECT * FROM orders ORDER BY created_at DESC')
+    res.json(result.rows)
   } catch (err) {
     res.status(500).json({ error: err.message })
   }
@@ -82,7 +94,7 @@ app.patch('/api/orders/:id/status', async (req, res) => {
     return res.status(400).json({ error: 'Invalid status' })
   }
   try {
-    await db.query('UPDATE orders SET status = ? WHERE id = ?', [status, req.params.id])
+    await db.query('UPDATE orders SET status = $1 WHERE id = $2', [status, req.params.id])
     res.json({ message: 'Status updated' })
   } catch (err) {
     res.status(500).json({ error: err.message })
