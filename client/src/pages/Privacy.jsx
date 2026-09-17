@@ -156,7 +156,7 @@ export default function Privacy() {
         <title>Privacy Policy | Boldstone Property Investments</title>
         <meta name="description" content="Read the Boldstone Property Investments Privacy Policy to understand how we collect, use, and protect your personal information." />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://www.boldstoneinvestments.com/privacy" />
+        <link rel="canonical" href="https://www.boldstoneinvestments.com/privacy/" />
       </Helmet>
 
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '64px 24px 80px' }}>

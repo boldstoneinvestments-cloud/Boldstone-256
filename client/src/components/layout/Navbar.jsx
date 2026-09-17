@@ -7,6 +7,7 @@ const links = [
   { to: '/lease-a-coffee-farm', label: 'Lease A Coffee Farm' },
   { to: '/partnership', label: 'Partnerships' },
   { to: '/about', label: 'About Us' },
+  { to: '/shop', label: 'Shop' },
   { to: '/blog', label: 'Blog' },
 ]
 
