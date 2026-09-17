@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import './Shop.css'
 
@@ -148,55 +148,9 @@ function ProductCard({ product, onOrder }) {
 }
 
 export default function Shop() {
-  const formRef = useRef(null)
-  const [form, setForm] = useState({
-    name: '', phone: '', email: '', product: '', quantity: 1,
-    location: '', date: '', notes: '',
-  })
-  const [sent, setSent] = useState(false)
-  const [err, setErr] = useState('')
-
-  const handle = e => setForm({ ...form, [e.target.name]: e.target.value })
-
   const onOrder = (product, qty, variety) => {
-    const productName = variety ? `${product.name} — ${variety}` : product.name
-    setForm(f => ({ ...f, product: productName, quantity: qty }))
-    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    // order handling placeholder
   }
-
-  const submit = async e => {
-    e.preventDefault()
-    setErr('')
-    try {
-      const res = await fetch('https://formsubmit.co/ajax/boldstone.investments@gmail.com', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          _subject: `Shop Order — ${form.product}`,
-          name: form.name,
-          phone: form.phone,
-          email: form.email,
-          product: form.product,
-          quantity: form.quantity,
-          delivery_location: form.location,
-          preferred_date: form.date,
-          notes: form.notes,
-          _captcha: 'false',
-        }),
-      })
-      if (!res.ok) throw new Error()
-      setSent(true)
-      setForm({ name: '', phone: '', email: '', product: '', quantity: 1, location: '', date: '', notes: '' })
-    } catch {
-      setErr('Failed to submit order. Please try again or contact us directly.')
-    }
-  }
-
-  const allProducts = [
-    ...PRODUCTS.seedlings.map(p => p.name),
-    ...PRODUCTS.roasted.map(p => p.name),
-    ...PRODUCTS.trees.map(p => p.name),
-  ]
 
   return (
     <>
@@ -238,81 +192,7 @@ export default function Shop() {
           </section>
         ))}
 
-        {/* ORDER FORM */}
-        <section className="shop-form-section" ref={formRef}>
-          <div className="bs-wrap">
-            <div className="shop-form-wrap">
-              <div className="shop-form-left">
-                <span className="shop-form-eyebrow">Place Your Order</span>
-                <h2>Ready to Order?<br />Fill in the Details</h2>
-                <p>Complete the form and our team will confirm your order within 24 hours and arrange delivery to your location.</p>
-                <ul className="shop-form-perks">
-                  {['Delivery across Uganda', 'Bulk order discounts available', 'Expert agronomic advice included', 'Certified, quality-assured products'].map(p => (
-                    <li key={p}><span className="perk-dot" />  {p}</li>
-                  ))}
-                </ul>
-              </div>
 
-              <form className="shop-form" onSubmit={submit}>
-                {sent && (
-                  <div className="shop-alert shop-alert-success">
-                    ✓ Order submitted! We'll contact you within 24 hours to confirm.
-                  </div>
-                )}
-                {err && <div className="shop-alert shop-alert-error">✗ {err}</div>}
-
-                <div className="shop-form-row">
-                  <div className="shop-field">
-                    <label>Full Name *</label>
-                    <input name="name" type="text" placeholder="Your full name" value={form.name} onChange={handle} required />
-                  </div>
-                  <div className="shop-field">
-                    <label>Phone Number *</label>
-                    <input name="phone" type="tel" placeholder="+256 7XX XXX XXX" value={form.phone} onChange={handle} required />
-                  </div>
-                </div>
-
-                <div className="shop-field">
-                  <label>Email Address</label>
-                  <input name="email" type="email" placeholder="your@email.com" value={form.email} onChange={handle} />
-                </div>
-
-                <div className="shop-form-row">
-                  <div className="shop-field">
-                    <label>Product / Type *</label>
-                    <select name="product" value={form.product} onChange={handle} required>
-                      <option value="">Select a product</option>
-                      {allProducts.map(p => <option key={p} value={p}>{p}</option>)}
-                    </select>
-                  </div>
-                  <div className="shop-field">
-                    <label>Quantity *</label>
-                    <input name="quantity" type="number" min="1" value={form.quantity} onChange={handle} required />
-                  </div>
-                </div>
-
-                <div className="shop-field">
-                  <label>Delivery Location *</label>
-                  <input name="location" type="text" placeholder="Town, district or full address" value={form.location} onChange={handle} required />
-                </div>
-
-                <div className="shop-field">
-                  <label>Preferred Delivery Date</label>
-                  <input name="date" type="date" value={form.date} onChange={handle} min={new Date().toISOString().split('T')[0]} />
-                </div>
-
-                <div className="shop-field">
-                  <label>Additional Notes</label>
-                  <textarea name="notes" rows={3} placeholder="Any special requirements, planting advice needed, etc." value={form.notes} onChange={handle} />
-                </div>
-
-                <button type="submit" className="shop-submit-btn">
-                  Submit Order →
-                </button>
-              </form>
-            </div>
-          </div>
-        </section>
       </div>
     </>
   )
