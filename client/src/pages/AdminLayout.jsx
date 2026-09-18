@@ -22,7 +22,15 @@ export default function AdminLayout() {
 
   return (
     <div className="admin-shell">
-      <button className="admin-menu-button" aria-label="Open admin menu" onClick={() => setOpen(true)}>Menu</button>
+      <header className="admin-mobile-header">
+        <button className="admin-back-button" aria-label="Go back" onClick={() => navigate(-1)}>
+          <span aria-hidden="true" />
+          <span>Back</span>
+        </button>
+        <button className="admin-menu-button" aria-label="Open admin menu" onClick={() => setOpen(true)}>
+          <span aria-hidden="true"><i /><i /><i /></span>
+        </button>
+      </header>
       {open && <button className="admin-menu-backdrop" aria-label="Close admin menu" onClick={() => setOpen(false)} />}
       <aside className={`admin-sidebar${open ? ' is-open' : ''}`}>
         <div className="admin-sidebar-brand"><span className="admin-brand-mark">B</span><div><strong>Boldstone</strong><small>Admin workspace</small></div><button className="admin-close-button" aria-label="Close admin menu" onClick={() => setOpen(false)}>Close</button></div>

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRotateRight, faBoxOpen } from '@fortawesome/free-solid-svg-icons'
+import { faBoxOpen } from '@fortawesome/free-solid-svg-icons'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app')
@@ -9,6 +9,7 @@ const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-
   : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
 
 export default function AdminOrders() {
+  const navigate = useNavigate()
   const [authed, setAuthed] = useState(null)
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(false)
@@ -31,6 +32,21 @@ export default function AdminOrders() {
     }
   }, [])
 
+  const deleteOrder = async (event, order) => {
+    event.stopPropagation()
+    if (!window.confirm(`Delete the order from ${order.name}? This cannot be undone.`)) return
+
+    const res = await fetch(`${BACKEND}/api/admin/orders/${encodeURIComponent(order.id)}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
+    if (res.ok) {
+      setOrders(current => current.filter(item => item.id !== order.id))
+    } else {
+      setFetchErr('Could not delete this order. Please try again.')
+    }
+  }
+
   useEffect(() => { fetchOrders() }, [fetchOrders])
 
   if (authed === null) {
@@ -49,11 +65,7 @@ export default function AdminOrders() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32, flexWrap: 'wrap', gap: 16 }}>
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#0f8972', marginBottom: 4 }}>Admin Portal</p>
-            <h1 style={{ fontSize: 28, fontWeight: 900, color: '#0d1f1c', margin: 0 }}>Orders Dashboard</h1>
           </div>
-          <button onClick={fetchOrders} style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#fff', border: '1px solid #e0e0e0', color: '#0f8972', fontWeight: 700, fontSize: 14, padding: '10px 18px', borderRadius: 8, cursor: 'pointer' }}>
-            <FontAwesomeIcon icon={faRotateRight} /> Refresh
-          </button>
         </div>
 
         {/* Stats */}
@@ -91,14 +103,18 @@ export default function AdminOrders() {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
                   <tr style={{ background: '#f4f8f7', borderBottom: '1px solid #e0e0e0' }}>
-                          {['Invoice', 'Date', 'Customer', 'Phone', 'Email', 'Product', 'Qty', 'Location', 'Notes'].map(h => (
+                          {['Invoice', 'Date', 'Customer', 'Phone', 'Email', 'Product', 'Qty', 'Location', 'Notes', 'Action'].map(h => (
                       <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 700, color: '#555', fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, whiteSpace: 'nowrap' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {orders.map((o, i) => (
-                    <tr key={o.id} style={{ borderBottom: '1px solid #f0f0f0', background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
+                    <tr
+                      key={o.id}
+                      onClick={() => navigate(`/admin/orders/${encodeURIComponent(o.id)}`)}
+                      style={{ borderBottom: '1px solid #f0f0f0', background: i % 2 === 0 ? '#fff' : '#fafafa', cursor: 'pointer' }}
+                    >
                       <td style={{ padding: '14px 16px', color: '#999', fontWeight: 600, whiteSpace: 'nowrap' }}>{o.invoice_number || o.id}</td>
                       <td style={{ padding: '14px 16px', color: '#555', whiteSpace: 'nowrap' }}>
                         {new Date(o.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
@@ -110,6 +126,11 @@ export default function AdminOrders() {
                       <td style={{ padding: '14px 16px', color: '#0d1f1c', fontWeight: 700, textAlign: 'center' }}>{o.quantity}</td>
                       <td style={{ padding: '14px 16px', color: '#555', maxWidth: 160 }}>{o.location}</td>
                       <td style={{ padding: '14px 16px', color: '#555', minWidth: 180 }}>{o.notes || '—'}</td>
+                      <td style={{ padding: '14px 16px' }}>
+                        <button onClick={event => deleteOrder(event, o)} style={{ border: '1px solid #f1c8c4', borderRadius: 7, padding: '7px 10px', background: '#fff7f6', color: '#b64035', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
+                          Delete
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

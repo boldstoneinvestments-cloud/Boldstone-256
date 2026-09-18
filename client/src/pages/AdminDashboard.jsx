@@ -21,8 +21,7 @@ export default function AdminDashboard() {
   if (status === 'error') return <Navigate to="/admin/sign-in" replace />
 
   return <section className="admin-dashboard-page">
-    <div className="admin-page-heading"><div><span className="admin-eyebrow">Overview</span><h1>Good to see you.</h1><p>Keep an eye on orders and new coffee farm applications.</p></div></div>
-    <div className="admin-metric-grid">
+    <div className="admin-dashboard-card-grid">
       <Link className="admin-metric-card" to="/admin/orders"><span><FontAwesomeIcon icon={faClipboardList} /></span><small>Total orders</small><strong>{data.orders.length}</strong><em>View orders <FontAwesomeIcon icon={faArrowRight} /></em></Link>
       <Link className="admin-metric-card" to="/admin/lease-applications"><span><FontAwesomeIcon icon={faFileSignature} /></span><small>Lease applications</small><strong>{data.applications.length}</strong><em>Review applications <FontAwesomeIcon icon={faArrowRight} /></em></Link>
     </div>

@@ -14,6 +14,7 @@ import Contact from './pages/Contact'
 import Blog from './pages/Blog'
 import AdminBlog from './pages/AdminBlog'
 import AdminOrders from './pages/AdminOrders'
+import AdminOrderDetail from './pages/AdminOrderDetail'
 import AdminLogin from './pages/AdminLogin'
 import AdminLayout from './pages/AdminLayout'
 import AdminDashboard from './pages/AdminDashboard'
@@ -50,6 +51,7 @@ function AppInner() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="orders" element={<AdminOrders />} />
+            <Route path="orders/:id" element={<AdminOrderDetail />} />
             <Route path="lease-applications" element={<AdminApplications />} />
             <Route path="blog" element={<AdminBlog />} />
           </Route>

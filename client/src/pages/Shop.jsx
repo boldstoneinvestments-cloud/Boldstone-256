@@ -94,36 +94,45 @@ const PRODUCTS = {
   ],
 }
 
+const CATEGORY_ORDER = ['seedlings', 'roasted', 'trees']
+
 const CATEGORY_META = {
-  seedlings: { label: 'Coffee Seedlings', icon: '', desc: 'Certified, nursery-grown coffee seedlings ready for planting.' },
   roasted:   { label: 'Roasted Coffee',   icon: '☕', desc: 'Freshly roasted coffee from our partner farms in Uganda.' },
   trees:     { label: 'Indigenous Trees', icon: '', desc: 'Native Ugandan tree seedlings for agroforestry and reforestation.' },
 }
 
-function VarietyQtyTable({ varieties, qtys, onChange }) {
+function VarietyQtyTable({ varieties, qtys, onChange, open, onToggle }) {
   return (
-    <div className="shop-variety-table">
-      <div className="shop-variety-table-head">
-        <span>Variety</span>
-        <span>Quantity</span>
-      </div>
-      {varieties.map(v => (
-        <div key={v} className="shop-variety-table-row">
-          <span className="shop-variety-name">{v}</span>
-          <div className="shop-qty">
-            <button type="button" onClick={() => onChange(v, Math.max(0, (qtys[v] || 0) - 1))}>−</button>
-            <input
-              type="number"
-              min="0"
-              value={qtys[v] || ''}
-              onChange={e => onChange(v, Math.max(0, parseInt(e.target.value) || 0))}
-              className="shop-qty-input"
-              placeholder="0"
-            />
-            <button type="button" onClick={() => onChange(v, (qtys[v] || 0) + 1)}>+</button>
+    <div className={`shop-variety-table${open ? ' shop-variety-table--open' : ''}`}>
+      <button type="button" className="shop-variety-toggle" onClick={onToggle}>
+        <span>Select Varieties & Quantities</span>
+        <span className={`shop-variety-toggle-icon${open ? ' open' : ''}`}>▾</span>
+      </button>
+      {open && (
+        <>
+          <div className="shop-variety-table-head">
+            <span>Variety</span>
+            <span>Quantity</span>
           </div>
-        </div>
-      ))}
+          {varieties.map(v => (
+            <div key={v} className="shop-variety-table-row">
+              <span className="shop-variety-name">{v}</span>
+              <div className="shop-qty">
+                <button type="button" onClick={() => onChange(v, Math.max(0, (qtys[v] || 0) - 1))}>−</button>
+                <input
+                  type="number"
+                  min="0"
+                  value={qtys[v] || ''}
+                  onChange={e => onChange(v, Math.max(0, parseInt(e.target.value) || 0))}
+                  className="shop-qty-input"
+                  placeholder="0"
+                />
+                <button type="button" onClick={() => onChange(v, (qtys[v] || 0) + 1)}>+</button>
+              </div>
+            </div>
+          ))}
+        </>
+      )}
     </div>
   )
 }
@@ -132,6 +141,7 @@ function ProductCard({ product }) {
   const [qty, setQty] = useState('')
   const [varietyQtys, setVarietyQtys] = useState({})
   const [added, setAdded] = useState(false)
+  const [tableOpen, setTableOpen] = useState(false)
   const { addToCart } = useCart()
 
   const handleVarietyQty = (variety, val) =>
@@ -154,15 +164,15 @@ function ProductCard({ product }) {
 
   return (
     <div className="shop-card">
-      <div className="shop-card-img-wrap">
+      <div className="shop-card-img-wrap" style={product.varieties ? { height: '260px' } : undefined}>
         <img src={product.image} alt={product.name} className="shop-card-img" loading="lazy" />
       </div>
       <div className="shop-card-body">
         <p className="shop-card-variety">{product.variety}</p>
         <h3 className="shop-card-name">{product.name}</h3>
         <p className="shop-card-desc">{product.desc}</p>
-        {product.varieties?.length ? (
-          <VarietyQtyTable varieties={product.varieties} qtys={varietyQtys} onChange={handleVarietyQty} />
+        {product.varieties ? (
+          <VarietyQtyTable varieties={product.varieties} qtys={varietyQtys} onChange={handleVarietyQty} open={tableOpen} onToggle={() => setTableOpen(o => !o)} />
         ) : (
           <div className="shop-qty-row" style={{ marginBottom: '12px' }}>
             <div className="shop-qty">
@@ -442,7 +452,12 @@ export default function Shop() {
   useEffect(() => {
     fetch(`${BACKEND}/api/shop/products`)
       .then(res => { if (!res.ok) throw new Error(); return res.json() })
-      .then(setProducts)
+      .then(data => {
+        const ordered = Object.fromEntries(
+          CATEGORY_ORDER.filter(k => k in data).map(k => [k, data[k]])
+        )
+        setProducts(ordered)
+      })
       .catch(() => {})
   }, [])
 
@@ -485,7 +500,7 @@ export default function Shop() {
                   <p className="shop-section-desc">{CATEGORY_META[key].desc}</p>
                 </div>
               </div>
-              <div className={`shop-grid shop-grid-${items.length}`}>
+              <div className={`shop-grid shop-grid-${items.length}${key === 'roasted' ? ' shop-grid-stretch' : ''}`}>
                 {items.map(p => (
                   <ProductCard key={p.id} product={p} />
                 ))}
