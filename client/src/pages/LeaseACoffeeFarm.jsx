@@ -401,7 +401,7 @@ export default function Investors() {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
             className="hero-actions"
           >
-            <Link to="/partnership" className="btn-primary">Get Started →</Link>
+            <Link to="/lease-application?plan=Starter%20Plan" className="btn-primary">Get Started →</Link>
             <Link to="/about" className="btn-secondary">Learn More</Link>
           </motion.div>
         </div>
