@@ -103,7 +103,7 @@ export default function AdminOrders() {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
                   <tr style={{ background: '#f4f8f7', borderBottom: '1px solid #e0e0e0' }}>
-                          {['Invoice', 'Date', 'Customer', 'Phone', 'Email', 'Product', 'Qty', 'Location', 'Notes', 'Action'].map(h => (
+                          {['Invoice', 'Date', 'Customer', 'Product', 'Qty', 'Action'].map(h => (
                       <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 700, color: '#555', fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, whiteSpace: 'nowrap' }}>{h}</th>
                     ))}
                   </tr>
@@ -120,12 +120,8 @@ export default function AdminOrders() {
                         {new Date(o.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </td>
                       <td style={{ padding: '14px 16px', fontWeight: 700, color: '#0d1f1c', whiteSpace: 'nowrap' }}>{o.name}</td>
-                      <td style={{ padding: '14px 16px', color: '#555' }}>{o.phone}</td>
-                      <td style={{ padding: '14px 16px', color: '#555' }}>{o.email || '—'}</td>
-                      <td style={{ padding: '14px 16px', color: '#0d1f1c', fontWeight: 600, maxWidth: 200, whiteSpace: 'nowrap' }}>{o.product}</td>
+                      <td style={{ padding: '14px 16px', color: '#0d1f1c', fontWeight: 600, maxWidth: 280 }}>{o.product}</td>
                       <td style={{ padding: '14px 16px', color: '#0d1f1c', fontWeight: 700, textAlign: 'center' }}>{o.quantity}</td>
-                      <td style={{ padding: '14px 16px', color: '#555', maxWidth: 160 }}>{o.location}</td>
-                      <td style={{ padding: '14px 16px', color: '#555', minWidth: 180 }}>{o.notes || '—'}</td>
                       <td style={{ padding: '14px 16px' }}>
                         <button onClick={event => deleteOrder(event, o)} style={{ border: '1px solid #f1c8c4', borderRadius: 7, padding: '7px 10px', background: '#fff7f6', color: '#b64035', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
                           Delete

@@ -165,14 +165,14 @@ function ProductCard({ product }) {
 
   return (
     <div className="shop-card">
-      <div className="shop-card-img-wrap" style={product.varieties ? { height: '260px' } : undefined}>
+      <div className="shop-card-img-wrap" style={product.varieties?.length ? { height: '260px' } : undefined}>
         <img src={product.image} alt={product.name} className="shop-card-img" loading="lazy" />
       </div>
       <div className="shop-card-body">
         <p className="shop-card-variety">{product.variety}</p>
         <h3 className="shop-card-name">{product.name}</h3>
         <p className="shop-card-desc">{product.desc}</p>
-        {product.varieties ? (
+        {product.varieties?.length ? (
           <VarietyQtyTable varieties={product.varieties} qtys={varietyQtys} onChange={handleVarietyQty} open={tableOpen} onToggle={() => setTableOpen(o => !o)} />
         ) : (
           <div className="shop-qty-row" style={{ marginBottom: '12px' }}>
@@ -242,6 +242,14 @@ function CartDrawer({ onClose }) {
     setStatus('loading')
     setErrorMessage('')
     try {
+      const orderItems = cart.flatMap(item => {
+        if (item.id !== 'seedlings' || !Array.isArray(item.selections)) return [item]
+        const { arabica, robusta } = groupSeedlingSelections(item.selections)
+        return [
+          arabica.length > 0 ? { ...item, id: 'arabica', productName: 'Arabica Seedlings', selections: arabica } : null,
+          robusta.length > 0 ? { ...item, id: 'robusta', productName: 'Robusta Seedlings', selections: robusta } : null,
+        ].filter(Boolean)
+      })
       const res = await fetch(`${BACKEND}/api/shop/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -249,7 +257,7 @@ function CartDrawer({ onClose }) {
           name: form.name,
           phone: form.phone,
           email: form.email,
-          items: cart,
+          items: orderItems,
           quantity: totalQty,
           location: [form.district, form.province, form.country].filter(Boolean).join(', '),
           country: form.country,

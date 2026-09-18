@@ -33,7 +33,7 @@ export default function AdminLayout() {
       </header>
       {open && <button className="admin-menu-backdrop" aria-label="Close admin menu" onClick={() => setOpen(false)} />}
       <aside className={`admin-sidebar${open ? ' is-open' : ''}`}>
-        <div className="admin-sidebar-brand"><span className="admin-brand-mark">B</span><div><strong>Boldstone</strong><small>Admin workspace</small></div><button className="admin-close-button" aria-label="Close admin menu" onClick={() => setOpen(false)}>Close</button></div>
+        <div className="admin-sidebar-brand"><img className="admin-brand-mark" src="https://res.cloudinary.com/cwj8d38f/image/upload/v1789729870/Boldstone_logo_hiv7pl.jpg" alt="Boldstone Investments" /><div><strong>Boldstone</strong><small>Admin workspace</small></div><button className="admin-close-button" aria-label="Close admin menu" onClick={() => setOpen(false)}>Close</button></div>
         <nav className="admin-sidebar-nav" aria-label="Admin pages">
           <span className="admin-nav-label">Workspace</span>
           {links.map(link => <NavLink key={link.to} to={link.to} end={link.end} onClick={() => setOpen(false)}><span>{link.label}</span></NavLink>)}
