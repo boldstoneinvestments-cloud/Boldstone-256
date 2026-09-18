@@ -22,18 +22,10 @@ export default function AdminLayout() {
 
   return (
     <div className="admin-shell">
-      <button className="admin-menu-button" aria-label="Open admin menu" onClick={() => setOpen(true)}>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 7h16M4 12h16M4 17h16" />
-        </svg>
-      </button>
+      <button className="admin-menu-button" aria-label="Open admin menu" onClick={() => setOpen(true)}>Menu</button>
       {open && <button className="admin-menu-backdrop" aria-label="Close admin menu" onClick={() => setOpen(false)} />}
       <aside className={`admin-sidebar${open ? ' is-open' : ''}`}>
-        <div className="admin-sidebar-brand"><span className="admin-brand-mark">B</span><div><strong>Boldstone</strong><small>Admin workspace</small></div><button className="admin-close-button" aria-label="Close admin menu" onClick={() => setOpen(false)}>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 6l12 12M18 6L6 18" />
-          </svg>
-        </button></div>
+        <div className="admin-sidebar-brand"><span className="admin-brand-mark">B</span><div><strong>Boldstone</strong><small>Admin workspace</small></div><button className="admin-close-button" aria-label="Close admin menu" onClick={() => setOpen(false)}>Close</button></div>
         <nav className="admin-sidebar-nav" aria-label="Admin pages">
           <span className="admin-nav-label">Workspace</span>
           {links.map(link => <NavLink key={link.to} to={link.to} end={link.end} onClick={() => setOpen(false)}><span>{link.label}</span></NavLink>)}
