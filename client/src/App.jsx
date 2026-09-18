@@ -19,6 +19,7 @@ import AdminLogin from './pages/AdminLogin'
 import AdminLayout from './pages/AdminLayout'
 import AdminDashboard from './pages/AdminDashboard'
 import AdminApplications from './pages/AdminApplications'
+import AdminUsers from './pages/AdminUsers'
 import NotFound from './pages/NotFound'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
@@ -53,6 +54,7 @@ function AppInner() {
             <Route path="orders" element={<AdminOrders />} />
             <Route path="orders/:id" element={<AdminOrderDetail />} />
             <Route path="lease-applications" element={<AdminApplications />} />
+            <Route path="users" element={<AdminUsers />} />
             <Route path="blog" element={<AdminBlog />} />
           </Route>
           <Route path="/terms" element={<Terms />} />

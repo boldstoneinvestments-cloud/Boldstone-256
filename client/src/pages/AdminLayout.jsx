@@ -8,6 +8,7 @@ const links = [
   { to: '/admin', label: 'Dashboard', end: true },
   { to: '/admin/orders', label: 'Orders' },
   { to: '/admin/lease-applications', label: 'Lease applications' },
+  { to: '/admin/users', label: 'Admin users' },
   { to: '/admin/blog', label: 'Blog manager' },
 ]
 
