@@ -72,6 +72,11 @@ const pages = {
     description: 'Submit your details to get started with a managed coffee farm at Boldstone Investments.',
     image: shareImage,
   },
+  '/shop': {
+    title: 'Shop | Boldstone Investments — Coffee Seedlings, Roasted Coffee & Indigenous Trees',
+    description: 'Order coffee seedlings (Arabica & Robusta), freshly roasted coffee, and indigenous tree seedlings from Boldstone Investments Uganda.',
+    image: 'https://res.cloudinary.com/cwj8d38f/image/upload/v1789633592/coffee_bacground_image_ao1pyb.png',
+  },
   '/team': {
     title: 'Boldstone Team | Meet Our Leadership & Coffee Experts',
     description: 'Meet the Boldstone team of coffee experts, entrepreneurs, and strategists dedicated to building sustainable coffee farming and value chains in Uganda.',
