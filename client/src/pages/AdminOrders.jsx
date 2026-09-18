@@ -50,7 +50,7 @@ export default function AdminOrders() {
 
   return (
     <div style={{ background: '#f4f8f7', minHeight: '100vh', padding: 'clamp(24px, 6vw, 48px) clamp(14px, 4vw, 24px)' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+      <div style={{ width: '100%', maxWidth: 'none', margin: '0 auto', boxSizing: 'border-box' }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32, flexWrap: 'wrap', gap: 16 }}>
