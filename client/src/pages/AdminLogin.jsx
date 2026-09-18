@@ -27,7 +27,7 @@ export default function AdminLogin() {
         body: JSON.stringify({ username, password }),
       })
       if (!response.ok) throw new Error()
-      navigate('/admin/orders')
+      navigate('/admin')
     } catch {
       setError('Invalid admin credentials. Please try again.')
     } finally {

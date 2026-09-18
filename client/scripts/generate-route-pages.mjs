@@ -52,6 +52,16 @@ const pages = {
     description: 'Sign in to the Boldstone Investments administration dashboard.',
     image: shareImage,
   },
+  '/admin': {
+    title: 'Admin Dashboard | Boldstone Investments',
+    description: 'Boldstone Investments administration dashboard.',
+    image: shareImage,
+  },
+  '/admin/lease-applications': {
+    title: 'Lease Applications | Boldstone Investments',
+    description: 'Review Boldstone Investments coffee farm lease applications.',
+    image: shareImage,
+  },
   '/admin/orders': {
     title: 'Orders Dashboard | Boldstone Investments',
     description: 'View Boldstone Investments shop orders.',

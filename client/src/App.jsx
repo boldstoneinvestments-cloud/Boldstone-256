@@ -14,6 +14,9 @@ import Blog from './pages/Blog'
 import AdminBlog from './pages/AdminBlog'
 import AdminOrders from './pages/AdminOrders'
 import AdminLogin from './pages/AdminLogin'
+import AdminLayout from './pages/AdminLayout'
+import AdminDashboard from './pages/AdminDashboard'
+import AdminApplications from './pages/AdminApplications'
 import NotFound from './pages/NotFound'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
@@ -26,10 +29,12 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  const { pathname } = useLocation()
+  const isAdmin = pathname.startsWith('/admin')
   return (
     <div className="min-h-screen flex flex-col">
       <ScrollToTop />
-      <Navbar />
+      {!isAdmin && <Navbar />}
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -40,17 +45,21 @@ export default function App() {
           <Route path="/partnership" element={<Partnership />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
-          <Route path="/admin/blog" element={<AdminBlog />} />
           <Route path="/admin/sign-in" element={<AdminLogin />} />
-          <Route path="/admin/orders" element={<AdminOrders />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="lease-applications" element={<AdminApplications />} />
+            <Route path="blog" element={<AdminBlog />} />
+          </Route>
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      {['/farmers', '/lease-a-coffee-farm'].includes(useLocation().pathname) && <PaymentBar />}
-      <Footer />
+      {!isAdmin && ['farmers', 'lease-a-coffee-farm'].includes(pathname.slice(1)) && <PaymentBar />}
+      {!isAdmin && <Footer />}
     </div>
   )
 }
