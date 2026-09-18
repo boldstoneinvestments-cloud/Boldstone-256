@@ -47,6 +47,16 @@ const pages = {
     description: "Read Boldstone news, insights and updates on Uganda's coffee industry, coffee farming, investment, processing, agriculture, markets and the future of African coffee.",
     image: 'https://address-restaurant2.odoo.com/web/image/2031-8f550bf9/coffee%20machine.webp',
   },
+  '/admin/sign-in': {
+    title: 'Admin Sign In | Boldstone Investments',
+    description: 'Sign in to the Boldstone Investments administration dashboard.',
+    image: shareImage,
+  },
+  '/admin/orders': {
+    title: 'Orders Dashboard | Boldstone Investments',
+    description: 'View Boldstone Investments shop orders.',
+    image: shareImage,
+  },
   '/team': {
     title: 'Boldstone Team | Meet Our Leadership & Coffee Experts',
     description: 'Meet the Boldstone team of coffee experts, entrepreneurs, and strategists dedicated to building sustainable coffee farming and value chains in Uganda.',
