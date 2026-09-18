@@ -64,15 +64,15 @@ export default function AdminOrders() {
         </div>
 
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 16, marginBottom: 32 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, marginBottom: 32 }}>
           {[
             { label: 'Total Orders', value: counts.total, color: '#0f8972', bg: '#e6f4f1' },
             { label: 'Latest order', value: orders[0] ? new Date(orders[0].created_at).toLocaleDateString() : '—', color: '#2563eb', bg: '#dbeafe' },
             { label: 'Customers', value: new Set(orders.map(order => order.email)).size, color: '#16a34a', bg: '#dcfce7' },
           ].map(s => (
-            <div key={s.label} style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 12, padding: '20px 24px' }}>
-              <p style={{ fontSize: 12, color: '#888', fontWeight: 600, margin: '0 0 8px', textTransform: 'uppercase', letterSpacing: 1 }}>{s.label}</p>
-              <p style={{ fontSize: 28, fontWeight: 900, color: s.color, margin: 0 }}>{s.value}</p>
+            <div key={s.label} style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 10, padding: '12px 8px', minWidth: 0, overflow: 'hidden' }}>
+              <p style={{ fontSize: 9, color: '#888', fontWeight: 700, margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.25, overflowWrap: 'anywhere' }}>{s.label}</p>
+              <p style={{ fontSize: 18, fontWeight: 900, color: s.color, margin: 0, lineHeight: 1.15, overflowWrap: 'anywhere' }}>{s.value}</p>
             </div>
           ))}
         </div>
