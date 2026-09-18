@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLock } from '@fortawesome/free-solid-svg-icons'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app')
@@ -38,9 +36,6 @@ export default function AdminLogin() {
   return (
     <div style={{ minHeight: '60vh', background: '#f4f8f7', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(20px, 6vw, 48px) 16px' }}>
       <form onSubmit={submit} style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 16, padding: 'clamp(28px, 8vw, 48px) clamp(20px, 7vw, 40px)', width: '100%', maxWidth: 400, textAlign: 'center', boxSizing: 'border-box' }}>
-        <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(15,137,114,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-          <FontAwesomeIcon icon={faLock} style={{ color: '#0f8972', fontSize: 22 }} />
-        </div>
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#0f8972', margin: '0 0 8px' }}>Boldstone</p>
         <h1 style={{ fontSize: 24, fontWeight: 900, color: '#0d1f1c', margin: '0 0 8px' }}>Admin sign in</h1>
         <p style={{ fontSize: 13, color: '#777', margin: '0 0 28px' }}>Sign in to view shop orders.</p>
