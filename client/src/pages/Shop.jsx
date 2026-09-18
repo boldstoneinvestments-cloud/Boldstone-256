@@ -209,9 +209,10 @@ function groupSeedlingSelections(selections) {
 function CartDrawer({ onClose }) {
   const { cart, removeFromCart, clearCart } = useCart()
   const [step, setStep] = useState('receipt')
-  const [form, setForm] = useState({ name: '', phone: '', email: '', location: '', notes: '' })
+  const [form, setForm] = useState({ name: '', phone: '', email: '', country: 'Uganda', province: '', district: '', street: '', village: '', notes: '' })
   const [status, setStatus] = useState('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [invoiceNumber, setInvoiceNumber] = useState('')
 
   const handle = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
@@ -239,7 +240,12 @@ function CartDrawer({ onClose }) {
           email: form.email,
           items: cart,
           quantity: totalQty,
-          location: form.location,
+          location: [form.district, form.province, form.country].filter(Boolean).join(', '),
+          country: form.country,
+          province: form.province,
+          district: form.district,
+          street: form.street,
+          village: form.village,
           notes: form.notes,
         }),
       })
@@ -247,6 +253,8 @@ function CartDrawer({ onClose }) {
         const data = await res.json().catch(() => ({}))
         throw new Error(data.error || 'Failed to place order.')
       }
+      const data = await res.json()
+      setInvoiceNumber(data.invoiceNumber || '')
       setStatus('success')
       clearCart()
     } catch (error) {
@@ -265,6 +273,7 @@ function CartDrawer({ onClose }) {
             <div className="drawer-success-icon">✓</div>
             <h3>Order Placed!</h3>
             <p>Thank you, <strong>{form.name}</strong>. We'll contact you within 24 hours to confirm your order.</p>
+            {invoiceNumber && <p className="drawer-invoice-number">Invoice: <strong>{invoiceNumber}</strong></p>}
             <button className="drawer-done-btn" onClick={onClose}>Done</button>
           </div>
         ) : step === 'receipt' ? (
@@ -382,9 +391,29 @@ function CartDrawer({ onClose }) {
                   <label>Email Address *</label>
                   <input name="email" type="email" placeholder="your@email.com" value={form.email} onChange={handle} required />
                 </div>
+                <div className="drawer-row">
+                  <div className="drawer-field">
+                    <label>Country *</label>
+                    <input name="country" type="text" value={form.country} onChange={handle} required />
+                  </div>
+                  <div className="drawer-field">
+                    <label>Province / Region *</label>
+                    <input name="province" type="text" placeholder="Central, Western..." value={form.province} onChange={handle} required />
+                  </div>
+                </div>
+                <div className="drawer-row">
+                  <div className="drawer-field">
+                    <label>District *</label>
+                    <input name="district" type="text" placeholder="District" value={form.district} onChange={handle} required />
+                  </div>
+                  <div className="drawer-field">
+                    <label>Street <span>(optional)</span></label>
+                    <input name="street" type="text" placeholder="Street or road" value={form.street} onChange={handle} />
+                  </div>
+                </div>
                 <div className="drawer-field">
-                  <label>Delivery Location *</label>
-                  <input name="location" type="text" placeholder="Town, district or full address" value={form.location} onChange={handle} required />
+                  <label>Village <span>(optional)</span></label>
+                  <input name="village" type="text" placeholder="Village or locality" value={form.village} onChange={handle} />
                 </div>
                 <div className="drawer-field">
                   <label>Additional Notes</label>

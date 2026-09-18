@@ -360,6 +360,11 @@
   border: 1px solid rgba(220,38,38,0.2);
   color: #dc2626;
 }
+.drawer-invoice-number {
+  margin-top: 10px;
+  color: #0f8972;
+  font-size: 0.9rem;
+}
 
 @media (max-width: 1024px) {
   .shop-grid-3 { grid-template-columns: repeat(2, 1fr); }

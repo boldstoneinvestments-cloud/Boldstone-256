@@ -91,7 +91,7 @@ export default function AdminOrders() {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
                   <tr style={{ background: '#f4f8f7', borderBottom: '1px solid #e0e0e0' }}>
-                          {['#', 'Date', 'Customer', 'Phone', 'Email', 'Product', 'Qty', 'Location', 'Notes'].map(h => (
+                          {['Invoice', 'Date', 'Customer', 'Phone', 'Email', 'Product', 'Qty', 'Location', 'Notes'].map(h => (
                       <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 700, color: '#555', fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, whiteSpace: 'nowrap' }}>{h}</th>
                     ))}
                   </tr>
@@ -99,7 +99,7 @@ export default function AdminOrders() {
                 <tbody>
                   {orders.map((o, i) => (
                     <tr key={o.id} style={{ borderBottom: '1px solid #f0f0f0', background: i % 2 === 0 ? '#fff' : '#fafafa' }}>
-                      <td style={{ padding: '14px 16px', color: '#999', fontWeight: 600 }}>{o.id}</td>
+                      <td style={{ padding: '14px 16px', color: '#999', fontWeight: 600, whiteSpace: 'nowrap' }}>{o.invoice_number || o.id}</td>
                       <td style={{ padding: '14px 16px', color: '#555', whiteSpace: 'nowrap' }}>
                         {new Date(o.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </td>
