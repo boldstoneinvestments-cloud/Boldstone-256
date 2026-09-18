@@ -3,7 +3,10 @@ import { Navigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRotateRight, faBoxOpen } from '@fortawesome/free-solid-svg-icons'
 
-const BACKEND = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+const configuredBackend = import.meta.env.VITE_API_URL
+const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app')
+  ? configuredBackend.replace(/\/$/, '')
+  : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
 
 export default function AdminOrders() {
   const [authed, setAuthed] = useState(null)
