@@ -138,7 +138,7 @@ function ProductCard({ product }) {
     setVarietyQtys(q => ({ ...q, [variety]: val }))
 
   const handleAdd = () => {
-    if (product.varieties) {
+    if (product.varieties?.length) {
       const selections = product.varieties
         .filter(v => (varietyQtys[v] || 0) > 0)
         .map(v => ({ variety: v, qty: varietyQtys[v] }))
@@ -161,7 +161,7 @@ function ProductCard({ product }) {
         <p className="shop-card-variety">{product.variety}</p>
         <h3 className="shop-card-name">{product.name}</h3>
         <p className="shop-card-desc">{product.desc}</p>
-        {product.varieties ? (
+        {product.varieties?.length ? (
           <VarietyQtyTable varieties={product.varieties} qtys={varietyQtys} onChange={handleVarietyQty} />
         ) : (
           <div className="shop-qty-row" style={{ marginBottom: '12px' }}>
