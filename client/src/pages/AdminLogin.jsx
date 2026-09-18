@@ -36,8 +36,8 @@ export default function AdminLogin() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f4f8f7', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <form onSubmit={submit} style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 16, padding: '48px 40px', width: '100%', maxWidth: 400, textAlign: 'center' }}>
+    <div style={{ minHeight: '60vh', background: '#f4f8f7', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(20px, 6vw, 48px) 16px' }}>
+      <form onSubmit={submit} style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 16, padding: 'clamp(28px, 8vw, 48px) clamp(20px, 7vw, 40px)', width: '100%', maxWidth: 400, textAlign: 'center', boxSizing: 'border-box' }}>
         <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(15,137,114,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
           <FontAwesomeIcon icon={faLock} style={{ color: '#0f8972', fontSize: 22 }} />
         </div>

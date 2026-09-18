@@ -34,7 +34,7 @@ export default function AdminOrders() {
   useEffect(() => { fetchOrders() }, [fetchOrders])
 
   if (authed === null) {
-    return <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', color: '#777' }}>Checking admin session...</div>
+    return <div style={{ minHeight: '60vh', display: 'grid', placeItems: 'center', color: '#777', padding: 24 }}>Checking admin session...</div>
   }
 
   if (!authed) {
@@ -49,7 +49,7 @@ export default function AdminOrders() {
   }
 
   return (
-    <div style={{ background: '#f4f8f7', minHeight: '100vh', padding: '48px 24px' }}>
+    <div style={{ background: '#f4f8f7', minHeight: '100vh', padding: 'clamp(24px, 6vw, 48px) clamp(14px, 4vw, 24px)' }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
 
         {/* Header */}
@@ -64,7 +64,7 @@ export default function AdminOrders() {
         </div>
 
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 32 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 16, marginBottom: 32 }}>
           {[
             { label: 'Total Orders', value: counts.total, color: '#0f8972', bg: '#e6f4f1' },
             { label: 'Latest order', value: orders[0] ? new Date(orders[0].created_at).toLocaleDateString() : '—', color: '#2563eb', bg: '#dbeafe' },
