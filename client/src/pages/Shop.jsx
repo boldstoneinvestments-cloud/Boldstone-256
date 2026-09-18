@@ -94,7 +94,9 @@ const PRODUCTS = {
   ],
 }
 
-const CATEGORY_META = {
+const CATEGORY_ORDER = ['seedlings', 'roasted', 'trees']
+
+
   seedlings: { label: 'Coffee Seedlings', icon: '', desc: 'Certified, nursery-grown coffee seedlings ready for planting.' },
   roasted:   { label: 'Roasted Coffee',   icon: '☕', desc: 'Freshly roasted coffee from our partner farms in Uganda.' },
   trees:     { label: 'Indigenous Trees', icon: '', desc: 'Native Ugandan tree seedlings for agroforestry and reforestation.' },
@@ -451,7 +453,12 @@ export default function Shop() {
   useEffect(() => {
     fetch(`${BACKEND}/api/shop/products`)
       .then(res => { if (!res.ok) throw new Error(); return res.json() })
-      .then(setProducts)
+      .then(data => {
+        const ordered = Object.fromEntries(
+          CATEGORY_ORDER.filter(k => k in data).map(k => [k, data[k]])
+        )
+        setProducts(ordered)
+      })
       .catch(() => {})
   }, [])
 
