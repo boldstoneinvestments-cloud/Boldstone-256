@@ -57,6 +57,11 @@ const pages = {
     description: 'View Boldstone Investments shop orders.',
     image: shareImage,
   },
+  '/lease-application': {
+    title: 'Get Started | Boldstone Investments',
+    description: 'Submit your details to get started with a managed coffee farm at Boldstone Investments.',
+    image: shareImage,
+  },
   '/team': {
     title: 'Boldstone Team | Meet Our Leadership & Coffee Experts',
     description: 'Meet the Boldstone team of coffee experts, entrepreneurs, and strategists dedicated to building sustainable coffee farming and value chains in Uganda.',

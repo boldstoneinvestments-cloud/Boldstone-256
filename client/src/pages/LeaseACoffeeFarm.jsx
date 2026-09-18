@@ -581,7 +581,7 @@ export default function Investors() {
                     )}
                     </div>
 
-                    <Link to="/partnership" className="plan-cta">
+                    <Link to={`/lease-application?plan=${encodeURIComponent(plan.name)}`} className="plan-cta">
                       {plan.cta} <FontAwesomeIcon icon={faArrowRight} />
                     </Link>
                   </div>

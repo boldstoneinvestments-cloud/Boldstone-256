@@ -1197,6 +1197,9 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 }
 
 @media (max-width: 540px) {
+  .lease-application-grid { grid-template-columns: 1fr; }
+  .lease-application-grid .full-field { grid-column: auto; }
+  .lease-application-plan { align-items: flex-start; flex-direction: column; gap: 6px; }
   .hero-content h1 { font-size: 1.5rem; }
   .hero-content p { font-size: 0.9rem; }
   .hero-btns { flex-direction: column; align-items: center; }
@@ -1212,6 +1215,39 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .plan-pricing span { font-size: 16px !important; }
   .plan-card:nth-child(1) { max-height: 695px; }
 }
+
+/* LEASE APPLICATION */
+.lease-application-page {
+  min-height: 100vh;
+  padding: clamp(32px, 7vw, 80px) 20px;
+  background: #f4f8f7;
+}
+.lease-application-intro,
+.lease-application-card {
+  width: min(100%, 760px);
+  margin: 0 auto;
+}
+.lease-application-intro { margin-bottom: 28px; }
+.lease-application-kicker { color: #0f8972; font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+.lease-application-intro h1 { margin: 10px 0; color: #0d1f1c; font-size: clamp(28px, 5vw, 46px); line-height: 1.1; }
+.lease-application-intro p { max-width: 560px; color: #5f6f6b; line-height: 1.7; }
+.lease-application-card { box-sizing: border-box; padding: clamp(22px, 5vw, 40px); background: #fff; border: 1px solid #dceae6; border-radius: 16px; box-shadow: 0 12px 32px rgba(13, 31, 28, 0.06); }
+.lease-application-card.success { text-align: center; }
+.lease-application-card.success h1 { color: #0d1f1c; }
+.lease-application-card.success p { color: #5f6f6b; line-height: 1.7; }
+.lease-application-plan { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 26px; padding: 14px 16px; background: #f0faf7; border-radius: 10px; color: #0f8972; }
+.lease-application-plan span { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.lease-application-plan strong { white-space: nowrap; }
+.lease-application-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.lease-application-grid label { display: flex; flex-direction: column; gap: 7px; color: #0d1f1c; font-size: 13px; font-weight: 700; }
+.lease-application-grid input,
+.lease-application-grid textarea { width: 100%; box-sizing: border-box; border: 1px solid #d6e3df; border-radius: 8px; padding: 12px 13px; color: #0d1f1c; font: inherit; font-weight: 400; outline: none; }
+.lease-application-grid input:focus,
+.lease-application-grid textarea:focus { border-color: #0f8972; }
+.lease-application-grid .full-field { grid-column: 1 / -1; }
+.lease-application-error { color: #c62828; font-size: 13px; }
+.lease-application-submit { width: 100%; margin-top: 22px; padding: 13px 18px; border: 0; border-radius: 8px; background: #0f8972; color: #fff; font-weight: 800; cursor: pointer; }
+.lease-application-submit:disabled { opacity: .65; cursor: wait; }
 
 /* ════════════════════════════════
    PARTNERSHIP PAGE
