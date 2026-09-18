@@ -1,43 +1,26 @@
 import { useState, useEffect, useCallback } from 'react'
+import { Navigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLock, faRotateRight, faBoxOpen } from '@fortawesome/free-solid-svg-icons'
+import { faRotateRight, faBoxOpen } from '@fortawesome/free-solid-svg-icons'
 
 const BACKEND = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 export default function AdminOrders() {
-  const [authed, setAuthed] = useState(false)
-  const [username, setUsername] = useState('')
-  const [pw, setPw] = useState('')
-  const [pwErr, setPwErr] = useState(false)
+  const [authed, setAuthed] = useState(null)
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(false)
   const [fetchErr, setFetchErr] = useState('')
-
-  const login = async e => {
-    e.preventDefault()
-    setPwErr(false)
-    try {
-      const res = await fetch(`${BACKEND}/api/admin/login`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password: pw }),
-      })
-      if (!res.ok) throw new Error()
-      setAuthed(true)
-    } catch {
-      setPwErr(true)
-    }
-  }
 
   const fetchOrders = useCallback(async () => {
     setLoading(true)
     setFetchErr('')
     try {
       const res = await fetch(`${BACKEND}/api/admin/orders`, { credentials: 'include' })
+      if (res.status === 401 || res.status === 403) { setAuthed(false); return }
       if (!res.ok) throw new Error()
       const data = await res.json()
       setOrders(data.orders || [])
+      setAuthed(true)
     } catch {
       setFetchErr('Could not load orders. Is the backend running?')
     } finally {
@@ -45,40 +28,14 @@ export default function AdminOrders() {
     }
   }, [])
 
-  useEffect(() => { if (authed) fetchOrders() }, [authed, fetchOrders])
+  useEffect(() => { fetchOrders() }, [fetchOrders])
+
+  if (authed === null) {
+    return <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', color: '#777' }}>Checking admin session...</div>
+  }
 
   if (!authed) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#f4f8f7', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-        <form onSubmit={login} style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 16, padding: '48px 40px', width: '100%', maxWidth: 400, textAlign: 'center' }}>
-          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(15,137,114,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-            <FontAwesomeIcon icon={faLock} style={{ color: '#0f8972', fontSize: 22 }} />
-          </div>
-          <h2 style={{ fontSize: 22, fontWeight: 900, color: '#0d1f1c', marginBottom: 6 }}>Admin Access</h2>
-            <p style={{ fontSize: 13, color: '#777', marginBottom: 28 }}>Sign in with your Django admin account</p>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-            required
-            style={{ width: '100%', border: '1px solid #e0e0e0', borderRadius: 8, padding: '12px 14px', fontSize: 14, outline: 'none', marginBottom: 8, boxSizing: 'border-box' }}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            required
-            value={pw}
-            onChange={e => setPw(e.target.value)}
-            style={{ width: '100%', border: `1px solid ${pwErr ? '#f87171' : '#e0e0e0'}`, borderRadius: 8, padding: '12px 14px', fontSize: 14, outline: 'none', marginBottom: 8, boxSizing: 'border-box' }}
-          />
-          {pwErr && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>Incorrect password</p>}
-          <button type="submit" style={{ width: '100%', background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: 13, borderRadius: 8, border: 'none', cursor: 'pointer', marginTop: 8 }}>
-            Login
-          </button>
-        </form>
-      </div>
-    )
+    return <Navigate to="/admin/sign-in" replace />
   }
 
   const counts = {

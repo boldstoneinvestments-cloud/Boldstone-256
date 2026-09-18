@@ -12,6 +12,7 @@ import Contact from './pages/Contact'
 import Blog from './pages/Blog'
 import AdminBlog from './pages/AdminBlog'
 import AdminOrders from './pages/AdminOrders'
+import AdminLogin from './pages/AdminLogin'
 import NotFound from './pages/NotFound'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/admin/blog" element={<AdminBlog />} />
+          <Route path="/admin/sign-in" element={<AdminLogin />} />
           <Route path="/admin/orders" element={<AdminOrders />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
