@@ -97,6 +97,7 @@ const PRODUCTS = {
 const CATEGORY_ORDER = ['seedlings', 'roasted', 'trees']
 
 const CATEGORY_META = {
+  seedlings: { label: 'Coffee Seedlings', icon: '', desc: 'Certified, nursery-grown coffee seedlings ready for planting.' },
   roasted:   { label: 'Roasted Coffee',   icon: '☕', desc: 'Freshly roasted coffee from our partner farms in Uganda.' },
   trees:     { label: 'Indigenous Trees', icon: '', desc: 'Native Ugandan tree seedlings for agroforestry and reforestation.' },
 }
@@ -494,10 +495,10 @@ export default function Shop() {
           <section key={key} className="shop-section">
             <div className="bs-wrap">
               <div className="shop-section-header">
-                <span className="shop-section-icon">{CATEGORY_META[key].icon}</span>
+                <span className="shop-section-icon">{CATEGORY_META[key]?.icon}</span>
                 <div>
-                  <h2 className="shop-section-title">{CATEGORY_META[key].label}</h2>
-                  <p className="shop-section-desc">{CATEGORY_META[key].desc}</p>
+                  <h2 className="shop-section-title">{CATEGORY_META[key]?.label ?? key}</h2>
+                  <p className="shop-section-desc">{CATEGORY_META[key]?.desc}</p>
                 </div>
               </div>
               <div className={`shop-grid shop-grid-${items.length}${key === 'roasted' ? ' shop-grid-stretch' : ''}`}>
