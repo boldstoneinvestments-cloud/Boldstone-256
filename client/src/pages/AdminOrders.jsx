@@ -41,13 +41,6 @@ export default function AdminOrders() {
     return <Navigate to="/admin/sign-in" replace />
   }
 
-  const counts = {
-    total: orders.length,
-    pending: orders.filter(o => o.status === 'Pending').length,
-    confirmed: orders.filter(o => o.status === 'Confirmed').length,
-    delivered: orders.filter(o => o.status === 'Delivered').length,
-  }
-
   return (
     <div style={{ background: '#f4f8f7', minHeight: '100vh', padding: 'clamp(24px, 6vw, 48px) clamp(14px, 4vw, 24px)' }}>
       <div style={{ width: '100%', maxWidth: 'none', margin: '0 auto', boxSizing: 'border-box' }}>
@@ -66,7 +59,7 @@ export default function AdminOrders() {
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, marginBottom: 32 }}>
           {[
-            { label: 'Total Orders', value: counts.total, color: '#0f8972', bg: '#e6f4f1' },
+            { label: 'Total Orders', value: orders.length, color: '#0f8972', bg: '#e6f4f1' },
             { label: 'Latest order', value: orders[0] ? new Date(orders[0].created_at).toLocaleDateString() : '—', color: '#2563eb', bg: '#dbeafe' },
             { label: 'Customers', value: new Set(orders.map(order => order.email)).size, color: '#16a34a', bg: '#dcfce7' },
           ].map(s => (
@@ -98,7 +91,7 @@ export default function AdminOrders() {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
                   <tr style={{ background: '#f4f8f7', borderBottom: '1px solid #e0e0e0' }}>
-                    {['#', 'Date', 'Customer', 'Phone', 'Email', 'Product', 'Qty', 'Location'].map(h => (
+                          {['#', 'Date', 'Customer', 'Phone', 'Email', 'Product', 'Qty', 'Location', 'Notes'].map(h => (
                       <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 700, color: '#555', fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, whiteSpace: 'nowrap' }}>{h}</th>
                     ))}
                   </tr>
@@ -116,6 +109,7 @@ export default function AdminOrders() {
                       <td style={{ padding: '14px 16px', color: '#0d1f1c', fontWeight: 600, maxWidth: 200, whiteSpace: 'nowrap' }}>{o.product}</td>
                       <td style={{ padding: '14px 16px', color: '#0d1f1c', fontWeight: 700, textAlign: 'center' }}>{o.quantity}</td>
                       <td style={{ padding: '14px 16px', color: '#555', maxWidth: 160 }}>{o.location}</td>
+                      <td style={{ padding: '14px 16px', color: '#555', minWidth: 180 }}>{o.notes || '—'}</td>
                     </tr>
                   ))}
                 </tbody>
