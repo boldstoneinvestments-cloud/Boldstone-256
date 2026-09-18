@@ -96,8 +96,7 @@ const PRODUCTS = {
 
 const CATEGORY_ORDER = ['seedlings', 'roasted', 'trees']
 
-
-  seedlings: { label: 'Coffee Seedlings', icon: '', desc: 'Certified, nursery-grown coffee seedlings ready for planting.' },
+const CATEGORY_META = {
   roasted:   { label: 'Roasted Coffee',   icon: '☕', desc: 'Freshly roasted coffee from our partner farms in Uganda.' },
   trees:     { label: 'Indigenous Trees', icon: '', desc: 'Native Ugandan tree seedlings for agroforestry and reforestation.' },
 }
