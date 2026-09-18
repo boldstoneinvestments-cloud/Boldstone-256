@@ -80,6 +80,13 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-user-row strong { color: #0d1f1c; font-size: 14px; }
 .admin-user-row span { margin-top: 4px; color: #70817c; font-size: 12px; }
 .admin-user-row small { flex-shrink: 0; padding: 5px 8px; border-radius: 999px; background: #e6f4f1; color: #0f8972; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+.admin-user-row-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.admin-user-row-actions button, .admin-user-cancel { border: 1px solid #cfe0db; border-radius: 7px; padding: 7px 10px; background: #fff; color: #0f8972; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.admin-user-edit-form { margin-top: 14px; padding-top: 20px; border-top: 1px solid #edf1ef; }
+.admin-user-edit-form h2 { margin-bottom: 0; }
+.admin-user-edit-form label { display: grid; gap: 7px; margin-top: 14px; color: #315d54; font-size: 12px; font-weight: 800; }
+.admin-user-edit-form input { width: 100%; padding: 11px 12px; border: 1px solid #cfe0db; border-radius: 8px; background: #fbfdfc; color: #0d1f1c; font: inherit; font-size: 14px; outline: none; }
+.admin-user-edit-form input:focus { border-color: #0f8972; box-shadow: 0 0 0 3px rgba(15,137,114,.12); }
 .admin-user-empty { color: #8a9a96; font-size: 13px; }
 
 .admin-order-detail-page { max-width: 1100px; margin: 0 auto; }
