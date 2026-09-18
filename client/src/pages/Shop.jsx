@@ -211,6 +211,7 @@ function CartDrawer({ onClose }) {
   const [step, setStep] = useState('receipt')
   const [form, setForm] = useState({ name: '', phone: '', email: '', location: '', notes: '' })
   const [status, setStatus] = useState('idle')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handle = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
@@ -227,8 +228,9 @@ function CartDrawer({ onClose }) {
   const submit = async e => {
     e.preventDefault()
     setStatus('loading')
+    setErrorMessage('')
     try {
-      const res = await fetch(`${BACKEND}/api/orders`, {
+      const res = await fetch(`${BACKEND}/api/shop/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -241,11 +243,15 @@ function CartDrawer({ onClose }) {
           notes: form.notes,
         }),
       })
-      if (!res.ok) throw new Error()
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Failed to place order.')
+      }
       setStatus('success')
       clearCart()
-    } catch {
+    } catch (error) {
       setStatus('error')
+      setErrorMessage(error.message || 'Failed to place order. Please try again.')
     }
   }
 
@@ -360,7 +366,7 @@ function CartDrawer({ onClose }) {
               </div>
               <form id="checkout-form" className="drawer-form" onSubmit={submit}>
                 {status === 'error' && (
-                  <div className="drawer-alert-error">Failed to place order. Please try again.</div>
+                  <div className="drawer-alert-error">{errorMessage || 'Failed to place order. Please try again.'}</div>
                 )}
                 <div className="drawer-row">
                   <div className="drawer-field">
