@@ -2,7 +2,10 @@ import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 
-const BACKEND = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+const configuredBackend = import.meta.env.VITE_API_URL
+const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app')
+  ? configuredBackend.replace(/\/$/, '')
+  : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
 const plans = ['Starter Plan', 'Growth Plan']
 
 export default function LeaseApplication() {
