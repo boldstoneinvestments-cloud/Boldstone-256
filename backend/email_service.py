@@ -6,7 +6,7 @@ import resend
 
 logger = logging.getLogger(__name__)
 LOGO_URL = 'https://res.cloudinary.com/cwj8d38f/image/upload/v1789729870/Boldstone_logo_hiv7pl.jpg'
-ADMIN_ORDER_EMAIL = 'boldstone.investments@gmail.com'
+ADMIN_ORDER_EMAIL = os.getenv('RESEND_ADMIN_EMAIL', 'boldstone.investments@gmail.com').strip()
 
 
 def send_lease_application_confirmation(application):
@@ -22,25 +22,48 @@ def send_lease_application_confirmation(application):
     name = html.escape(application.full_name)
     plan = html.escape(application.plan)
     country = html.escape(application.country)
+    address = html.escape(application.address or '')
+    phone = html.escape(application.phone or '')
     sender = f'{from_name} <{from_email}>'
 
     try:
         resend.Emails.send({
             'from': sender,
             'to': [application.email],
-            'subject': f'Thank you, {application.full_name} - your lease application',
+            'subject': f'Thank you, {application.full_name} - your land lease request',
             'reply_to': from_email,
             'html': f'''
                 <div style="font-family: Arial, sans-serif; color: #173b34; line-height: 1.6; max-width: 640px;">
                     <div style="padding: 8px 0 24px; text-align: center; border-bottom: 1px solid #dceae6;">
                         <img src="{LOGO_URL}" alt="Boldstone Investments" width="110" height="110" style="display: block; width: 110px; height: 110px; max-width: 100%; margin: 0 auto; border-radius: 50%; object-fit: cover;" />
                     </div>
-                    <h2 style="color: #0f8972;">Thank you for your application, {name}</h2>
+                    <h2 style="color: #0f8972;">Thank you for your interest in leasing land, {name}</h2>
                     <p>Dear {name},</p>
-                    <p>Thank you for your interest in leasing land with Boldstone Investments. We have received your application and appreciate the opportunity to learn more about your plans for coffee farming.</p>
+                    <p>Thank you for choosing Boldstone Investments. We have received your request to lease land with us and appreciate your interest in developing a coffee farm.</p>
                     <p><strong>Selected plan:</strong> {plan}<br><strong>Country:</strong> {country}</p>
-                    <p>Our team will review the information provided and contact you shortly to discuss availability, the application process, and the next steps.</p>
-                    <p>Kind regards,<br><strong>Boldstone Investments Team</strong><br>Coffee farming and agricultural investment in Uganda</p>
+                    <p>Our team will contact you shortly to confirm the payment details, provide more information about the lease, and guide you through the next steps.</p>
+                    <p>We look forward to helping you begin your coffee farming journey with Boldstone Investments.</p>
+                    <p>Kind regards,<br><strong>Boldstone Investments</strong><br>Coffee farming and agricultural investment in Uganda</p>
+                </div>
+            ''',
+        })
+        resend.Emails.send({
+            'from': sender,
+            'to': [ADMIN_ORDER_EMAIL],
+            'subject': f'New lease request from {application.full_name} - Boldstone Investments',
+            'reply_to': from_email,
+            'html': f'''
+                <div style="font-family:Arial,sans-serif;color:#173b34;line-height:1.6;max-width:640px;margin:0 auto;">
+                    <div style="padding:8px 0 24px;text-align:center;border-bottom:1px solid #dceae6;">
+                        <img src="{LOGO_URL}" alt="Boldstone Investments" width="110" height="110" style="display:block;width:110px;height:110px;max-width:100%;margin:0 auto;border-radius:50%;object-fit:cover;" />
+                    </div>
+                    <p style="margin-top:28px;">Hello Boldstone Investments Team,</p>
+                    <p>A new lease request has been submitted through the <strong>Boldstone Investments</strong> website.</p>
+                    <h2 style="margin:28px 0 12px;color:#0f8972;font-size:20px;">Lease Request</h2>
+                    <p><strong>Customer:</strong> {name}<br><strong>Plan:</strong> {plan}<br><strong>Status:</strong> Submitted<br><strong>Country:</strong> {country}<br><strong>Phone:</strong> {phone}<br><strong>Email:</strong> {html.escape(application.email)}</p>
+                    <p><strong>Address:</strong> {address or 'Not provided'}<br><strong>Notes:</strong> {html.escape(application.notes or 'None')}</p>
+                    <p>Please contact the customer to confirm payment details and provide more information about the land lease.</p>
+                    <p>Kind regards,<br><strong>Boldstone Investments System</strong><br><em>Automated Lease Notification</em><br><strong>Coffee Farming &amp; Agricultural Investment in Uganda</strong></p>
                 </div>
             ''',
         })
@@ -57,7 +80,7 @@ def send_shop_order_confirmation(orders, invoice_number):
     from_email = os.getenv('RESEND_FROM_EMAIL', '').strip()
     from_name = os.getenv('RESEND_FROM_NAME', 'Boldstone Investments Team').strip()
     if not api_key or not from_email:
-        logger.warning('Resend is not configured; shop order confirmation email was skipped.')
+        logger.error('Order email skipped: RESEND_API_KEY and RESEND_FROM_EMAIL must be configured.')
         return False
 
     resend.api_key = api_key
@@ -98,7 +121,7 @@ def send_shop_order_confirmation(orders, invoice_number):
                     <p>We&rsquo;re pleased to confirm that we have received your order for coffee and tree seedlings. Our team will contact you shortly to confirm your order details and arrange delivery.</p>
                     <h2 style="margin:28px 0 12px;color:#0f8972;font-size:20px;">Order Details</h2>
                     <p><strong>Invoice Number:</strong> {invoice}</p>
-                    <p><strong>Delivery Address:</strong><br>{address}</p>
+                    <p><strong>Delivery Address:</strong><br>{customer_address}</p>
                     <h2 style="margin:28px 0 12px;color:#0f8972;font-size:20px;">Items Ordered</h2>
                     <table style="width:100%;border-collapse:collapse;border:1px solid #dceae6;">
                         <thead><tr style="background:#edf7f4;"><th style="padding:10px 8px;text-align:left;">Item</th><th style="padding:10px 8px;text-align:center;">Quantity</th><th style="padding:10px 8px;text-align:right;">Amount</th></tr></thead>

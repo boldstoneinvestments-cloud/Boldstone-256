@@ -39,7 +39,7 @@ export default function LeaseApplication() {
   }
 
   if (status === 'success') {
-    return <main className="lease-application-page"><div className="lease-application-card success"><span className="lease-application-kicker">Application received</span><h1>Thank you, {form.full_name}.</h1><p>Our team will review your {form.plan} interest and contact you using the details provided.</p></div></main>
+    return <main className="lease-application-page"><div className="lease-application-card success"><span className="lease-application-kicker">Lease request received</span><h1>Thank you for your interest in leasing land, {form.full_name}.</h1><p>Your lease order has been submitted successfully. Boldstone Investments will contact you very soon with more information and the next steps.</p></div></main>
   }
 
   return (
@@ -58,7 +58,7 @@ export default function LeaseApplication() {
             <label className="full-field">What would you like us to know?<textarea name="notes" rows="4" value={form.notes} onChange={update} placeholder="Tell us about your goals or questions..." /></label>
           </div>
           {error && <p className="lease-application-error">{error}</p>}
-          <button className="lease-application-submit" type="submit" disabled={status === 'loading'}>{status === 'loading' ? 'Submitting...' : 'Submit application'}</button>
+          <button className="lease-application-submit" type="submit" disabled={status === 'loading'}>{status === 'loading' ? 'Submitting...' : 'Lease Land'}</button>
         </form>
       </main>
     </>
