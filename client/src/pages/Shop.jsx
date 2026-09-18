@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import './Shop.css'
 
@@ -167,6 +167,7 @@ function OrderDrawer({ order, onClose }) {
           phone: form.phone,
           email: form.email,
           product: order.productName,
+          productId: order.productId,
           quantity: order.qty,
           location: form.location,
           notes: form.notes,
@@ -238,10 +239,21 @@ function OrderDrawer({ order, onClose }) {
 
 export default function Shop() {
   const [drawerOrder, setDrawerOrder] = useState(null)
+  const [products, setProducts] = useState(PRODUCTS)
+
+  useEffect(() => {
+    fetch(`${BACKEND}/api/shop/products`)
+      .then(res => {
+        if (!res.ok) throw new Error()
+        return res.json()
+      })
+      .then(setProducts)
+      .catch(() => {})
+  }, [])
 
   const onOrder = (product, qty, variety) => {
     const productName = variety ? `${product.name} — ${variety}` : product.name
-    setDrawerOrder({ productName, qty, unitPrice: product.price, unit: product.unit })
+    setDrawerOrder({ productId: product.id, productName, qty, unitPrice: product.price, unit: product.unit })
   }
 
   return (
@@ -265,7 +277,7 @@ export default function Shop() {
       <div className="shop-page">
 
         {/* CATEGORIES */}
-        {Object.entries(PRODUCTS).map(([key, items]) => (
+        {Object.entries(products).map(([key, items]) => (
           <section key={key} className="shop-section">
             <div className="bs-wrap">
               <div className="shop-section-header">
