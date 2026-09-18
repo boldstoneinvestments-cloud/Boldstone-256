@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app')
@@ -53,7 +53,6 @@ export default function AdminOrderDetail() {
           <h1>{order ? (order.invoice_number || 'Order detail') : 'Order not found'}</h1>
           <p>Review the full customer order and delivery information.</p>
         </div>
-        <Link to="/admin/orders" className="admin-order-back-link">Back to orders</Link>
       </div>
 
       {!order ? (
