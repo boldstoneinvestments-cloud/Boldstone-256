@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
+import { CartProvider } from './CartContext'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import PaymentBar from './components/layout/PaymentBar'
@@ -28,7 +29,7 @@ function ScrollToTop() {
   return null
 }
 
-export default function App() {
+function AppInner() {
   const { pathname } = useLocation()
   const isAdmin = pathname.startsWith('/admin')
   return (
@@ -61,5 +62,13 @@ export default function App() {
       {!isAdmin && ['farmers', 'lease-a-coffee-farm'].includes(pathname.slice(1)) && <PaymentBar />}
       {!isAdmin && <Footer />}
     </div>
+  )
+}
+
+export default function App() {
+  return (
+    <CartProvider>
+      <AppInner />
+    </CartProvider>
   )
 }

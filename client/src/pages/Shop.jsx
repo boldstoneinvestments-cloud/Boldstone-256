@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useCart } from '../CartContext'
 import './Shop.css'
 
 const PRODUCTS = {
@@ -99,9 +100,58 @@ const CATEGORY_META = {
   trees:     { label: 'Indigenous Trees', icon: '', desc: 'Native Ugandan tree seedlings for agroforestry and reforestation.' },
 }
 
-function ProductCard({ product, onOrder }) {
+function VarietyQtyTable({ varieties, qtys, onChange }) {
+  return (
+    <div className="shop-variety-table">
+      <div className="shop-variety-table-head">
+        <span>Variety</span>
+        <span>Quantity</span>
+      </div>
+      {varieties.map(v => (
+        <div key={v} className="shop-variety-table-row">
+          <span className="shop-variety-name">{v}</span>
+          <div className="shop-qty">
+            <button type="button" onClick={() => onChange(v, Math.max(0, (qtys[v] || 0) - 1))}>−</button>
+            <input
+              type="number"
+              min="0"
+              value={qtys[v] || ''}
+              onChange={e => onChange(v, Math.max(0, parseInt(e.target.value) || 0))}
+              className="shop-qty-input"
+              placeholder="0"
+            />
+            <button type="button" onClick={() => onChange(v, (qtys[v] || 0) + 1)}>+</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function ProductCard({ product }) {
   const [qty, setQty] = useState('')
-  const [selectedVariety, setSelectedVariety] = useState(product.varieties?.[0] || '')
+  const [varietyQtys, setVarietyQtys] = useState({})
+  const [added, setAdded] = useState(false)
+  const { addToCart } = useCart()
+
+  const handleVarietyQty = (variety, val) =>
+    setVarietyQtys(q => ({ ...q, [variety]: val }))
+
+  const handleAdd = () => {
+    if (product.varieties) {
+      const selections = product.varieties
+        .filter(v => (varietyQtys[v] || 0) > 0)
+        .map(v => ({ variety: v, qty: varietyQtys[v] }))
+      if (selections.length === 0) return
+      addToCart({ id: product.id, productName: product.name, unitPrice: product.price, unit: product.unit, selections })
+    } else {
+      const q = parseInt(qty) || 1
+      addToCart({ id: product.id, productName: product.name, unitPrice: product.price, unit: product.unit, qty: q })
+    }
+    setAdded(true)
+    setTimeout(() => setAdded(false), 2000)
+  }
+
   return (
     <div className="shop-card">
       <div className="shop-card-img-wrap">
@@ -111,22 +161,12 @@ function ProductCard({ product, onOrder }) {
         <p className="shop-card-variety">{product.variety}</p>
         <h3 className="shop-card-name">{product.name}</h3>
         <p className="shop-card-desc">{product.desc}</p>
-        {product.varieties && (
-          <div className="shop-variety-select">
-            <label>Select Variety</label>
-            <select value={selectedVariety} onChange={e => setSelectedVariety(e.target.value)}>
-              {product.varieties.map(v => <option key={v} value={v}>{v}</option>)}
-            </select>
-          </div>
-        )}
-        <div className="shop-card-footer">
-          <div className="shop-card-price">
-            <span className="shop-price-amount">UGX {product.price.toLocaleString()}</span>
-            <span className="shop-price-unit">{product.unit}</span>
-          </div>
-          <div className="shop-qty-row">
+        {product.varieties ? (
+          <VarietyQtyTable varieties={product.varieties} qtys={varietyQtys} onChange={handleVarietyQty} />
+        ) : (
+          <div className="shop-qty-row" style={{ marginBottom: '12px' }}>
             <div className="shop-qty">
-              <button onClick={() => setQty(q => Math.max(1, (parseInt(q) || 0) - 1))}>−</button>
+              <button type="button" onClick={() => setQty(q => Math.max(1, (parseInt(q) || 0) - 1))}>−</button>
               <input
                 type="number"
                 min="1"
@@ -135,12 +175,18 @@ function ProductCard({ product, onOrder }) {
                 className="shop-qty-input"
                 placeholder="Qty"
               />
-              <button onClick={() => setQty(q => (parseInt(q) || 0) + 1)}>+</button>
+              <button type="button" onClick={() => setQty(q => (parseInt(q) || 0) + 1)}>+</button>
             </div>
-    <button className="shop-order-btn" onClick={() => onOrder(product, parseInt(qty) || 1, selectedVariety)}>
-              Order Now →
-            </button>
           </div>
+        )}
+        <div className="shop-card-footer">
+          <div className="shop-card-price">
+            <span className="shop-price-amount">UGX {product.price.toLocaleString()}</span>
+            <span className="shop-price-unit">{product.unit}</span>
+          </div>
+          <button className={`shop-order-btn${added ? ' shop-order-btn--added' : ''}`} onClick={handleAdd}>
+            {added ? '✓ Added!' : 'Add to Cart'}
+          </button>
         </div>
       </div>
     </div>
@@ -152,11 +198,31 @@ const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-
   ? configuredBackend.replace(/\/$/, '')
   : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
 
-function OrderDrawer({ order, onClose }) {
+const ARABICA_VARIETIES = new Set(['SL14','SL28','SL34','Ruiru 11','Batian','CIFC 635','K7','Blue Mountain','Nyasaland'])
+
+function groupSeedlingSelections(selections) {
+  const arabica = selections.filter(s => ARABICA_VARIETIES.has(s.variety))
+  const robusta = selections.filter(s => !ARABICA_VARIETIES.has(s.variety))
+  return { arabica, robusta }
+}
+
+function CartDrawer({ onClose }) {
+  const { cart, removeFromCart, clearCart } = useCart()
+  const [step, setStep] = useState('receipt')
   const [form, setForm] = useState({ name: '', phone: '', email: '', location: '', notes: '' })
-  const [status, setStatus] = useState('idle') // idle | loading | success | error
+  const [status, setStatus] = useState('idle')
 
   const handle = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
+
+  const grandTotal = cart.reduce((sum, item) => {
+    if (item.selections) return sum + item.selections.reduce((a, b) => a + b.qty * item.unitPrice, 0)
+    return sum + (item.qty || 0) * item.unitPrice
+  }, 0)
+
+  const totalQty = cart.reduce((s, c) => {
+    if (c.selections) return s + c.selections.reduce((a, b) => a + b.qty, 0)
+    return s + (c.qty || 0)
+  }, 0)
 
   const submit = async e => {
     e.preventDefault()
@@ -169,15 +235,15 @@ function OrderDrawer({ order, onClose }) {
           name: form.name,
           phone: form.phone,
           email: form.email,
-          product: order.productName,
-          productId: order.productId,
-          quantity: order.qty,
+          items: cart,
+          quantity: totalQty,
           location: form.location,
           notes: form.notes,
         }),
       })
       if (!res.ok) throw new Error()
       setStatus('success')
+      clearCart()
     } catch {
       setStatus('error')
     }
@@ -192,47 +258,140 @@ function OrderDrawer({ order, onClose }) {
           <div className="drawer-success">
             <div className="drawer-success-icon">✓</div>
             <h3>Order Placed!</h3>
-            <p>Thank you, <strong>{form.name}</strong>. We'll contact you within 24 hours to confirm your order of <strong>{order.qty} × {order.productName}</strong>.</p>
+            <p>Thank you, <strong>{form.name}</strong>. We'll contact you within 24 hours to confirm your order.</p>
             <button className="drawer-done-btn" onClick={onClose}>Done</button>
           </div>
-        ) : (
+        ) : step === 'receipt' ? (
           <>
-            <div className="drawer-header">
-              <span className="drawer-eyebrow">Place Order</span>
-              <h2 className="drawer-title">{order.productName}</h2>
-              <p className="drawer-subtitle">Qty: <strong>{order.qty}</strong> · UGX {order.unitPrice.toLocaleString()} {order.unit}</p>
+            <div className="drawer-receipt">
+              <div className="drawer-header">
+                <span className="drawer-eyebrow">Your Cart</span>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <h2 className="drawer-title">Order Summary</h2>
+                  {cart.length > 0 && (
+                    <button className="drawer-clear-btn" onClick={clearCart}>Clear Cart</button>
+                  )}
+                </div>
+              </div>
+
+              {cart.length === 0 ? (
+                <p style={{ color: '#888', fontSize: '0.9rem', marginTop: 8 }}>Your cart is empty. Add items from the shop.</p>
+              ) : (
+                <div className="drawer-cart-items">
+                  {cart.map(item => {
+                    const itemTotal = item.selections
+                      ? item.selections.reduce((a, b) => a + b.qty * item.unitPrice, 0)
+                      : (item.qty || 0) * item.unitPrice
+                    return (
+                      <div key={item.id} className="drawer-cart-item">
+                        <div className="drawer-cart-item-header">
+                          <span className="drawer-cart-item-name">{item.productName}</span>
+                          <button className="drawer-cart-remove" onClick={() => removeFromCart(item.id)}>✕</button>
+                        </div>
+                        <div className="drawer-variety-summary">
+                          {item.selections ? (() => {
+                            const { arabica, robusta } = groupSeedlingSelections(item.selections)
+                            const groups = [
+                              { label: 'Arabica Seedlings', rows: arabica, unitPrice: 1500 },
+                              { label: 'Robusta Seedlings', rows: robusta, unitPrice: 1200 },
+                            ].filter(g => g.rows.length > 0)
+                            return groups.map(g => {
+                              const groupTotal = g.rows.reduce((a, b) => a + b.qty * g.unitPrice, 0)
+                              const groupQty = g.rows.reduce((a, b) => a + b.qty, 0)
+                              return (
+                                <div key={g.label} className="drawer-seedling-group">
+                                  <div className="drawer-seedling-group-header">
+                                    <span>{g.label}</span>
+                                    <span>{groupQty.toLocaleString()} seedlings · UGX {g.unitPrice.toLocaleString()} each</span>
+                                  </div>
+                                  {g.rows.map(s => (
+                                    <div key={s.variety} className="drawer-variety-row">
+                                      <span>{s.variety} <span style={{color:'#aaa', fontWeight:400}}>× {s.qty.toLocaleString()}</span></span>
+                                      <span>UGX {(s.qty * g.unitPrice).toLocaleString()}</span>
+                                    </div>
+                                  ))}
+                                  <div className="drawer-variety-total">
+                                    <span>Subtotal</span>
+                                    <span>UGX {groupTotal.toLocaleString()}</span>
+                                  </div>
+                                </div>
+                              )
+                            })
+                          })() : (
+                            <>
+                              <div className="drawer-variety-row">
+                                <span>{item.productName} × {item.qty}</span>
+                                <span>UGX {itemTotal.toLocaleString()}</span>
+                              </div>
+                              <div className="drawer-variety-total">
+                                <span>Subtotal</span>
+                                <span>UGX {itemTotal.toLocaleString()}</span>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                  <div className="drawer-grand-total">
+                    <span>Grand Total</span>
+                    <span>UGX {grandTotal.toLocaleString()}</span>
+                  </div>
+                </div>
+              )}
             </div>
 
-            <form className="drawer-form" onSubmit={submit}>
-              {status === 'error' && (
-                <div className="drawer-alert-error">Failed to place order. Please try again.</div>
-              )}
-              <div className="drawer-row">
-                <div className="drawer-field">
-                  <label>Full Name *</label>
-                  <input name="name" type="text" placeholder="Your full name" value={form.name} onChange={handle} required />
+            <div className="drawer-form-panel">
+              <button
+                className="drawer-submit-btn"
+                onClick={() => setStep('form')}
+                disabled={cart.length === 0}
+              >
+                Proceed to Checkout →
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="drawer-receipt">
+              <div className="drawer-header">
+                <button className="drawer-back-btn" onClick={() => setStep('receipt')}>← Back to Cart</button>
+                <h2 className="drawer-title" style={{ marginTop: 12 }}>Delivery Details</h2>
+              </div>
+              <form id="checkout-form" className="drawer-form" onSubmit={submit}>
+                {status === 'error' && (
+                  <div className="drawer-alert-error">Failed to place order. Please try again.</div>
+                )}
+                <div className="drawer-row">
+                  <div className="drawer-field">
+                    <label>Full Name *</label>
+                    <input name="name" type="text" placeholder="Your full name" value={form.name} onChange={handle} required />
+                  </div>
+                  <div className="drawer-field">
+                    <label>Phone Number *</label>
+                    <input name="phone" type="tel" placeholder="+256 7XX XXX XXX" value={form.phone} onChange={handle} required />
+                  </div>
                 </div>
                 <div className="drawer-field">
-                  <label>Phone Number *</label>
-                  <input name="phone" type="tel" placeholder="+256 7XX XXX XXX" value={form.phone} onChange={handle} required />
+                  <label>Email Address *</label>
+                  <input name="email" type="email" placeholder="your@email.com" value={form.email} onChange={handle} required />
                 </div>
-              </div>
-              <div className="drawer-field">
-                <label>Email Address *</label>
-                <input name="email" type="email" placeholder="your@email.com" value={form.email} onChange={handle} required />
-              </div>
-              <div className="drawer-field">
-                <label>Delivery Location *</label>
-                <input name="location" type="text" placeholder="Town, district or full address" value={form.location} onChange={handle} required />
-              </div>
-              <div className="drawer-field">
-                <label>Additional Notes</label>
-                <textarea name="notes" rows={3} placeholder="Any special requirements..." value={form.notes} onChange={handle} />
-              </div>
-              <button type="submit" className="drawer-submit-btn" disabled={status === 'loading'}>
+                <div className="drawer-field">
+                  <label>Delivery Location *</label>
+                  <input name="location" type="text" placeholder="Town, district or full address" value={form.location} onChange={handle} required />
+                </div>
+                <div className="drawer-field">
+                  <label>Additional Notes</label>
+                  <textarea name="notes" rows={3} placeholder="Any special requirements..." value={form.notes} onChange={handle} />
+                </div>
+              </form>
+            </div>
+
+            <div className="drawer-form-panel">
+              <button type="submit" form="checkout-form" className="drawer-submit-btn" disabled={status === 'loading'}>
                 {status === 'loading' ? 'Placing Order…' : 'Confirm Order →'}
               </button>
-            </form>
+            </div>
           </>
         )}
       </div>
@@ -241,23 +400,27 @@ function OrderDrawer({ order, onClose }) {
 }
 
 export default function Shop() {
-  const [drawerOrder, setDrawerOrder] = useState(null)
+  const { cartOpen, setCartOpen, totalItems } = useCart()
+  const [fabVisible, setFabVisible] = useState(true)
   const [products, setProducts] = useState(PRODUCTS)
 
   useEffect(() => {
     fetch(`${BACKEND}/api/shop/products`)
-      .then(res => {
-        if (!res.ok) throw new Error()
-        return res.json()
-      })
+      .then(res => { if (!res.ok) throw new Error(); return res.json() })
       .then(setProducts)
       .catch(() => {})
   }, [])
 
-  const onOrder = (product, qty, variety) => {
-    const productName = variety ? `${product.name} — ${variety}` : product.name
-    setDrawerOrder({ productId: product.id, productName, qty, unitPrice: product.price, unit: product.unit })
-  }
+  useEffect(() => {
+    const footer = document.querySelector('footer')
+    if (!footer) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setFabVisible(!entry.isIntersecting),
+      { threshold: 0 }
+    )
+    observer.observe(footer)
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <>
@@ -267,7 +430,6 @@ export default function Shop() {
         <link rel="canonical" href="https://www.boldstoneinvestments.com/shop" />
       </Helmet>
 
-      {/* HERO */}
       <section className="shop-hero">
         <div className="shop-hero-overlay" />
         <div className="shop-hero-content">
@@ -278,8 +440,6 @@ export default function Shop() {
       </section>
 
       <div className="shop-page">
-
-        {/* CATEGORIES */}
         {Object.entries(products).map(([key, items]) => (
           <section key={key} className="shop-section">
             <div className="bs-wrap">
@@ -292,17 +452,30 @@ export default function Shop() {
               </div>
               <div className={`shop-grid shop-grid-${items.length}`}>
                 {items.map(p => (
-                  <ProductCard key={p.id} product={p} onOrder={onOrder} />
+                  <ProductCard key={p.id} product={p} />
                 ))}
               </div>
             </div>
           </section>
         ))}
-
-
       </div>
 
-      {drawerOrder && <OrderDrawer order={drawerOrder} onClose={() => setDrawerOrder(null)} />}
+      {cartOpen && <CartDrawer onClose={() => setCartOpen(false)} />}
+
+      {fabVisible && (
+        <button
+          className="shop-cart-fab"
+          onClick={() => setCartOpen(true)}
+          aria-label="Open cart"
+        >
+          <svg width={22} height={22} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.4 7h12.8M7 13L5.4 5M10 21a1 1 0 100-2 1 1 0 000 2zm7 0a1 1 0 100-2 1 1 0 000 2z" />
+          </svg>
+          {totalItems > 0 && (
+            <span className="shop-cart-fab-badge">{totalItems}</span>
+          )}
+        </button>
+      )}
     </>
   )
 }
