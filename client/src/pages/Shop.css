@@ -141,6 +141,7 @@
   font-weight: 800;
   color: #0d1f1c;
   margin: 0 0 10px;
+  white-space: nowrap;
 }
 .shop-card-desc {
   font-size: 0.83rem;

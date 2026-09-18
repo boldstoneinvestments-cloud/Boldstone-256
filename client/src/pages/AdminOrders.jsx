@@ -113,7 +113,7 @@ export default function AdminOrders() {
                       <td style={{ padding: '14px 16px', fontWeight: 700, color: '#0d1f1c', whiteSpace: 'nowrap' }}>{o.name}</td>
                       <td style={{ padding: '14px 16px', color: '#555' }}>{o.phone}</td>
                       <td style={{ padding: '14px 16px', color: '#555' }}>{o.email || '—'}</td>
-                      <td style={{ padding: '14px 16px', color: '#0d1f1c', fontWeight: 600, maxWidth: 200 }}>{o.product}</td>
+                      <td style={{ padding: '14px 16px', color: '#0d1f1c', fontWeight: 600, maxWidth: 200, whiteSpace: 'nowrap' }}>{o.product}</td>
                       <td style={{ padding: '14px 16px', color: '#0d1f1c', fontWeight: 700, textAlign: 'center' }}>{o.quantity}</td>
                       <td style={{ padding: '14px 16px', color: '#555', maxWidth: 160 }}>{o.location}</td>
                     </tr>
