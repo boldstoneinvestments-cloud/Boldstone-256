@@ -8,6 +8,7 @@ const quickLinks = [
   { to: '/partnership', label: 'Partnerships' },
   { to: '/about', label: 'About Us' },
   { to: '/blog', label: 'Blog' },
+  { to: '/shop', label: 'Shop' },
   { to: '/contact', label: 'Contact Us' },
 ]
 
