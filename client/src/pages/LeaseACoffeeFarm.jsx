@@ -162,7 +162,7 @@ const plans = [
       { step: '1–6', title: 'Months 1–6', desc: 'Your subscription builds the establishment fund for your coffee acre.' },
       { step: '7', title: 'Month 7', desc: 'Boldstone begins preparing and planting your coffee farm.' },
       { step: '7–12', title: 'Months 7–12', desc: 'Your farm is established and maintained while you continue your subscription.' },
-      { step: 'After', title: 'After Year 1', desc: 'Your subscription reduces to US$18/month or US$180/year to cover continued land access, farm management, and agronomy support.' },
+      { step: 'After', title: 'After Year 1', desc: 'Your subscription reduces to US$19.99/month or US$239.88/year to cover continued land access, farm management, and agronomy support.' },
     ],
     whyChoose: [
       'Low upfront commitment',
@@ -241,7 +241,7 @@ const leaseFaqs = [
   },
   {
     q: 'How does the Monthly Subscription Plan work?',
-    a: 'The Monthly Subscription Plan is designed for people who want to start coffee farming with a manageable monthly commitment. During the first six months, your payments contribute toward land preparation, seedling procurement, and farm establishment. From Month 7, Boldstone begins establishing your one-acre coffee farm while your subscription continues through the remainder of the first year. After Year 1, the subscription reduces to US$18 per month or US$180 per year for continued land access, farm management, and agronomy support.',
+    a: 'The Monthly Subscription Plan is designed for people who want to start coffee farming with a manageable monthly commitment. During the first six months, your payments contribute toward land preparation, seedling procurement, and farm establishment. From Month 7, Boldstone begins establishing your one-acre coffee farm while your subscription continues through the remainder of the first year. After Year 1, the subscription reduces to US$19.99 per month or US$239.88 per year for continued land access, farm management, and agronomy support.',
   },
   {
     q: 'What makes Boldstone’s farming model sustainable?',
@@ -726,7 +726,11 @@ export default function Investors() {
                     className="p-faq-a"
                     style={{ maxHeight: openFaq === i ? `${faqAnswerRefs.current[i]?.scrollHeight || 0}px` : '0px' }}
                   >
-                    {faq.a}
+                    {faq.a.split(/(US\$[\d.,]+(?:\/(?:month|year)| per (?:month|year)))/g).map((part, k) =>
+                      /US\$[\d.,]+(?:\/(?:month|year)| per (?:month|year))/.test(part)
+                        ? <strong key={k} style={{ fontWeight: 700, color: '#0f8972' }}>{part}</strong>
+                        : part
+                    )}
                   </div>
                 </div>
               ))}
@@ -827,7 +831,13 @@ export default function Investors() {
                       </div>
                       <div>
                         <p style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0d1f1c', margin: '0 0 4px 0' }}>{item.title}</p>
-                        <p style={{ fontSize: '0.9rem', color: '#555', margin: 0, lineHeight: '1.5' }}>{item.desc}</p>
+                        <p style={{ fontSize: '0.9rem', color: '#555', margin: 0, lineHeight: '1.5' }}>
+                          {item.desc.split(/(US\$[\d.,]+\/(?:month|year))/g).map((part, k) =>
+                            /US\$[\d.,]+\/(?:month|year)/.test(part)
+                              ? <strong key={k} style={{ color: '#0f8972' }}>{part}</strong>
+                              : part
+                          )}
+                        </p>
                       </div>
                     </div>
                   ))}
