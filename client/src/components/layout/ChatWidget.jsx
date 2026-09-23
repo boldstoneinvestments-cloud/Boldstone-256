@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')).replace(/\/api$/, '') + '/api'
 
@@ -163,8 +164,8 @@ export default function ChatWidget() {
             <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, margin: 0 }}>{accountLoading ? 'Checking your account...' : 'Sign in before starting a private support chat.'}</p>
               {!accountLoading && <>
-                <a href="/account/sign-in" style={{ background: 'linear-gradient(90deg,#0f8972,#12a688)', color: '#fff', borderRadius: 8, padding: 12, fontWeight: 700, fontSize: 13, textAlign: 'center', textDecoration: 'none' }}>Sign in</a>
-                <a href="/account/sign-up" style={{ color: '#8be1cd', fontSize: 13, textAlign: 'center', textDecoration: 'none' }}>Create an account</a>
+                <Link to="/account/sign-in" style={{ background: 'linear-gradient(90deg,#0f8972,#12a688)', color: '#fff', borderRadius: 8, padding: 12, fontWeight: 700, fontSize: 13, textAlign: 'center', textDecoration: 'none' }}>Sign in</Link>
+                <Link to="/account/sign-up" style={{ color: '#8be1cd', fontSize: 13, textAlign: 'center', textDecoration: 'none' }}>Create an account</Link>
               </>}
             </div>
           ) : (
