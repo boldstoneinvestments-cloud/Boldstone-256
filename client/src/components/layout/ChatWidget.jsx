@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 
-const API = (import.meta.env.VITE_API_URL || 'https://boldstone-256-production.up.railway.app').replace(/\/api$/, '') + '/api'
+const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')).replace(/\/api$/, '') + '/api'
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false)
