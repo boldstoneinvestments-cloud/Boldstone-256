@@ -1,0 +1,103 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "backend-check",
+			"type": "shell",
+			"command": "cd /d c:\\Users\\ssema\\Documents\\GitHub\\Boldstone-256\\backend && python manage.py check",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "backend-check-cmd",
+			"type": "shell",
+			"command": "cmd /c \"cd /d c:\\Users\\ssema\\Documents\\GitHub\\Boldstone-256\\backend && python manage.py check\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "backend-check-valid",
+			"type": "shell",
+			"command": "powershell -NoProfile -Command \"Set-Location 'c:\\Users\\ssema\\Documents\\GitHub\\Boldstone-256\\backend'; python manage.py check\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "django-check-proof",
+			"type": "shell",
+			"command": "powershell -NoProfile -Command \"Set-Location -Path 'c:\\Users\\ssema\\Documents\\GitHub\\Boldstone-256\\backend'; python manage.py check; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; Write-Output 'DJANGO_CHECK_OK'\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "django-check-correct",
+			"type": "shell",
+			"command": "cmd /c \"cd /d \"c:\\Users\\ssema\\Documents\\GitHub\\Boldstone-256\\backend\" && python manage.py check\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "client-build-check",
+			"type": "shell",
+			"command": "npm run build",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "client-build-check-correct",
+			"type": "shell",
+			"command": "powershell -NoProfile -Command \"Set-Location 'c:\\Users\\ssema\\Documents\\GitHub\\Boldstone-256\\client'; npm run build\"",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "client-build-check-cmd",
+			"type": "shell",
+			"command": "cmd /c \"cd /d c:\\Users\\ssema\\Documents\\GitHub\\Boldstone-256\\client && npm run build\"",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "client-build-check-prefix",
+			"type": "shell",
+			"command": "npm --prefix client run build",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "client-build-after-google-auth-fix",
+			"type": "shell",
+			"command": "npm --prefix client run build",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "client-lint-after-google-auth-fix",
+			"type": "shell",
+			"command": "npm --prefix client run lint",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "django-check-after-google-auth-fix",
+			"type": "shell",
+			"command": "python backend/manage.py check",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		}
+	]
+}

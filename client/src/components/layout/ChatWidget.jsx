@@ -38,12 +38,8 @@ export default function ChatWidget() {
 
   useEffect(() => {
     const googleToken = new URLSearchParams(hash.replace(/^#/, '')).get('google_token')
-    if (googleToken) {
-      localStorage.setItem('boldstone_customer_token', googleToken)
-      window.history.replaceState({}, document.title, window.location.pathname + window.location.search)
-    }
     const controller = new AbortController()
-    const timeout = window.setTimeout(() => controller.abort(), 5000)
+    const timeout = window.setTimeout(() => controller.abort(), 3000)
     fetch(`${API}/account/me`, { credentials: 'include', headers: customerHeaders(), signal: controller.signal })
       .then(response => response.ok ? response.json() : Promise.reject())
       .then(data => {

@@ -34,6 +34,19 @@ function ScrollToTop() {
   return null
 }
 
+function GoogleAuthHandoff() {
+  const { hash } = useLocation()
+
+  useEffect(() => {
+    const googleToken = new URLSearchParams(hash.replace(/^#/, '')).get('google_token')
+    if (!googleToken) return
+    localStorage.setItem('boldstone_customer_token', googleToken)
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.search)
+  }, [hash])
+
+  return null
+}
+
 function AppInner() {
   const { pathname } = useLocation()
   const isAdmin = pathname.startsWith('/admin')
@@ -41,6 +54,7 @@ function AppInner() {
   return (
     <div className="min-h-screen flex flex-col">
       <ScrollToTop />
+      <GoogleAuthHandoff />
       {!isAdmin && <Navbar />}
       <main className="flex-1">
         <Routes>
