@@ -9,7 +9,7 @@ const PRODUCTS = {
       id: 'arabica',
       name: 'Arabica Seedlings',
       variety: '',
-      price: 1500,
+      price: 2000,
       unit: 'per seedling',
       image: 'https://res.cloudinary.com/cwj8d38f/image/upload/v1789646469/Arabica-Coffee-Seeds-For-Planting_o2ijiw.jpg',
       desc: 'High-altitude Arabica varieties known for their smooth, mild flavour with hints of fruit and chocolate. Ideal for elevations above 1,200m.',
@@ -20,7 +20,7 @@ const PRODUCTS = {
       id: 'robusta',
       name: 'Robusta Seedlings',
       variety: '',
-      price: 1200,
+      price: 2000,
       unit: 'per seedling',
       image: 'https://res.cloudinary.com/cwj8d38f/image/upload/v1789646468/Robusta_svyvej.jpg',
       desc: 'Hardy Robusta varieties with strong, bold flavour and higher caffeine content. Thrives in lower altitudes and are highly disease-resistant.',
@@ -326,8 +326,8 @@ function CartDrawer({ onClose }) {
                           {item.selections ? (() => {
                             const { arabica, robusta } = groupSeedlingSelections(item.selections)
                             const groups = [
-                              { label: 'Arabica Seedlings', rows: arabica, unitPrice: 1500 },
-                              { label: 'Robusta Seedlings', rows: robusta, unitPrice: 1200 },
+                              { label: 'Arabica Seedlings', rows: arabica, unitPrice: 2000 },
+                              { label: 'Robusta Seedlings', rows: robusta, unitPrice: 2000 },
                             ].filter(g => g.rows.length > 0)
                             return groups.map(g => {
                               const groupTotal = g.rows.reduce((a, b) => a + b.qty * g.unitPrice, 0)
@@ -430,17 +430,18 @@ function CartDrawer({ onClose }) {
                     <input name="street" type="text" placeholder="Street or road" value={form.street} onChange={handle} />
                   </div>
                 </div>
-                <div className="drawer-field">
-                  <label>Village <span>(optional)</span></label>
-                  <input name="village" type="text" placeholder="Village or locality" value={form.village} onChange={handle} />
-                </div>
-                <div className="drawer-field">
-                  <label>Additional Notes</label>
-                  <textarea name="notes" rows={3} placeholder="Any special requirements..." value={form.notes} onChange={handle} />
+                <div className="drawer-row">
+                  <div className="drawer-field">
+                    <label>Village <span>(optional)</span></label>
+                    <input name="village" type="text" placeholder="Village or locality" value={form.village} onChange={handle} />
+                  </div>
+                  <div className="drawer-field">
+                    <label>Additional Notes</label>
+                    <textarea name="notes" rows={2} placeholder="Any special requirements..." value={form.notes} onChange={handle} />
+                  </div>
                 </div>
               </form>
             </div>
-
             <div className="drawer-form-panel">
               <button type="submit" form="checkout-form" className="drawer-submit-btn" disabled={status === 'loading'}>
                 {status === 'loading' ? 'Placing Order…' : 'Confirm Order →'}

@@ -21,6 +21,7 @@ import AdminDashboard from './pages/AdminDashboard'
 import AdminApplications from './pages/AdminApplications'
 import AdminUsers from './pages/AdminUsers'
 import NotFound from './pages/NotFound'
+import ChatWidget from './components/layout/ChatWidget'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
 import Shop from './pages/Shop'
@@ -65,6 +66,7 @@ function AppInner() {
       </main>
       {!isAdmin && ['farmers', 'lease-a-coffee-farm'].includes(pathname.slice(1)) && <PaymentBar />}
       {!isAdmin && <Footer />}
+      {!isAdmin && pathname !== '/shop' && <ChatWidget />}
     </div>
   )
 }
