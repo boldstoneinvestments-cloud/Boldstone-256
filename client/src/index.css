@@ -59,6 +59,23 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-status { display: inline-block; padding: 5px 8px; border-radius: 999px; background: #e6f4f1; color: #0f8972; font-size: 10px; font-weight: 800; text-transform: uppercase; }
 .admin-empty { padding: 70px 24px; color: #8a9a96; text-align: center; }
 .admin-empty svg { margin-bottom: 12px; font-size: 30px; color: #8bc9bc; }
+.admin-chat-heading { align-items: center; }
+.admin-refresh-button { display: inline-flex; align-items: center; gap: 8px; padding: 10px 13px; border: 1px solid #cfe0db; border-radius: 8px; background: #fff; color: #0f8972; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.admin-refresh-button:disabled { cursor: wait; opacity: .65; }
+.admin-chat-summary { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 18px; padding: 14px 17px; border: 1px solid #dbe9e5; border-radius: 12px; background: #fff; }
+.admin-chat-summary > span { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: #e6f4f1; color: #0f8972; }
+.admin-chat-summary strong, .admin-chat-summary small { display: block; }
+.admin-chat-summary strong { color: #0d1f1c; font-size: 18px; line-height: 1; }
+.admin-chat-summary small { margin-top: 4px; color: #70817c; font-size: 11px; }
+.admin-chat-list { display: grid; gap: 12px; max-width: 920px; }
+.admin-chat-message { padding: 20px 22px; border: 1px solid #dbe9e5; border-radius: 14px; background: #fff; box-shadow: 0 8px 24px rgba(13,31,28,.035); }
+.admin-chat-message-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+.admin-chat-message h2 { color: #0d1f1c; font-size: 15px; }
+.admin-chat-message a { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; color: #0f8972; font-size: 12px; text-decoration: none; }
+.admin-chat-message a:hover { text-decoration: underline; }
+.admin-chat-message time { flex-shrink: 0; color: #8a9a96; font-size: 11px; }
+.admin-chat-message > p { margin-top: 16px; padding-top: 15px; border-top: 1px solid #edf1ef; color: #536661; font-size: 14px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+.admin-chat-empty { max-width: 920px; border: 1px solid #dbe9e5; border-radius: 14px; background: #fff; }
 .admin-users-layout { display: grid; grid-template-columns: minmax(280px, 360px) minmax(0, 1fr); gap: 20px; max-width: 980px; }
 .admin-user-form, .admin-user-list { padding: 24px; border: 1px solid #dbe9e5; border-radius: 16px; background: #fff; box-shadow: 0 10px 30px rgba(13,31,28,.04); }
 .admin-user-form h2, .admin-user-list h2 { margin: 8px 0 22px; color: #0d1f1c; font-size: 22px; }
@@ -119,6 +136,9 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .admin-menu-backdrop { position: fixed; z-index: 25; inset: 0; display: block; border: 0; background: rgba(4,27,22,.45); }
   .admin-dashboard-page, .admin-content-page { padding-top: 78px; }
   .admin-page-heading { margin-bottom: 26px; }
+  .admin-chat-heading { align-items: flex-start; }
+  .admin-chat-message-header { flex-direction: column; gap: 8px; }
+  .admin-chat-message { padding: 17px; }
   .admin-dashboard-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: none; gap: 10px; padding: 2px 0 12px; }
   .admin-dashboard-card-grid .admin-metric-card { min-width: 0; min-height: 172px; padding: 16px; }
   .admin-dashboard-card-grid .admin-metric-card > span { width: 30px; height: 30px; margin-bottom: 16px; }
