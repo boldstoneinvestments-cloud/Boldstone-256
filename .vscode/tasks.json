@@ -107,6 +107,24 @@
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "build"
+		},
+		{
+			"label": "client-build-oauth-timeout-fix",
+			"type": "shell",
+			"command": "npm --prefix client run build",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "django-check-oauth-timeout-fix",
+			"type": "shell",
+			"command": "python backend/manage.py check",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
 		}
 	]
 }
