@@ -37,6 +37,7 @@ function ScrollToTop() {
 function AppInner() {
   const { pathname } = useLocation()
   const isAdmin = pathname.startsWith('/admin')
+  const isAccountAuth = pathname === '/account/sign-in' || pathname === '/account/sign-up'
   return (
     <div className="min-h-screen flex flex-col">
       <ScrollToTop />
@@ -71,7 +72,7 @@ function AppInner() {
       </main>
       {!isAdmin && ['farmers', 'lease-a-coffee-farm'].includes(pathname.slice(1)) && <PaymentBar />}
       {!isAdmin && <Footer />}
-      {!isAdmin && pathname !== '/shop' && <ChatWidget />}
+      {!isAdmin && !isAccountAuth && pathname !== '/shop' && <ChatWidget />}
     </div>
   )
 }
