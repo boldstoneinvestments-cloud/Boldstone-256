@@ -98,6 +98,15 @@
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
+		},
+		{
+			"label": "client-build-google-chat-fix",
+			"type": "shell",
+			"command": "npm --prefix client run build",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
 		}
 	]
 }
