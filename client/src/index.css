@@ -76,6 +76,18 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-chat-message time { flex-shrink: 0; color: #8a9a96; font-size: 11px; }
 .admin-chat-message > p { margin-top: 16px; padding-top: 15px; border-top: 1px solid #edf1ef; color: #536661; font-size: 14px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
 .admin-chat-empty { max-width: 920px; border: 1px solid #dbe9e5; border-radius: 14px; background: #fff; }
+.admin-chat-thread { max-width: 920px; padding: 20px 22px; border: 1px solid #dbe9e5; border-radius: 14px; background: #fff; box-shadow: 0 8px 24px rgba(13,31,28,.035); }
+.admin-chat-thread-messages { display: grid; gap: 10px; margin-top: 18px; }
+.admin-chat-bubble { max-width: 82%; padding: 11px 14px; border-radius: 11px 11px 11px 2px; background: #f1f7f5; color: #315d54; }
+.admin-chat-bubble.is-admin { justify-self: end; border-radius: 11px 11px 2px 11px; background: #0f8972; color: #fff; }
+.admin-chat-bubble p { font-size: 13px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.admin-chat-bubble time { display: block; margin-top: 7px; color: #8a9a96; font-size: 10px; }
+.admin-chat-bubble.is-admin time { color: rgba(255,255,255,.72); }
+.admin-chat-reply { display: flex; gap: 8px; margin-top: 18px; padding-top: 16px; border-top: 1px solid #edf1ef; }
+.admin-chat-reply input { min-width: 0; flex: 1; padding: 10px 12px; border: 1px solid #cfe0db; border-radius: 8px; color: #0d1f1c; font: inherit; font-size: 13px; outline: none; }
+.admin-chat-reply input:focus { border-color: #0f8972; box-shadow: 0 0 0 3px rgba(15,137,114,.12); }
+.admin-chat-reply button { display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0; padding: 10px 13px; border: 0; border-radius: 8px; background: #0f8972; color: #fff; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.admin-chat-reply button:disabled { cursor: wait; opacity: .65; }
 .admin-users-layout { display: grid; grid-template-columns: minmax(280px, 360px) minmax(0, 1fr); gap: 20px; max-width: 980px; }
 .admin-user-form, .admin-user-list { padding: 24px; border: 1px solid #dbe9e5; border-radius: 16px; background: #fff; box-shadow: 0 10px 30px rgba(13,31,28,.04); }
 .admin-user-form h2, .admin-user-list h2 { margin: 8px 0 22px; color: #0d1f1c; font-size: 22px; }
@@ -139,6 +151,9 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
   .admin-chat-heading { align-items: flex-start; }
   .admin-chat-message-header { flex-direction: column; gap: 8px; }
   .admin-chat-message { padding: 17px; }
+  .admin-chat-thread { padding: 17px; }
+  .admin-chat-bubble { max-width: 92%; }
+  .admin-chat-reply { align-items: stretch; flex-direction: column; }
   .admin-dashboard-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: none; gap: 10px; padding: 2px 0 12px; }
   .admin-dashboard-card-grid .admin-metric-card { min-width: 0; min-height: 172px; padding: 16px; }
   .admin-dashboard-card-grid .admin-metric-card > span { width: 30px; height: 30px; margin-bottom: 16px; }

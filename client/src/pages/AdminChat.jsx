@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faComments, faEnvelope, faRotate } from '@fortawesome/free-solid-svg-icons'
+import { faComments, faEnvelope, faPaperPlane, faRotate } from '@fortawesome/free-solid-svg-icons'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app') ? configuredBackend.replace(/\/$/, '') : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
@@ -9,6 +9,8 @@ const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-
 export default function AdminChat() {
   const [messages, setMessages] = useState(null)
   const [status, setStatus] = useState('loading')
+  const [replies, setReplies] = useState({})
+  const [sending, setSending] = useState('')
 
   const loadMessages = useCallback(() => {
     setStatus('loading')
@@ -22,6 +24,25 @@ export default function AdminChat() {
   }, [])
 
   useEffect(() => { loadMessages() }, [loadMessages])
+
+  const sendReply = async (event, email, name) => {
+    event.preventDefault()
+    const message = (replies[email] || '').trim()
+    if (!message || sending) return
+    setSending(email)
+    const response = await fetch(`${BACKEND}/api/admin/chat/reply`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ name, email, message }),
+    }).catch(() => null)
+    if (response?.ok) {
+      const data = await response.json()
+      setMessages(current => [data.message, ...(current || [])])
+      setReplies(current => ({ ...current, [email]: '' }))
+    }
+    setSending('')
+  }
 
   if (status === 'loading' && messages === null) return <div className="admin-state">Loading chat messages...</div>
   if (status === 'error') return <Navigate to="/admin/sign-in" replace />
@@ -45,15 +66,29 @@ export default function AdminChat() {
     </div>
 
     {messages.length === 0 ? <div className="admin-empty admin-chat-empty"><FontAwesomeIcon icon={faComments} /><p>No chat messages yet.</p></div> : <div className="admin-chat-list">
-      {messages.map(message => <article className="admin-chat-message" key={message.id}>
+      {Object.values(messages.reduce((threads, message) => {
+        const key = message.email.toLowerCase()
+        if (!threads[key]) threads[key] = { name: message.name, email: message.email, messages: [] }
+        threads[key].messages.push(message)
+        return threads
+      }, {})).map(thread => <article className="admin-chat-thread" key={thread.email}>
         <div className="admin-chat-message-header">
           <div>
-            <h2>{message.name}</h2>
-            <a href={`mailto:${message.email}`}><FontAwesomeIcon icon={faEnvelope} />{message.email}</a>
+            <h2>{thread.name}</h2>
+            <a href={`mailto:${thread.email}`}><FontAwesomeIcon icon={faEnvelope} />{thread.email}</a>
           </div>
-          <time dateTime={message.created_at}>{new Date(message.created_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</time>
+          <span className="admin-status">{thread.messages.length} {thread.messages.length === 1 ? 'message' : 'messages'}</span>
         </div>
-        <p>{message.message}</p>
+        <div className="admin-chat-thread-messages">
+          {thread.messages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at)).map(message => <div className={`admin-chat-bubble${message.is_admin ? ' is-admin' : ''}`} key={message.id}>
+            <p>{message.message}</p>
+            <time dateTime={message.created_at}>{message.is_admin ? 'You' : thread.name} · {new Date(message.created_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</time>
+          </div>)}
+        </div>
+        <form className="admin-chat-reply" onSubmit={event => sendReply(event, thread.email, thread.name)}>
+          <input value={replies[thread.email] || ''} onChange={event => setReplies(current => ({ ...current, [thread.email]: event.target.value }))} placeholder="Write a reply..." aria-label={`Reply to ${thread.name}`} />
+          <button type="submit" disabled={sending === thread.email}><FontAwesomeIcon icon={faPaperPlane} /> Reply</button>
+        </form>
       </article>)}
     </div>}
   </section>

@@ -11,12 +11,31 @@ export default function ChatWidget() {
   ])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
-  const [sent, setSent] = useState(false)
   const bottomRef = useRef(null)
 
   useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, open])
+
+  useEffect(() => {
+    if (step !== 'chat' || !info.email) return undefined
+    const loadReplies = () => {
+      fetch(`${API}/chat?email=${encodeURIComponent(info.email)}`)
+        .then(response => response.ok ? response.json() : Promise.reject())
+        .then(data => setMessages(current => {
+          const welcome = current[0]
+          const localMessages = current.filter(message => message.local)
+          const serverMessages = (data.messages || []).map(message => ({
+            from: message.is_admin ? 'bot' : 'user', text: message.message, id: message.id,
+          }))
+          return [welcome, ...serverMessages, ...localMessages.filter(message => !serverMessages.some(serverMessage => serverMessage.text === message.text && serverMessage.from === message.from))]
+        }))
+        .catch(() => {})
+    }
+    loadReplies()
+    const interval = window.setInterval(loadReplies, 5000)
+    return () => window.clearInterval(interval)
+  }, [step, info.email])
 
   const startChat = e => {
     e.preventDefault()
@@ -29,19 +48,15 @@ export default function ChatWidget() {
     const text = input.trim()
     if (!text || sending) return
     setInput('')
-    setMessages(m => [...m, { from: 'user', text }])
+    setMessages(m => [...m, { from: 'user', text, local: true }])
     setSending(true)
     try {
-      await fetch(`${API}/chat`, {
+      const response = await fetch(`${API}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: info.name, email: info.email, message: text }),
       })
-      setMessages(m => [...m, {
-        from: 'bot',
-        text: "Thanks for your message! Our team will get back to you shortly. You can also reach us at boldstone.investments@gmail.com or call +256 785688921.",
-      }])
-      setSent(true)
+      if (!response.ok) throw new Error('Message failed')
     } catch {
       setMessages(m => [...m, { from: 'bot', text: 'Sorry, something went wrong. Please try again or email us directly.' }])
     }
@@ -157,7 +172,7 @@ export default function ChatWidget() {
                 )}
                 <div ref={bottomRef} />
               </div>
-              {!sent && (
+              {(
                 <form onSubmit={send} style={{ padding: '10px 12px 14px', display: 'flex', gap: 8, borderTop: '1px solid rgba(255,255,255,0.07)' }}>
                   <input
                     value={input} onChange={e => setInput(e.target.value)}
@@ -178,11 +193,6 @@ export default function ChatWidget() {
                     <svg width={16} height={16} fill="none" stroke="#fff" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" /></svg>
                   </button>
                 </form>
-              )}
-              {sent && (
-                <p style={{ padding: '12px 16px', color: '#0f8972', fontSize: 12, fontWeight: 600, borderTop: '1px solid rgba(255,255,255,0.07)', margin: 0 }}>
-                  ✓ Message received! We'll be in touch soon.
-                </p>
               )}
             </>
           )}
