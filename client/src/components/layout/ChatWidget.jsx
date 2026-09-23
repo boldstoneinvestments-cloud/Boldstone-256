@@ -3,10 +3,27 @@ import { Link, useLocation } from 'react-router-dom'
 
 const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')).replace(/\/api$/, '') + '/api'
 
-const getCsrfToken = async () => (await (await fetch(`${API}/account/csrf`, { credentials: 'include' })).json()).csrfToken
+let csrfTokenPromise
+const customerHeaders = () => {
+  const token = localStorage.getItem('boldstone_customer_token')
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
+
+const getCsrfToken = () => {
+  if (!csrfTokenPromise) {
+    csrfTokenPromise = fetch(`${API}/account/csrf`, { credentials: 'include' })
+      .then(response => response.ok ? response.json() : Promise.reject())
+      .then(data => data.csrfToken)
+      .catch(error => {
+        csrfTokenPromise = undefined
+        throw error
+      })
+  }
+  return csrfTokenPromise
+}
 
 export default function ChatWidget() {
-  const { search } = useLocation()
+  const { search, hash } = useLocation()
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState('info') // 'info' | 'chat'
   const [account, setAccount] = useState(null)
@@ -20,15 +37,20 @@ export default function ChatWidget() {
   const lastIdRef = useRef(0)
 
   useEffect(() => {
+    const googleToken = new URLSearchParams(hash.replace(/^#/, '')).get('google_token')
+    if (googleToken) {
+      localStorage.setItem('boldstone_customer_token', googleToken)
+      window.history.replaceState({}, document.title, window.location.pathname + window.location.search)
+    }
     const controller = new AbortController()
     const timeout = window.setTimeout(() => controller.abort(), 5000)
-    fetch(`${API}/account/me`, { credentials: 'include', signal: controller.signal })
+    fetch(`${API}/account/me`, { credentials: 'include', headers: customerHeaders(), signal: controller.signal })
       .then(response => response.ok ? response.json() : Promise.reject())
       .then(data => {
         if (data.authenticated && data.user) {
           setAccount(data.user)
           setStep('chat')
-          if (new URLSearchParams(search).get('google') === 'success') setOpen(true)
+          if (googleToken) setOpen(true)
         }
       })
       .catch(() => {})
@@ -40,7 +62,7 @@ export default function ChatWidget() {
       window.clearTimeout(timeout)
       controller.abort()
     }
-  }, [search])
+  }, [search, hash])
 
   useEffect(() => {
     const handleAuthenticated = event => {
@@ -73,11 +95,11 @@ export default function ChatWidget() {
     })
     const stream = async () => {
       try {
-        const history = await fetch(`${API}/chat`, { credentials: 'include', signal: streamController.signal }).then(response => response.ok ? response.json() : Promise.reject()).catch(() => null)
+        const history = await fetch(`${API}/chat`, { credentials: 'include', headers: customerHeaders(), signal: streamController.signal }).then(response => response.ok ? response.json() : Promise.reject()).catch(() => null)
         if (history) addMessages(history.messages || [])
         while (active) {
           try {
-            const response = await fetch(`${API}/chat/stream?last_id=${lastIdRef.current}`, { credentials: 'include', headers: { Accept: 'text/event-stream' }, signal: streamController.signal })
+            const response = await fetch(`${API}/chat/stream?last_id=${lastIdRef.current}`, { credentials: 'include', headers: { ...customerHeaders(), Accept: 'text/event-stream' }, signal: streamController.signal })
             if (!response.body) break
             const reader = response.body.getReader()
             const decoder = new TextDecoder()
@@ -109,19 +131,24 @@ export default function ChatWidget() {
     if (!text || sending) return
     setInput('')
     setSending(true)
+    const pendingId = `pending-${Date.now()}`
+    setMessages(messages => [...messages, { from: 'user', text, id: pendingId }])
     try {
       const csrfToken = await getCsrfToken()
       const response = await fetch(`${API}/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        headers: { ...customerHeaders(), 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
         credentials: 'include',
         body: JSON.stringify({ message: text }),
       })
       if (!response.ok) throw new Error('Message failed')
       const data = await response.json()
-      setMessages(m => [...m, { from: 'user', text, id: data.message.id }])
+      setMessages(messages => messages.map(message => message.id === pendingId ? { ...message, id: data.message.id } : message))
     } catch {
-      setMessages(m => [...m, { from: 'bot', text: 'Sorry, something went wrong. Please try again or email us directly.' }])
+      setMessages(messages => [
+        ...messages.filter(message => message.id !== pendingId),
+        { from: 'bot', text: 'Sorry, something went wrong. Please try again or email us directly.' },
+      ])
     }
     setSending(false)
   }
