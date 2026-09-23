@@ -130,6 +130,19 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-order-note-label { margin: 0 0 10px; font-size: 10px; font-weight: 800; color: #70817c; letter-spacing: 1.4px; text-transform: uppercase; }
 .admin-order-note-value { margin: 0; font-size: 15px; line-height: 1.8; color: #0d1f1c; white-space: pre-wrap; word-break: normal; overflow-wrap: normal; }
 .admin-order-empty { background: #fff; border: 1px solid #dbe9e5; border-radius: 18px; box-shadow: 0 12px 24px rgba(13,31,28,.04); }
+.account-page { min-height: 70vh; display: grid; place-items: center; padding: 90px 20px; background: linear-gradient(135deg, #edf7f4, #f8fbfa); }
+.account-panel { width: min(100%, 430px); padding: 34px; border: 1px solid #dbe9e5; border-radius: 16px; background: #fff; box-shadow: 0 18px 42px rgba(13,31,28,.08); }
+.account-panel h1 { margin: 10px 0 8px; color: #0d1f1c; font-size: 30px; }
+.account-panel > p { color: #70817c; font-size: 13px; line-height: 1.6; }
+.account-panel form { display: grid; gap: 15px; margin-top: 25px; }
+.account-panel label { display: grid; gap: 7px; color: #315d54; font-size: 12px; font-weight: 800; }
+.account-panel input { width: 100%; padding: 12px; border: 1px solid #cfe0db; border-radius: 8px; color: #0d1f1c; font: inherit; outline: none; }
+.account-panel input:focus { border-color: #0f8972; box-shadow: 0 0 0 3px rgba(15,137,114,.12); }
+.account-panel form button { padding: 12px; border: 0; border-radius: 8px; background: #0f8972; color: #fff; font: inherit; font-weight: 800; cursor: pointer; }
+.account-panel form button:disabled { cursor: wait; opacity: .65; }
+.account-error { color: #b64035 !important; font-size: 12px !important; }
+.account-switch { margin-top: 20px; text-align: center; }
+.account-switch a { color: #0f8972; font-weight: 800; text-decoration: none; }
 
 @media (min-width: 761px) {
   .admin-sidebar { position: sticky; top: 0; height: 100vh; max-height: 100vh; overflow-y: auto; align-self: flex-start; }

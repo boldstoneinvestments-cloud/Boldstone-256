@@ -26,6 +26,7 @@ import ChatWidget from './components/layout/ChatWidget'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
 import Shop from './pages/Shop'
+import AccountAuth from './pages/AccountAuth'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -51,6 +52,8 @@ function AppInner() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/admin/sign-in" element={<AdminLogin />} />
+          <Route path="/account/sign-in" element={<AccountAuth mode="sign-in" />} />
+          <Route path="/account/sign-up" element={<AccountAuth mode="sign-up" />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="orders" element={<AdminOrders />} />

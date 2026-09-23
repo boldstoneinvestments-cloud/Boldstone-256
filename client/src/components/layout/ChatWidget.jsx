@@ -2,45 +2,71 @@ import { useState, useRef, useEffect } from 'react'
 
 const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')).replace(/\/api$/, '') + '/api'
 
+const getCsrfToken = async () => (await (await fetch(`${API}/account/csrf`, { credentials: 'include' })).json()).csrfToken
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState('info') // 'info' | 'chat'
   const [info, setInfo] = useState({ name: '', email: '' })
+  const [account, setAccount] = useState(null)
+  const [accountLoading, setAccountLoading] = useState(true)
   const [messages, setMessages] = useState([
     { from: 'bot', text: 'Hi! Welcome to Boldstone Investments. How can we help you today?' }
   ])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
   const bottomRef = useRef(null)
+  const lastIdRef = useRef(0)
+
+  useEffect(() => {
+    fetch(`${API}/account/me`, { credentials: 'include' })
+      .then(response => response.ok ? response.json() : Promise.reject())
+      .then(data => { setAccount(data.user); setInfo({ name: data.user.name, email: data.user.email }); setStep('chat') })
+      .catch(() => {})
+      .finally(() => setAccountLoading(false))
+  }, [])
 
   useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, open])
 
   useEffect(() => {
-    if (step !== 'chat' || !info.email) return undefined
-    const loadReplies = () => {
-      fetch(`${API}/chat?email=${encodeURIComponent(info.email)}`)
-        .then(response => response.ok ? response.json() : Promise.reject())
-        .then(data => setMessages(current => {
-          const welcome = current[0]
-          const localMessages = current.filter(message => message.local)
-          const serverMessages = (data.messages || []).map(message => ({
-            from: message.is_admin ? 'bot' : 'user', text: message.message, id: message.id,
-          }))
-          return [welcome, ...serverMessages, ...localMessages.filter(message => !serverMessages.some(serverMessage => serverMessage.text === message.text && serverMessage.from === message.from))]
-        }))
-        .catch(() => {})
+    if (step !== 'chat' || !account) return undefined
+    let active = true
+    const addMessages = incoming => setMessages(current => {
+      const existing = new Set(current.map(message => message.id).filter(Boolean))
+      const fresh = incoming.filter(message => !existing.has(message.id)).map(message => ({
+        from: message.is_admin ? 'bot' : 'user', text: message.message, id: message.id,
+      }))
+      incoming.forEach(message => { lastIdRef.current = Math.max(lastIdRef.current, message.id) })
+      return [...current, ...fresh]
+    })
+    const stream = async () => {
+      const history = await fetch(`${API}/chat`, { credentials: 'include' }).then(response => response.ok ? response.json() : Promise.reject()).catch(() => null)
+      if (history) addMessages(history.messages || [])
+      while (active) {
+        const response = await fetch(`${API}/chat/stream?last_id=${lastIdRef.current}`, { credentials: 'include', headers: { Accept: 'text/event-stream' } }).catch(() => null)
+        if (!response?.body) break
+        const reader = response.body.getReader()
+        const decoder = new TextDecoder()
+        let buffer = ''
+        while (active) {
+          const chunk = await reader.read()
+          if (chunk.done) break
+          buffer += decoder.decode(chunk.value, { stream: true })
+          const events = buffer.split('\n\n')
+          buffer = events.pop() || ''
+          events.forEach(event => event.split('\n').filter(line => line.startsWith('data: ')).forEach(line => addMessages([JSON.parse(line.slice(6))])))
+        }
+      }
     }
-    loadReplies()
-    const interval = window.setInterval(loadReplies, 5000)
-    return () => window.clearInterval(interval)
-  }, [step, info.email])
+    stream()
+    return () => { active = false }
+  }, [step, account])
 
   const startChat = e => {
     e.preventDefault()
-    if (!info.name.trim() || !info.email.trim()) return
-    setStep('chat')
+    if (account) setStep('chat')
   }
 
   const send = async e => {
@@ -48,15 +74,18 @@ export default function ChatWidget() {
     const text = input.trim()
     if (!text || sending) return
     setInput('')
-    setMessages(m => [...m, { from: 'user', text, local: true }])
     setSending(true)
     try {
+      const csrfToken = await getCsrfToken()
       const response = await fetch(`${API}/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: info.name, email: info.email, message: text }),
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        credentials: 'include',
+        body: JSON.stringify({ message: text }),
       })
       if (!response.ok) throw new Error('Message failed')
+      const data = await response.json()
+      setMessages(m => [...m, { from: 'user', text, id: data.message.id }])
     } catch {
       setMessages(m => [...m, { from: 'bot', text: 'Sorry, something went wrong. Please try again or email us directly.' }])
     }
@@ -123,31 +152,13 @@ export default function ChatWidget() {
 
           {step === 'info' ? (
             /* Info form */
-            <form onSubmit={startChat} style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, margin: 0 }}>Before we start, please tell us who you are.</p>
-              {[
-                { key: 'name', placeholder: 'Your name', type: 'text' },
-                { key: 'email', placeholder: 'Your email', type: 'email' },
-              ].map(f => (
-                <input key={f.key} type={f.type} placeholder={f.placeholder} required value={info[f.key]}
-                  onChange={e => setInfo(i => ({ ...i, [f.key]: e.target.value }))}
-                  style={{
-                    background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: 8, padding: '11px 14px', color: '#fff', fontSize: 13,
-                    outline: 'none', fontFamily: 'inherit',
-                  }}
-                  onFocus={e => e.target.style.borderColor = 'rgba(15,137,114,0.6)'}
-                  onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
-                />
-              ))}
-              <button type="submit" style={{
-                background: 'linear-gradient(90deg,#0f8972,#12a688)', color: '#fff',
-                border: 'none', borderRadius: 8, padding: '12px', fontWeight: 700,
-                fontSize: 13, cursor: 'pointer',
-              }}>
-                Start Chat →
-              </button>
-            </form>
+            <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, margin: 0 }}>{accountLoading ? 'Checking your account...' : 'Sign in before starting a private support chat.'}</p>
+              {!accountLoading && <>
+                <a href="/account/sign-in" style={{ background: 'linear-gradient(90deg,#0f8972,#12a688)', color: '#fff', borderRadius: 8, padding: 12, fontWeight: 700, fontSize: 13, textAlign: 'center', textDecoration: 'none' }}>Sign in</a>
+                <a href="/account/sign-up" style={{ color: '#8be1cd', fontSize: 13, textAlign: 'center', textDecoration: 'none' }}>Create an account</a>
+              </>}
+            </div>
           ) : (
             /* Chat */
             <>
