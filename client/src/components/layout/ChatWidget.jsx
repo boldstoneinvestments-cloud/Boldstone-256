@@ -54,7 +54,7 @@ export default function ChatWidget() {
       {!open && (
         <div style={{
           position: 'fixed', bottom: 90, right: 28, zIndex: 9999,
-          color: '#0f8972', fontWeight: 700, fontSize: 11,
+          color: '#c8a84b', fontWeight: 700, fontSize: 11,
           fontFamily: "'Inter','Segoe UI',sans-serif",
           pointerEvents: 'none', whiteSpace: 'nowrap',
           width: 56, textAlign: 'center',
@@ -71,8 +71,8 @@ export default function ChatWidget() {
         style={{
           position: 'fixed', bottom: 28, right: 28, zIndex: 9999,
           width: 56, height: 56, borderRadius: '50%',
-          background: 'linear-gradient(135deg, #0f8972, #12a688)',
-          border: 'none', cursor: 'pointer', boxShadow: '0 4px 20px rgba(15,137,114,0.45)',
+          background: 'linear-gradient(135deg, #c8a84b, #e0c068)',
+          border: 'none', cursor: 'pointer', boxShadow: '0 4px 20px rgba(200,168,75,0.45)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           transition: 'transform 0.2s',
         }}
