@@ -26,7 +26,10 @@ export default function AccountAuth({ mode }) {
     }).catch(() => null)
     const data = response ? await response.json().catch(() => ({})) : {}
     if (!response?.ok) setError(data.error || 'Unable to access your account.')
-    else navigate(location.state?.from || '/')
+    else {
+      window.dispatchEvent(new CustomEvent('boldstone-account-authenticated', { detail: data.user }))
+      navigate(location.state?.from || '/')
+    }
     setSaving(false)
   }
 

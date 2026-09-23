@@ -41,6 +41,18 @@ export default function ChatWidget() {
   }, [])
 
   useEffect(() => {
+    const handleAuthenticated = event => {
+      if (!event.detail) return
+      setAccount(event.detail)
+      setStep('chat')
+      setOpen(true)
+      setAccountLoading(false)
+    }
+    window.addEventListener('boldstone-account-authenticated', handleAuthenticated)
+    return () => window.removeEventListener('boldstone-account-authenticated', handleAuthenticated)
+  }, [])
+
+  useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, open])
 
