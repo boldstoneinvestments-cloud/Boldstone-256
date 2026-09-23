@@ -22,7 +22,12 @@ export default function ChatWidget() {
     const timeout = window.setTimeout(() => controller.abort(), 5000)
     fetch(`${API}/account/me`, { credentials: 'include', signal: controller.signal })
       .then(response => response.ok ? response.json() : Promise.reject())
-      .then(data => { setAccount(data.user); setStep('chat') })
+      .then(data => {
+        if (data.authenticated && data.user) {
+          setAccount(data.user)
+          setStep('chat')
+        }
+      })
       .catch(() => {})
       .finally(() => {
         window.clearTimeout(timeout)
