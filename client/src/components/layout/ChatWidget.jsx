@@ -18,11 +18,20 @@ export default function ChatWidget() {
   const lastIdRef = useRef(0)
 
   useEffect(() => {
-    fetch(`${API}/account/me`, { credentials: 'include' })
+    const controller = new AbortController()
+    const timeout = window.setTimeout(() => controller.abort(), 5000)
+    fetch(`${API}/account/me`, { credentials: 'include', signal: controller.signal })
       .then(response => response.ok ? response.json() : Promise.reject())
       .then(data => { setAccount(data.user); setStep('chat') })
       .catch(() => {})
-      .finally(() => setAccountLoading(false))
+      .finally(() => {
+        window.clearTimeout(timeout)
+        setAccountLoading(false)
+      })
+    return () => {
+      window.clearTimeout(timeout)
+      controller.abort()
+    }
   }, [])
 
   useEffect(() => {
