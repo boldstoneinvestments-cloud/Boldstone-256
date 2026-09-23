@@ -7,7 +7,6 @@ const getCsrfToken = async () => (await (await fetch(`${API}/account/csrf`, { cr
 export default function ChatWidget() {
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState('info') // 'info' | 'chat'
-  const [info, setInfo] = useState({ name: '', email: '' })
   const [account, setAccount] = useState(null)
   const [accountLoading, setAccountLoading] = useState(true)
   const [messages, setMessages] = useState([
@@ -21,7 +20,7 @@ export default function ChatWidget() {
   useEffect(() => {
     fetch(`${API}/account/me`, { credentials: 'include' })
       .then(response => response.ok ? response.json() : Promise.reject())
-      .then(data => { setAccount(data.user); setInfo({ name: data.user.name, email: data.user.email }); setStep('chat') })
+      .then(data => { setAccount(data.user); setStep('chat') })
       .catch(() => {})
       .finally(() => setAccountLoading(false))
   }, [])
@@ -63,11 +62,6 @@ export default function ChatWidget() {
     stream()
     return () => { active = false }
   }, [step, account])
-
-  const startChat = e => {
-    e.preventDefault()
-    if (account) setStep('chat')
-  }
 
   const send = async e => {
     e.preventDefault()

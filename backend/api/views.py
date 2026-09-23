@@ -55,6 +55,7 @@ def account_signup(request):
     first_name, _, last_name = name.partition(' ')
     user = User.objects.create_user(username=email, email=email, password=password, first_name=first_name, last_name=last_name)
     CustomerProfile.objects.create(user=user)
+    ChatMessage.objects.filter(user__isnull=True, email__iexact=email).update(user=user)
     login(request, user)
     return JsonResponse({'user': serialize_account(user)}, status=201)
 
