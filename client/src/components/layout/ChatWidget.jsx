@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 const API = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')).replace(/\/api$/, '') + '/api'
 
 const getCsrfToken = async () => (await (await fetch(`${API}/account/csrf`, { credentials: 'include' })).json()).csrfToken
 
 export default function ChatWidget() {
+  const { search } = useLocation()
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState('info') // 'info' | 'chat'
   const [account, setAccount] = useState(null)
@@ -27,6 +28,7 @@ export default function ChatWidget() {
         if (data.authenticated && data.user) {
           setAccount(data.user)
           setStep('chat')
+          if (new URLSearchParams(search).get('google') === 'success') setOpen(true)
         }
       })
       .catch(() => {})
@@ -38,7 +40,7 @@ export default function ChatWidget() {
       window.clearTimeout(timeout)
       controller.abort()
     }
-  }, [])
+  }, [search])
 
   useEffect(() => {
     const handleAuthenticated = event => {
@@ -59,6 +61,8 @@ export default function ChatWidget() {
   useEffect(() => {
     if (step !== 'chat' || !account) return undefined
     let active = true
+    const streamController = new AbortController()
+    const wait = delay => new Promise(resolve => window.setTimeout(resolve, delay))
     const addMessages = incoming => setMessages(current => {
       const existing = new Set(current.map(message => message.id).filter(Boolean))
       const fresh = incoming.filter(message => !existing.has(message.id)).map(message => ({
@@ -68,26 +72,35 @@ export default function ChatWidget() {
       return [...current, ...fresh]
     })
     const stream = async () => {
-      const history = await fetch(`${API}/chat`, { credentials: 'include' }).then(response => response.ok ? response.json() : Promise.reject()).catch(() => null)
-      if (history) addMessages(history.messages || [])
-      while (active) {
-        const response = await fetch(`${API}/chat/stream?last_id=${lastIdRef.current}`, { credentials: 'include', headers: { Accept: 'text/event-stream' } }).catch(() => null)
-        if (!response?.body) break
-        const reader = response.body.getReader()
-        const decoder = new TextDecoder()
-        let buffer = ''
+      try {
+        const history = await fetch(`${API}/chat`, { credentials: 'include', signal: streamController.signal }).then(response => response.ok ? response.json() : Promise.reject()).catch(() => null)
+        if (history) addMessages(history.messages || [])
         while (active) {
-          const chunk = await reader.read()
-          if (chunk.done) break
-          buffer += decoder.decode(chunk.value, { stream: true })
-          const events = buffer.split('\n\n')
-          buffer = events.pop() || ''
-          events.forEach(event => event.split('\n').filter(line => line.startsWith('data: ')).forEach(line => addMessages([JSON.parse(line.slice(6))])))
+          try {
+            const response = await fetch(`${API}/chat/stream?last_id=${lastIdRef.current}`, { credentials: 'include', headers: { Accept: 'text/event-stream' }, signal: streamController.signal })
+            if (!response.body) break
+            const reader = response.body.getReader()
+            const decoder = new TextDecoder()
+            let buffer = ''
+            while (active) {
+              const chunk = await reader.read()
+              if (chunk.done) break
+              buffer += decoder.decode(chunk.value, { stream: true })
+              const events = buffer.split('\n\n')
+              buffer = events.pop() || ''
+              events.forEach(event => event.split('\n').filter(line => line.startsWith('data: ')).forEach(line => addMessages([JSON.parse(line.slice(6))])))
+            }
+          } catch (error) {
+            if (error.name === 'AbortError') break
+          }
+          if (active) await wait(1000)
         }
+      } catch (error) {
+        if (error.name !== 'AbortError') return
       }
     }
     stream()
-    return () => { active = false }
+    return () => { active = false; streamController.abort() }
   }, [step, account])
 
   const send = async e => {
