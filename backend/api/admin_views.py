@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.db import transaction
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -132,6 +133,86 @@ def admin_user_detail(request, user_id):
         user.set_password(password)
     user.save()
     return JsonResponse({'success': True, 'user': serialize_admin_user(user)})
+
+
+@csrf_exempt
+@login_required
+def admin_customers(request):
+    if request.method == 'GET':
+        contacts = {}
+
+        def add_contact(email, name='', phone='', source='', reason='', created_at=None, account=None, details=None):
+            key = email.lower()
+            contact = contacts.setdefault(key, {
+                'id': account.id if account else f'contact-{len(contacts) + 1}',
+                'account_id': account.id if account else None,
+                'name': name,
+                'username': account.username if account else '',
+                'email': email,
+                'phone': phone,
+                'sources': [],
+                'date_joined': created_at.isoformat() if created_at else '',
+                'is_active': account.is_active if account else None,
+                'records': [],
+            })
+            if account:
+                contact.update({
+                    'id': account.id,
+                    'account_id': account.id,
+                    'name': account.get_full_name() or contact['name'],
+                    'username': account.username,
+                    'email': account.email,
+                    'is_active': account.is_active,
+                    'date_joined': account.date_joined.isoformat(),
+                })
+            elif not contact['name']:
+                contact['name'] = name
+            if phone and not contact['phone']:
+                contact['phone'] = phone
+            if source and source not in contact['sources']:
+                contact['sources'].append(source)
+            if source and not any(record['source'] == source and record['date'] == created_at.isoformat() for record in contact['records']):
+                contact['records'].append({
+                    'source': source,
+                    'reason': reason,
+                    'date': created_at.isoformat() if created_at else '',
+                    'details': details or {},
+                })
+            if created_at and (not contact['date_joined'] or created_at.isoformat() > contact['date_joined']):
+                contact['date_joined'] = created_at.isoformat()
+
+        for user in User.objects.filter(is_staff=False).order_by('first_name', 'last_name', 'email'):
+            add_contact(user.email, user.get_full_name(), source='Chat account', reason='Signed up to use customer chat', created_at=user.date_joined, account=user, details={'username': user.username})
+        for order in ShopOrder.objects.order_by('created_at'):
+            add_contact(order.email, order.name, order.phone, 'Order page', 'Placed an order', order.created_at, details={'product': order.product_name, 'quantity': order.quantity, 'location': order.location, 'country': order.country, 'province': order.province, 'district': order.district, 'street': order.street, 'village': order.village, 'notes': order.notes, 'invoice_number': order.invoice_number})
+        for order in Order.objects.order_by('created_at'):
+            add_contact(order.email, order.name, order.phone, 'Order page', 'Placed an order', order.created_at, details={'product': order.product, 'quantity': order.quantity, 'location': order.location, 'notes': order.notes})
+        for application in LeaseApplication.objects.order_by('created_at'):
+            add_contact(application.email, application.full_name, application.phone, 'Lease page', 'Applied to lease a coffee farm', application.created_at, details={'plan': application.plan, 'country': application.country, 'address': application.address, 'status': application.status, 'notes': application.notes})
+
+        return JsonResponse({
+            'customers': sorted(contacts.values(), key=lambda contact: (contact['name'] or contact['email']).lower()),
+        })
+
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+
+@csrf_exempt
+@login_required
+def admin_customer_delete(request, email):
+    if request.method != 'DELETE':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    with transaction.atomic():
+        user_deleted, _ = User.objects.filter(email__iexact=email, is_staff=False).delete()
+        orders_deleted, _ = ShopOrder.objects.filter(email__iexact=email).delete()
+        legacy_orders_deleted, _ = Order.objects.filter(email__iexact=email).delete()
+        applications_deleted, _ = LeaseApplication.objects.filter(email__iexact=email).delete()
+        messages_deleted, _ = ChatMessage.objects.filter(email__iexact=email).delete()
+
+    if not any((user_deleted, orders_deleted, legacy_orders_deleted, applications_deleted, messages_deleted)):
+        return JsonResponse({'error': 'Customer not found'}, status=404)
+    return JsonResponse({'success': True})
 
 
 @login_required

@@ -72,11 +72,20 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-chat-message-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
 .admin-chat-message h2 { color: #0d1f1c; font-size: 15px; }
 .admin-chat-message a { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; color: #0f8972; font-size: 12px; text-decoration: none; }
+.admin-chat-email { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; color: #0f8972; font-size: 12px; }
 .admin-chat-message a:hover { text-decoration: underline; }
 .admin-chat-message time { flex-shrink: 0; color: #8a9a96; font-size: 11px; }
 .admin-chat-message > p { margin-top: 16px; padding-top: 15px; border-top: 1px solid #edf1ef; color: #536661; font-size: 14px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
 .admin-chat-empty { max-width: 920px; border: 1px solid #dbe9e5; border-radius: 14px; background: #fff; }
 .admin-chat-thread { max-width: 920px; padding: 20px 22px; border: 1px solid #dbe9e5; border-radius: 14px; background: #fff; box-shadow: 0 8px 24px rgba(13,31,28,.035); }
+.admin-chat-thread-link { display: block; color: inherit; text-decoration: none; transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+.admin-chat-thread-link:hover { border-color: #8cc9bb; box-shadow: 0 10px 28px rgba(13,31,28,.08); transform: translateY(-1px); }
+.admin-chat-back { display: inline-flex; margin-bottom: 14px; color: #0f8972; font-size: 12px; font-weight: 800; text-decoration: none; }
+.admin-chat-back:hover { text-decoration: underline; }
+.admin-chat-preview { margin-top: 16px; padding-top: 15px; border-top: 1px solid #edf1ef; color: #536661; font-size: 14px; line-height: 1.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-chat-thread-footer { display: flex; align-items: center; gap: 14px; margin-top: 16px; color: #8a9a96; font-size: 11px; }
+.admin-chat-thread-footer strong { margin-left: auto; color: #0f8972; font-size: 12px; }
+.admin-chat-detail { margin-top: 8px; }
 .admin-chat-thread-messages { display: grid; gap: 10px; margin-top: 18px; }
 .admin-chat-bubble { max-width: 82%; padding: 11px 14px; border-radius: 11px 11px 11px 2px; background: #f1f7f5; color: #315d54; }
 .admin-chat-bubble.is-admin { justify-self: end; border-radius: 11px 11px 2px 11px; background: #0f8972; color: #fff; }
@@ -89,6 +98,49 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-chat-reply button { display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0; padding: 10px 13px; border: 0; border-radius: 8px; background: #0f8972; color: #fff; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
 .admin-chat-reply button:disabled { cursor: wait; opacity: .65; }
 .admin-users-layout { display: grid; grid-template-columns: minmax(280px, 360px) minmax(0, 1fr); gap: 20px; max-width: 980px; }
+.admin-customer-section { max-width: 980px; margin-top: 34px; }
+.admin-users-tabs { display: flex; gap: 4px; max-width: 980px; margin-top: 28px; border-bottom: 1px solid #dbe9e5; }
+.admin-users-tabs button { display: inline-flex; align-items: center; gap: 8px; padding: 11px 16px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: #70817c; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
+.admin-users-tabs button:hover, .admin-users-tabs button.is-active { border-bottom-color: #0f8972; color: #0f8972; }
+.admin-users-tabs strong { display: grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: #edf7f4; color: #0f8972; font-size: 11px; }
+.admin-customer-section > .admin-user-list-heading { margin-bottom: 8px; }
+.admin-customer-intro { margin-bottom: 16px; color: #70817c; font-size: 13px; }
+.admin-admins-section { max-width: 980px; margin-top: 42px; }
+.admin-admins-section > .admin-user-list-heading { margin-bottom: 16px; }
+.admin-inline-edit { padding: 22px 24px 24px; border-top: 1px solid #edf1ef; }
+.admin-table-empty { padding: 24px !important; color: #8a9a96 !important; text-align: center; }
+.admin-table-status { display: inline-block; padding: 5px 8px; border-radius: 999px; background: #e6f4f1; color: #0f8972; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+.admin-table-sources { color: #536661; font-size: 12px; white-space: normal; }
+.admin-table-muted { color: #8a9a96; font-size: 11px; }
+.admin-table-action { border: 1px solid #cfe0db; border-radius: 7px; padding: 7px 10px; background: #fff; color: #0f8972; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.admin-clickable-row { cursor: pointer; }
+.admin-clickable-row:hover, .admin-clickable-row:focus { background: #f7fbfa; outline: none; }
+.admin-modal-backdrop { position: fixed; z-index: 50; inset: 0; display: grid; place-items: center; padding: 24px; background: rgba(4,27,22,.55); }
+.admin-customer-modal { width: min(100%, 760px); max-height: min(88vh, 760px); overflow: auto; padding: 28px; border: 1px solid #dbe9e5; border-radius: 16px; background: #fff; box-shadow: 0 24px 70px rgba(0,0,0,.22); }
+.admin-customer-modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding-bottom: 20px; border-bottom: 1px solid #edf1ef; }
+.admin-customer-modal-header h2 { margin: 8px 0 5px; color: #0d1f1c; font-size: 24px; }
+.admin-customer-modal-header p { color: #70817c; font-size: 13px; }
+.admin-customer-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 20px; }
+.admin-customer-summary > div { padding: 13px; border: 1px solid #edf1ef; border-radius: 9px; background: #fbfdfc; }
+.admin-customer-summary small, .admin-customer-summary strong { display: block; }
+.admin-customer-summary small { color: #70817c; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+.admin-customer-summary strong { margin-top: 6px; color: #0d1f1c; font-size: 13px; overflow-wrap: anywhere; }
+.admin-customer-records { margin-top: 24px; }
+.admin-customer-records h3 { margin-bottom: 12px; color: #0d1f1c; font-size: 16px; }
+.admin-customer-records article { padding: 15px 0; border-top: 1px solid #edf1ef; }
+.admin-customer-records article > div:first-child strong, .admin-customer-records article > div:first-child span, .admin-customer-records article > div:first-child time { display: block; }
+.admin-customer-records article > div:first-child strong { color: #0f8972; font-size: 13px; }
+.admin-customer-records article > div:first-child span { margin-top: 3px; color: #315d54; font-size: 13px; }
+.admin-customer-records article > div:first-child time { margin-top: 5px; color: #8a9a96; font-size: 11px; }
+.admin-customer-records dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 18px; margin-top: 12px; }
+.admin-customer-records dl div { min-width: 0; }
+.admin-customer-records dt { color: #8a9a96; font-size: 10px; text-transform: capitalize; }
+.admin-customer-records dd { margin-top: 3px; color: #536661; font-size: 12px; overflow-wrap: anywhere; white-space: pre-wrap; }
+.admin-customer-modal-footer { display: flex; justify-content: flex-end; margin-top: 18px; padding-top: 18px; border-top: 1px solid #edf1ef; }
+.admin-danger-button { padding: 10px 14px; border: 0; border-radius: 8px; background: #b64035; color: #fff; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.admin-danger-button:disabled { cursor: wait; opacity: .65; }
+.admin-checkbox-label { display: flex !important; align-items: center; grid-template-columns: auto 1fr; gap: 8px !important; }
+.admin-checkbox-label input { width: auto; }
 .admin-user-form, .admin-user-list { padding: 24px; border: 1px solid #dbe9e5; border-radius: 16px; background: #fff; box-shadow: 0 10px 30px rgba(13,31,28,.04); }
 .admin-user-form h2, .admin-user-list h2 { margin: 8px 0 22px; color: #0d1f1c; font-size: 22px; }
 .admin-user-form label { display: grid; gap: 7px; margin-top: 16px; color: #315d54; font-size: 12px; font-weight: 800; }

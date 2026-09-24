@@ -75,6 +75,7 @@ function AppInner() {
             <Route path="orders/:id" element={<AdminOrderDetail />} />
             <Route path="lease-applications" element={<AdminApplications />} />
             <Route path="chat" element={<AdminChat />} />
+            <Route path="chat/:email" element={<AdminChat />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="blog" element={<AdminBlog />} />
           </Route>

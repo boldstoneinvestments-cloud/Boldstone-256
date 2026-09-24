@@ -9,7 +9,7 @@ const links = [
   { to: '/admin/orders', label: 'Orders' },
   { to: '/admin/lease-applications', label: 'Lease applications' },
   { to: '/admin/chat', label: 'Chat messages' },
-  { to: '/admin/users', label: 'Admin users' },
+  { to: '/admin/users', label: 'Users' },
   { to: '/admin/blog', label: 'Blog manager' },
 ]
 
