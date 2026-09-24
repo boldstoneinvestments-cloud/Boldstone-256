@@ -35,6 +35,7 @@ export default function ChatWidget() {
     { from: 'bot', text: 'Hi! Welcome to Boldstone Investments. How can we help you today?' }
   ])
   const [input, setInput] = useState('')
+  const [attachment, setAttachment] = useState(null)
   const [sending, setSending] = useState(false)
   const bottomRef = useRef(null)
   const lastIdRef = useRef(0)
@@ -120,7 +121,7 @@ export default function ChatWidget() {
           return
         }
 
-        next.push({ from: message.is_admin || message.is_ai ? 'bot' : 'user', text: message.message, id: message.id, is_ai: message.is_ai, is_admin: message.is_admin, admin_name: message.admin_name, admin_avatar: message.admin_avatar })
+        next.push({ from: message.is_admin || message.is_ai ? 'bot' : 'user', text: message.message, id: message.id, is_ai: message.is_ai, is_admin: message.is_admin, admin_name: message.admin_name, admin_avatar: message.admin_avatar, attachment_url: message.attachment_url, attachment_name: message.attachment_name })
       })
       return next
     })
@@ -159,23 +160,26 @@ export default function ChatWidget() {
   const send = async e => {
     e.preventDefault()
     const text = input.trim()
-    if (!text || sending) return
+    if ((!text && !attachment) || sending) return
     setInput('')
     setSending(true)
     const pendingId = `pending-${Date.now()}`
-    setMessages(messages => [...messages, { from: 'user', text, id: pendingId }])
+    setMessages(messages => [...messages, { from: 'user', text, id: pendingId, attachment_name: attachment?.name }])
     try {
       const csrfToken = await getCsrfToken()
+      const formData = new FormData()
+      formData.append('message', text)
+      if (attachment) formData.append('attachment', attachment)
       const response = await fetch(`${API}/chat`, {
         method: 'POST',
-        headers: { ...customerHeaders(), 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        headers: { ...customerHeaders(), 'X-CSRFToken': csrfToken },
         credentials: 'include',
-        body: JSON.stringify({ message: text }),
+        body: formData,
       })
       if (!response.ok) throw new Error('Message failed')
       const data = await response.json()
       setMessages(messages => {
-        const updated = messages.map(message => message.id === pendingId ? { ...message, id: data.message.id } : message)
+        const updated = messages.map(message => message.id === pendingId ? { ...message, id: data.message.id, attachment_url: data.message.attachment_url, attachment_name: data.message.attachment_name } : message)
         if (!data.ai_message || updated.some(message => message.id === data.ai_message.id)) return updated
         return [...updated, { from: 'bot', text: data.ai_message.message, id: data.ai_message.id, is_ai: true }]
       })
@@ -185,6 +189,7 @@ export default function ChatWidget() {
         { from: 'bot', text: 'Sorry, something went wrong. Please try again or email us directly.' },
       ])
     }
+    setAttachment(null)
     setSending(false)
   }
 
@@ -260,7 +265,7 @@ export default function ChatWidget() {
             <>
               <div style={{ flex: 1, overflowY: 'auto', padding: '16px 16px 8px', display: 'flex', flexDirection: 'column', gap: 10, maxHeight: 300 }}>
                 {messages.map((m, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: m.from === 'user' ? 'flex-end' : 'flex-start' }}>
+                  <div key={i} style={{ display: 'flex', justifyContent: m.from === 'user' ? 'flex-end' : 'flex-start', alignItems: 'flex-end' }}>
                     {m.is_admin && m.admin_avatar && <img src={m.admin_avatar} alt={m.admin_name || 'Boldstone team member'} style={{ width: 24, height: 24, borderRadius: '50%', objectFit: 'cover', marginRight: 6, alignSelf: 'flex-end' }} />}
                     <div style={{
                       maxWidth: '80%', padding: '9px 13px', borderRadius: m.from === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
@@ -269,6 +274,8 @@ export default function ChatWidget() {
                     }}>
                       {m.is_admin && m.admin_name && <div style={{ fontSize: 10, fontWeight: 700, marginBottom: 3, color: '#8be1cd' }}>{m.admin_name}</div>}
                       {m.text}
+                      {m.attachment_url && <a href={`${API.replace(/\/api$/, '')}${m.attachment_url}`} target="_blank" rel="noreferrer" style={{ display: 'block', marginTop: 6, color: '#8be1cd', fontSize: 11, textDecoration: 'underline' }}>{m.attachment_name || 'Open attachment'}</a>}
+                      {!m.attachment_url && m.attachment_name && <span style={{ display: 'block', marginTop: 6, color: '#8be1cd', fontSize: 11 }}>{m.attachment_name}</span>}
                     </div>
                   </div>
                 ))}
@@ -282,7 +289,11 @@ export default function ChatWidget() {
                 <div ref={bottomRef} />
               </div>
               {(
-                <form onSubmit={send} style={{ padding: '10px 12px 14px', display: 'flex', gap: 8, borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+                <form onSubmit={send} style={{ position: 'sticky', bottom: 0, padding: '10px 12px 14px', display: 'flex', gap: 8, borderTop: '1px solid rgba(255,255,255,0.07)', background: '#0a1628' }}>
+                  <label title="Attach a file under 5 MB" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#8be1cd', cursor: 'pointer', flexShrink: 0 }}>
+                    <input type="file" accept="image/*,.pdf,.doc,.docx,.txt,.csv" hidden onChange={event => setAttachment(event.target.files?.[0] || null)} />
+                    <span aria-hidden="true" style={{ fontSize: 20 }}>+</span>
+                  </label>
                   <input
                     value={input} onChange={e => setInput(e.target.value)}
                     placeholder="Type a message…"
@@ -294,7 +305,7 @@ export default function ChatWidget() {
                     onFocus={e => e.target.style.borderColor = 'rgba(15,137,114,0.6)'}
                     onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                   />
-                  <button type="submit" disabled={sending} style={{
+                  <button type="submit" disabled={sending || (!input.trim() && !attachment)} style={{
                     background: 'linear-gradient(135deg,#0f8972,#12a688)', border: 'none',
                     borderRadius: 8, width: 40, height: 40, cursor: 'pointer', flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
