@@ -300,10 +300,13 @@ export default function ChatWidget() {
                   </div>
                 ))}
                 {(sending || waitingForAi) && (
-                  <div style={{ display: 'flex', gap: 4, padding: '6px 0' }}>
-                    {[0, 1, 2].map(i => (
-                      <span key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: '#0f8972', animation: `bounce 1s ${i * 0.2}s infinite` }} />
-                    ))}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '6px 0' }}>
+                    <img className="chat-ai-thinking-icon" src="/images/AI%20icon.png" alt="Boldstone AI is thinking" />
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                      {[0, 1, 2].map(i => (
+                        <span key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: '#0f8972', animation: `bounce 1s ${i * 0.2}s infinite` }} />
+                      ))}
+                    </span>
                   </div>
                 )}
                 <div ref={bottomRef} />

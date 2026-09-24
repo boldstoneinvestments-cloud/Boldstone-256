@@ -98,6 +98,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-chat-ai-icon.is-thinking { animation: admin-ai-thinking 2.2s ease-in-out infinite; transform-origin: 50% 80%; }
 .admin-chat-bubble.is-admin .admin-chat-sender { color: rgba(255,255,255,.78); }
 .admin-chat-bubble.is-ai .admin-chat-sender { color: #a27d16; }
+.chat-ai-thinking-icon { width: 32px; height: 32px; flex: 0 0 32px; object-fit: contain; animation: admin-ai-thinking 2.2s ease-in-out infinite; transform-origin: 50% 80%; }
 .admin-chat-thinking { min-width: 118px; }
 .admin-chat-thinking-dots { display: inline-flex; align-items: center; gap: 4px; height: 16px; }
 .admin-chat-thinking-dots i { width: 5px; height: 5px; border-radius: 50%; background: #a27d16; animation: admin-ai-dot 1.2s ease-in-out infinite; }
