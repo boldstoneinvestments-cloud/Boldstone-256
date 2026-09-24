@@ -117,9 +117,9 @@ export default function ChatWidget() {
     const addMessages = incoming => setMessages(current => {
       let next = [...current]
       incoming.forEach(message => {
-        lastIdRef.current = Math.max(lastIdRef.current, message.id)
-        if (next.some(existing => existing.id === message.id)) return
+        lastIdRef.current = Math.max(lastIdRef.current, Number(message.id) || 0)
         if (message.is_ai || message.is_admin) setWaitingForAi(false)
+        if (next.some(existing => existing.id === message.id)) return
 
         if (message.is_admin && !next.some(existing => existing.is_system && existing.system_type === 'admin-joined')) {
           next.push({
@@ -147,6 +147,8 @@ export default function ChatWidget() {
         if (history) addMessages(history.messages || [])
         while (active) {
           try {
+            const latest = await fetch(`${API}/chat`, { credentials: 'include', headers: customerHeaders(), signal: streamController.signal }).then(response => response.ok ? response.json() : null).catch(() => null)
+            if (latest) addMessages(latest.messages || [])
             const response = await fetch(`${API}/chat/stream?last_id=${lastIdRef.current}`, { credentials: 'include', headers: { ...customerHeaders(), Accept: 'text/event-stream' }, signal: streamController.signal })
             if (!response.body) break
             const reader = response.body.getReader()
