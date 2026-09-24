@@ -94,6 +94,8 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-chat-bubble.is-admin time { color: rgba(255,255,255,.72); }
 .admin-chat-reply { display: flex; gap: 8px; margin-top: 18px; padding-top: 16px; border-top: 1px solid #edf1ef; }
 .admin-chat-reply input { min-width: 0; flex: 1; padding: 10px 12px; border: 1px solid #cfe0db; border-radius: 8px; color: #0d1f1c; font: inherit; font-size: 13px; outline: none; }
+.admin-chat-reply select { min-width: 190px; padding: 10px 12px; border: 1px solid #cfe0db; border-radius: 8px; background: #fff; color: #315d54; font: inherit; font-size: 12px; outline: none; }
+.admin-chat-reply select:focus { border-color: #0f8972; box-shadow: 0 0 0 3px rgba(15,137,114,.12); }
 .admin-chat-reply input:focus { border-color: #0f8972; box-shadow: 0 0 0 3px rgba(15,137,114,.12); }
 .admin-chat-reply button { display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0; padding: 10px 13px; border: 0; border-radius: 8px; background: #0f8972; color: #fff; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
 .admin-chat-reply button:disabled { cursor: wait; opacity: .65; }

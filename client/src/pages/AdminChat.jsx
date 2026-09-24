@@ -5,6 +5,11 @@ import { faComments, faEnvelope, faPaperPlane, faRotate } from '@fortawesome/fre
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app') ? configuredBackend.replace(/\/$/, '') : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
+const ADMIN_IDENTITIES = [
+  { name: 'SSEMATA SABITA', avatar: 'https://address-restaurant2.odoo.com/web/image/1888-df4ef49b/Sabira.webp' },
+  { name: 'MOSES ALICWAMU', avatar: 'https://address-restaurant2.odoo.com/web/image/1571-51dfbae5/Moses%20Photo%20-%20up%20to%20date.webp' },
+  { name: 'HABIB TUMWESIGE', avatar: 'https://address-restaurant2.odoo.com/web/image/1982-2595a3af/Habib%20Salah.webp' },
+]
 
 export default function AdminChat() {
   const { email: encodedEmail } = useParams()
@@ -13,6 +18,7 @@ export default function AdminChat() {
   const [status, setStatus] = useState('loading')
   const [replies, setReplies] = useState({})
   const [sending, setSending] = useState('')
+  const [adminIdentity, setAdminIdentity] = useState('')
 
   const loadMessages = useCallback(() => {
     setStatus('loading')
@@ -30,13 +36,14 @@ export default function AdminChat() {
   const sendReply = async (event, email, name) => {
     event.preventDefault()
     const message = (replies[email] || '').trim()
-    if (!message || sending) return
+    if (!message || !adminIdentity || sending) return
+    const identity = ADMIN_IDENTITIES.find(item => item.name === adminIdentity)
     setSending(email)
     const response = await fetch(`${BACKEND}/api/admin/chat/reply`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ name, email, message }),
+      body: JSON.stringify({ name, email, message, admin_name: identity.name, admin_avatar: identity.avatar }),
     }).catch(() => null)
     if (response?.ok) {
       const data = await response.json()
@@ -80,10 +87,14 @@ export default function AdminChat() {
         <div className="admin-chat-thread-messages">
           {orderedMessages.map(message => <div className={`admin-chat-bubble${message.is_admin ? ' is-admin' : ''}`} key={message.id}>
             <p>{message.message}</p>
-            <time dateTime={message.created_at}>{message.is_ai ? 'Boldstone AI' : (message.is_admin ? 'You' : thread.name)} · {new Date(message.created_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</time>
+            <time dateTime={message.created_at}>{message.is_ai ? 'Boldstone AI' : (message.is_admin ? (message.admin_name || 'Admin') : thread.name)} · {new Date(message.created_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</time>
           </div>)}
         </div>
         <form className="admin-chat-reply" onSubmit={event => sendReply(event, thread.email, thread.name)}>
+          <select value={adminIdentity} onChange={event => setAdminIdentity(event.target.value)} required aria-label="Select your admin identity">
+            <option value="">Select who is replying...</option>
+            {ADMIN_IDENTITIES.map(identity => <option key={identity.name} value={identity.name}>{identity.name}</option>)}
+          </select>
           <input value={replies[thread.email] || ''} onChange={event => setReplies(current => ({ ...current, [thread.email]: event.target.value }))} placeholder="Write a reply..." aria-label={`Reply to ${thread.name}`} />
           <button type="submit" disabled={sending === thread.email}><FontAwesomeIcon icon={faPaperPlane} /> Reply</button>
         </form>

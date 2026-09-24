@@ -104,13 +104,23 @@ export default function ChatWidget() {
         lastIdRef.current = Math.max(lastIdRef.current, message.id)
         if (next.some(existing => existing.id === message.id)) return
 
+        if (message.is_admin && !next.some(existing => existing.is_system && existing.system_type === 'admin-joined')) {
+          next.push({
+            from: 'bot',
+            text: 'This conversation has shifted to a Boldstone team member. You are now talking with a person.',
+            id: `system-admin-joined-${message.id}`,
+            is_system: true,
+            system_type: 'admin-joined',
+          })
+        }
+
         const pendingIndex = next.findIndex(existing => typeof existing.id === 'string' && existing.id.startsWith('pending-') && existing.from === 'user' && existing.text === message.message && !message.is_admin && !message.is_ai)
         if (pendingIndex !== -1) {
           next[pendingIndex] = { ...next[pendingIndex], id: message.id }
           return
         }
 
-        next.push({ from: message.is_admin || message.is_ai ? 'bot' : 'user', text: message.message, id: message.id, is_ai: message.is_ai })
+        next.push({ from: message.is_admin || message.is_ai ? 'bot' : 'user', text: message.message, id: message.id, is_ai: message.is_ai, is_admin: message.is_admin, admin_name: message.admin_name, admin_avatar: message.admin_avatar })
       })
       return next
     })
@@ -251,11 +261,13 @@ export default function ChatWidget() {
               <div style={{ flex: 1, overflowY: 'auto', padding: '16px 16px 8px', display: 'flex', flexDirection: 'column', gap: 10, maxHeight: 300 }}>
                 {messages.map((m, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: m.from === 'user' ? 'flex-end' : 'flex-start' }}>
+                    {m.is_admin && m.admin_avatar && <img src={m.admin_avatar} alt={m.admin_name || 'Boldstone team member'} style={{ width: 24, height: 24, borderRadius: '50%', objectFit: 'cover', marginRight: 6, alignSelf: 'flex-end' }} />}
                     <div style={{
                       maxWidth: '80%', padding: '9px 13px', borderRadius: m.from === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
                       background: m.from === 'user' ? 'linear-gradient(135deg,#0f8972,#12a688)' : 'rgba(255,255,255,0.08)',
                       color: '#fff', fontSize: 13, lineHeight: 1.55,
                     }}>
+                      {m.is_admin && m.admin_name && <div style={{ fontSize: 10, fontWeight: 700, marginBottom: 3, color: '#8be1cd' }}>{m.admin_name}</div>}
                       {m.text}
                     </div>
                   </div>
