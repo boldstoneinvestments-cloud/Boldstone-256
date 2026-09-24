@@ -62,10 +62,7 @@ export default function ChatWidget() {
           setStep('chat')
           if (googleToken) setOpen(true)
         } else if (data.invalidToken) {
-          localStorage.removeItem('boldstone_customer_token')
-          localStorage.removeItem('boldstone_customer_account')
-          setAccount(null)
-          setStep('info')
+          setStep(savedAccount ? 'chat' : 'info')
         }
       })
       .catch(() => {})
