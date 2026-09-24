@@ -88,7 +88,7 @@ export default function ChatWidget() {
     const addMessages = incoming => setMessages(current => {
       const existing = new Set(current.map(message => message.id).filter(Boolean))
       const fresh = incoming.filter(message => !existing.has(message.id)).map(message => ({
-        from: message.is_admin ? 'bot' : 'user', text: message.message, id: message.id,
+        from: message.is_admin || message.is_ai ? 'bot' : 'user', text: message.message, id: message.id,
       }))
       incoming.forEach(message => { lastIdRef.current = Math.max(lastIdRef.current, message.id) })
       return [...current, ...fresh]
@@ -143,7 +143,11 @@ export default function ChatWidget() {
       })
       if (!response.ok) throw new Error('Message failed')
       const data = await response.json()
-      setMessages(messages => messages.map(message => message.id === pendingId ? { ...message, id: data.message.id } : message))
+      setMessages(messages => {
+        const updated = messages.map(message => message.id === pendingId ? { ...message, id: data.message.id } : message)
+        if (!data.ai_message || updated.some(message => message.id === data.ai_message.id)) return updated
+        return [...updated, { from: 'bot', text: data.ai_message.message, id: data.ai_message.id }]
+      })
     } catch {
       setMessages(messages => [
         ...messages.filter(message => message.id !== pendingId),
@@ -206,8 +210,8 @@ export default function ChatWidget() {
               <svg width={18} height={18} fill="none" stroke="#fff" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
             </div>
             <div>
-              <p style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: 0 }}>Boldstone Support</p>
-              <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, margin: 0 }}>We typically reply within a few hours</p>
+              <p style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: 0 }}>Boldstone AI</p>
+              <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, margin: 0 }}>Friendly answers from Boldstone AI</p>
             </div>
           </div>
 

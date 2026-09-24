@@ -80,7 +80,7 @@ export default function AdminChat() {
         <div className="admin-chat-thread-messages">
           {orderedMessages.map(message => <div className={`admin-chat-bubble${message.is_admin ? ' is-admin' : ''}`} key={message.id}>
             <p>{message.message}</p>
-            <time dateTime={message.created_at}>{message.is_admin ? 'You' : thread.name} · {new Date(message.created_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</time>
+            <time dateTime={message.created_at}>{message.is_ai ? 'Boldstone AI' : (message.is_admin ? 'You' : thread.name)} · {new Date(message.created_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</time>
           </div>)}
         </div>
         <form className="admin-chat-reply" onSubmit={event => sendReply(event, thread.email, thread.name)}>

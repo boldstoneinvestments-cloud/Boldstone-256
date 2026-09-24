@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 
 const configuredBackend = import.meta.env.VITE_API_URL
@@ -16,6 +16,13 @@ const links = [
 export default function AdminLayout() {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    const sendPresence = () => fetch(`${API}/api/admin/presence`, { method: 'POST', credentials: 'include' }).catch(() => {})
+    sendPresence()
+    const interval = window.setInterval(sendPresence, 20000)
+    return () => window.clearInterval(interval)
+  }, [])
 
   const logout = async () => {
     await fetch(`${API}/api/admin/logout`, { method: 'POST', credentials: 'include' }).catch(() => {})
