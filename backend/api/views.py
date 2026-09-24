@@ -291,7 +291,6 @@ def chat(request):
         user = request.user
     if user is None:
         return JsonResponse({'error': 'Sign in required'}, status=401)
-    data = body(request)
     if request.method == 'GET':
         return JsonResponse({
             'messages': [
@@ -302,6 +301,7 @@ def chat(request):
 
     if request.method != 'POST':
         return JsonResponse({'error': 'Method not allowed'}, status=405)
+    data = body(request) if request.content_type == 'application/json' else None
     message_text = str((data or {}).get('message', '') if data is not None else request.POST.get('message', '')).strip()
     uploads = request.FILES.getlist('attachment')
     if not message_text and not uploads:
@@ -315,13 +315,16 @@ def chat(request):
     response = {'success': True, 'message': chat_message_payload(msg), 'messages': [chat_message_payload(item) for item in messages]}
 
     admin_has_replied = ChatMessage.objects.filter(user=user, is_admin=True).exists()
+    ai_message = None
     if not admin_has_replied:
         from .gemini import quick_response
         local_reply = quick_response(chat_history_for(user))
         if local_reply:
-            ChatMessage.objects.create(user=user, name='Boldstone AI', email=user.email, message=local_reply, is_ai=True)
+            ai_message = ChatMessage.objects.create(user=user, name='Boldstone AI', email=user.email, message=local_reply, is_ai=True)
         else:
             threading.Thread(target=process_chat_ai_followup, args=(user.id, msg.id), daemon=True).start()
+    if ai_message:
+        response['ai_message'] = chat_message_payload(ai_message)
     return JsonResponse(response)
 
 

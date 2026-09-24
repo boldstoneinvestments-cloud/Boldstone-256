@@ -39,12 +39,13 @@ export default function ChatWidget() {
   const [input, setInput] = useState('')
   const [attachments, setAttachments] = useState([])
   const [sending, setSending] = useState(false)
+  const [waitingForAi, setWaitingForAi] = useState(false)
   const [waitingMessageIndex, setWaitingMessageIndex] = useState(0)
   const bottomRef = useRef(null)
   const lastIdRef = useRef(0)
 
   useEffect(() => {
-    if (!sending) {
+    if (!sending && !waitingForAi) {
       setWaitingMessageIndex(0)
       return undefined
     }
@@ -52,7 +53,7 @@ export default function ChatWidget() {
       setWaitingMessageIndex(index => (index + 1) % AI_WAITING_MESSAGES.length)
     }, 1800)
     return () => window.clearInterval(interval)
-  }, [sending])
+  }, [sending, waitingForAi])
 
   useEffect(() => {
     const googleToken = new URLSearchParams(hash.replace(/^#/, '')).get('google_token')
@@ -118,6 +119,7 @@ export default function ChatWidget() {
       incoming.forEach(message => {
         lastIdRef.current = Math.max(lastIdRef.current, message.id)
         if (next.some(existing => existing.id === message.id)) return
+        if (message.is_ai || message.is_admin) setWaitingForAi(false)
 
         if (message.is_admin && !next.some(existing => existing.is_system && existing.system_type === 'admin-joined')) {
           next.push({
@@ -192,6 +194,7 @@ export default function ChatWidget() {
       })
       if (!response.ok) throw new Error('Message failed')
       const data = await response.json()
+      setWaitingForAi(!data.ai_message)
       setMessages(messages => {
         const returnedMessages = data.messages || [data.message]
         const updated = messages.map(message => message.id === pendingId ? { ...message, id: returnedMessages[0].id, text: returnedMessages[0].message, attachment_url: returnedMessages[0].attachment_url, attachment_name: returnedMessages[0].attachment_name } : message)
@@ -200,6 +203,7 @@ export default function ChatWidget() {
         return [...updated, ...extraMessages, { from: 'bot', text: data.ai_message.message, id: data.ai_message.id, is_ai: true }]
       })
     } catch {
+      setWaitingForAi(false)
       setMessages(messages => [
         ...messages.filter(message => message.id !== pendingId),
         { from: 'bot', text: 'Sorry, something went wrong. Please try again or email us directly.' },
@@ -262,8 +266,8 @@ export default function ChatWidget() {
               {(sending || messages[messages.length - 1]?.is_ai) ? <img src="/images/AI%20icon.png" alt="AI assistant" style={{ width: 32, height: 32, objectFit: 'contain' }} /> : <svg width={18} height={18} fill="none" stroke="#fff" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>}
             </div>
             <div>
-              <p style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: 0 }}>{(sending || messages[messages.length - 1]?.is_ai) ? 'Boldstone AI' : 'Boldstone Support'}</p>
-              <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, margin: 0 }}>{sending ? AI_WAITING_MESSAGES[waitingMessageIndex] : (messages[messages.length - 1]?.is_ai ? 'Friendly answers from Boldstone AI' : 'We typically reply within a few hours')}</p>
+              <p style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: 0 }}>{(sending || waitingForAi || messages[messages.length - 1]?.is_ai) ? 'Boldstone AI' : 'Boldstone Support'}</p>
+              <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, margin: 0 }}>{(sending || waitingForAi) ? AI_WAITING_MESSAGES[waitingMessageIndex] : (messages[messages.length - 1]?.is_ai ? 'Friendly answers from Boldstone AI' : 'We typically reply within a few hours')}</p>
             </div>
           </div>
 
@@ -295,7 +299,7 @@ export default function ChatWidget() {
                     </div>
                   </div>
                 ))}
-                {sending && (
+                {(sending || waitingForAi) && (
                   <div style={{ display: 'flex', gap: 4, padding: '6px 0' }}>
                     {[0, 1, 2].map(i => (
                       <span key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: '#0f8972', animation: `bounce 1s ${i * 0.2}s infinite` }} />
