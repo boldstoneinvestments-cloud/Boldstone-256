@@ -346,6 +346,26 @@ def chat_attachment(request, message_id):
     return FileResponse(message.attachment.open('rb'), as_attachment=False, filename=message.attachment.name.rsplit('/', 1)[-1])
 
 
+@csrf_exempt
+@customer_required
+def chat_message_actions(request, message_id):
+    message = ChatMessage.objects.filter(id=message_id, user=request.api_user, is_admin=False, is_ai=False).first()
+    if message is None:
+        return JsonResponse({'error': 'Message not found'}, status=404)
+    if request.method == 'DELETE':
+        message.delete()
+        return JsonResponse({'success': True, 'id': message_id})
+    if request.method not in ('PATCH', 'PUT'):
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    data = body(request)
+    text = str((data or {}).get('message', '')).strip()
+    if not text:
+        return JsonResponse({'error': 'Message cannot be empty'}, status=400)
+    message.message = text
+    message.save(update_fields=['message'])
+    return JsonResponse({'success': True, 'message': chat_message_payload(message)})
+
+
 @customer_required
 def chat_stream(request):
     request.api_user = token_user(request)

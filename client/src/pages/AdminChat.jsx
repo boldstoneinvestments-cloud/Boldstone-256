@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faComments, faEnvelope, faPaperPlane, faPlus, faRotate, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faComments, faEnvelope, faPaperPlane, faPlus, faRotate, faTrash, faUser } from '@fortawesome/free-solid-svg-icons'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app') ? configuredBackend.replace(/\/$/, '') : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
@@ -13,6 +13,7 @@ const ADMIN_IDENTITIES = [
 
 export default function AdminChat() {
   const { email: encodedEmail } = useParams()
+  const navigate = useNavigate()
   const selectedEmail = encodedEmail ? decodeURIComponent(encodedEmail) : null
   const [messages, setMessages] = useState(null)
   const [status, setStatus] = useState('loading')
@@ -22,6 +23,9 @@ export default function AdminChat() {
   const [identityMenuOpen, setIdentityMenuOpen] = useState(false)
   const [identityPromptOpen, setIdentityPromptOpen] = useState(false)
   const [attachments, setAttachments] = useState([])
+  const [openMessageMenu, setOpenMessageMenu] = useState(null)
+  const [editingMessageId, setEditingMessageId] = useState(null)
+  const [editText, setEditText] = useState('')
 
   const loadMessages = useCallback(() => {
     setStatus('loading')
@@ -67,6 +71,26 @@ export default function AdminChat() {
     setSending('')
   }
 
+  const deleteAdminMessage = async messageId => {
+    if (!window.confirm('Delete this message?')) return
+    const response = await fetch(`${BACKEND}/api/admin/chat/messages/${messageId}`, { method: 'DELETE', credentials: 'include' }).catch(() => null)
+    if (response?.ok) setMessages(current => (current || []).filter(message => message.id !== messageId))
+    setOpenMessageMenu(null)
+  }
+
+  const editAdminMessage = async messageId => {
+    const response = await fetch(`${BACKEND}/api/admin/chat/messages/${messageId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify({ message: editText }) }).catch(() => null)
+    if (!response?.ok) return
+    setMessages(current => (current || []).map(message => message.id === messageId ? { ...message, message: editText } : message))
+    setEditingMessageId(null)
+  }
+
+  const deleteChat = async (email, name) => {
+    if (!window.confirm(`Delete the entire chat with ${name || 'this user'}?`)) return
+    const response = await fetch(`${BACKEND}/api/admin/chat/${encodeURIComponent(email)}/delete`, { method: 'DELETE', credentials: 'include' }).catch(() => null)
+    if (response?.ok) navigate('/admin/chat')
+  }
+
   if (status === 'loading' && messages === null) return <div className="admin-state">Loading chat messages...</div>
   if (status === 'error') return <Navigate to="/admin/sign-in" replace />
 
@@ -97,13 +121,14 @@ export default function AdminChat() {
           <h1 className="admin-chat-detail-title">{thread.name}{(latestMessage?.is_ai || aiThinking) && <img className={`admin-chat-header-ai-icon${aiThinking ? ' is-thinking' : ''}`} src="/images/AI%20icon.png" alt="AI is in control" />}</h1>
           <p><a href={`mailto:${thread.email}`}><FontAwesomeIcon icon={faEnvelope} />{thread.email}</a></p>
         </div>
-        <span className="admin-status">Closed</span>
+        <div className="admin-chat-detail-actions"><span className="admin-status">Closed</span><button className="admin-chat-delete-button" type="button" onClick={() => deleteChat(thread.email, thread.name)} title="Delete entire chat" aria-label="Delete entire chat"><FontAwesomeIcon icon={faTrash} /></button></div>
       </div>
       <article className="admin-chat-thread admin-chat-detail">
         <div className="admin-chat-thread-messages">
           {orderedMessages.map(message => <div className={`admin-chat-bubble${message.is_admin ? ' is-admin' : ''}${message.is_ai ? ' is-ai' : ''}`} key={message.id}>
+            <div className="admin-chat-message-actions"><button type="button" onClick={() => setOpenMessageMenu(openMessageMenu === message.id ? null : message.id)} aria-label="Message actions">...</button>{openMessageMenu === message.id && <div className="admin-chat-message-menu"><button type="button" onClick={() => deleteAdminMessage(message.id)}>Delete</button>{message.is_admin && <button type="button" onClick={() => { setEditingMessageId(message.id); setEditText(message.message); setOpenMessageMenu(null) }}>Edit</button>}</div>}</div>
             <span className="admin-chat-sender">{message.is_ai ? <><img className="admin-chat-ai-icon" src="/images/AI%20icon.png" alt="AI" />Boldstone AI</> : (message.is_admin ? (message.admin_name || 'Sent by admin') : thread.name)}</span>
-            <p>{message.message}</p>
+            {editingMessageId === message.id ? <div className="admin-chat-edit"><textarea value={editText} onChange={event => setEditText(event.target.value)} /><span><button type="button" onClick={() => editAdminMessage(message.id)}>Save</button><button type="button" onClick={() => setEditingMessageId(null)}>Cancel</button></span></div> : <p>{message.message}</p>}
             {message.attachment_url && <a className="admin-chat-attachment" href={`${BACKEND}${message.attachment_url}`} target="_blank" rel="noreferrer">Open attachment: {message.attachment_name || 'file'}</a>}
             <time dateTime={message.created_at}>{message.is_ai ? 'Boldstone AI' : (message.is_admin ? (message.admin_name || 'Admin') : thread.name)} · {new Date(message.created_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</time>
           </div>)}

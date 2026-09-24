@@ -41,6 +41,10 @@ export default function ChatWidget() {
   const [sending, setSending] = useState(false)
   const [waitingForAi, setWaitingForAi] = useState(false)
   const [waitingMessageIndex, setWaitingMessageIndex] = useState(0)
+  const [openMessageMenu, setOpenMessageMenu] = useState(null)
+  const [editingMessageId, setEditingMessageId] = useState(null)
+  const [editText, setEditText] = useState('')
+  const [replyTo, setReplyTo] = useState(null)
   const bottomRef = useRef(null)
   const lastIdRef = useRef(0)
 
@@ -186,7 +190,7 @@ export default function ChatWidget() {
     try {
       const csrfToken = await getCsrfToken()
       const formData = new FormData()
-      formData.append('message', text)
+      formData.append('message', replyTo ? `Reply to ${replyTo.text.slice(0, 100)}: ${text}` : text)
       attachments.forEach(attachment => formData.append('attachment', attachment))
       const response = await fetch(`${API}/chat`, {
         method: 'POST',
@@ -212,7 +216,28 @@ export default function ChatWidget() {
       ])
     }
     setAttachments([])
+    setReplyTo(null)
     setSending(false)
+  }
+
+  const editMessage = async messageId => {
+    const response = await fetch(`${API}/chat/messages/${messageId}`, {
+      method: 'PATCH',
+      headers: { ...customerHeaders(), 'Content-Type': 'application/json', 'X-CSRFToken': await getCsrfToken() },
+      credentials: 'include',
+      body: JSON.stringify({ message: editText }),
+    }).catch(() => null)
+    if (!response?.ok) return
+    const data = await response.json()
+    setMessages(current => current.map(message => message.id === messageId ? { ...message, text: data.message.message } : message))
+    setEditingMessageId(null)
+  }
+
+  const deleteMessage = async messageId => {
+    if (!window.confirm('Delete this message?')) return
+    const response = await fetch(`${API}/chat/messages/${messageId}`, { method: 'DELETE', headers: customerHeaders(), credentials: 'include' }).catch(() => null)
+    if (response?.ok) setMessages(current => current.filter(message => message.id !== messageId))
+    setOpenMessageMenu(null)
   }
 
   return (
@@ -289,13 +314,21 @@ export default function ChatWidget() {
                 {messages.map((m, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: m.from === 'user' ? 'flex-end' : 'flex-start', alignItems: 'flex-end' }}>
                     {m.is_admin && m.admin_avatar && <img src={m.admin_avatar} alt={m.admin_name || 'Boldstone team member'} style={{ width: 24, height: 24, borderRadius: '50%', objectFit: 'cover', marginRight: 6, alignSelf: 'flex-end' }} />}
-                    <div style={{
+                    <div className="chat-message-bubble" style={{
                       maxWidth: '80%', padding: '9px 13px', borderRadius: m.from === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
                       background: m.from === 'user' ? 'linear-gradient(135deg,#0f8972,#12a688)' : 'rgba(255,255,255,0.08)',
                       color: '#fff', fontSize: 13, lineHeight: 1.55,
                     }}>
+                      {m.from === 'user' && typeof m.id === 'number' && <div className="chat-message-actions">
+                        <button type="button" aria-label="Message actions" onClick={() => setOpenMessageMenu(openMessageMenu === m.id ? null : m.id)}>...</button>
+                        {openMessageMenu === m.id && <div className="chat-message-menu">
+                          <button type="button" onClick={() => { setReplyTo(m); setInput(''); setOpenMessageMenu(null) }}>Reply</button>
+                          <button type="button" onClick={() => { setEditingMessageId(m.id); setEditText(m.text); setOpenMessageMenu(null) }}>Edit</button>
+                          <button type="button" onClick={() => deleteMessage(m.id)}>Delete</button>
+                        </div>}
+                      </div>}
                       {m.is_admin && m.admin_name && <div style={{ fontSize: 10, fontWeight: 700, marginBottom: 3, color: '#8be1cd' }}>{m.admin_name}</div>}
-                      {m.text}
+                      {editingMessageId === m.id ? <div className="chat-message-edit"><textarea value={editText} onChange={event => setEditText(event.target.value)} /><span><button type="button" onClick={() => editMessage(m.id)}>Save</button><button type="button" onClick={() => setEditingMessageId(null)}>Cancel</button></span></div> : m.text}
                       {m.attachment_url && <a href={`${API.replace(/\/api$/, '')}${m.attachment_url}`} target="_blank" rel="noreferrer" style={{ display: 'block', marginTop: 6, color: '#8be1cd', fontSize: 11, textDecoration: 'underline' }}>{m.attachment_name || 'Open attachment'}</a>}
                       {!m.attachment_url && m.attachment_name && <span style={{ display: 'block', marginTop: 6, color: '#8be1cd', fontSize: 11 }}>{m.attachment_name}</span>}
                     </div>
@@ -319,6 +352,7 @@ export default function ChatWidget() {
                     <input type="file" accept="image/*,.pdf,.doc,.docx,.txt,.csv" multiple hidden onChange={event => setAttachments(Array.from(event.target.files || []))} />
                     <span aria-hidden="true" style={{ fontSize: 20 }}>+</span>
                   </label>
+                  {replyTo && <div className="chat-reply-context">Replying to: {replyTo.text.slice(0, 70)} <button type="button" onClick={() => setReplyTo(null)}>×</button></div>}
                   <input
                     value={input} onChange={e => setInput(e.target.value)}
                     placeholder="Type a message…"
