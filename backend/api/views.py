@@ -61,8 +61,11 @@ def process_chat_ai_followup(user_id, message_id):
     if user is None or message is None or ChatMessage.objects.filter(user=user, is_admin=True).exists():
         return
 
-    from .gemini import generate_supported_reply
-    ai_text = generate_supported_reply(chat_history_for(user))
+    try:
+        from .gemini import generate_supported_reply
+        ai_text = generate_supported_reply(chat_history_for(user))
+    except Exception:
+        ai_text = None
     if ChatMessage.objects.filter(user=user, is_admin=True).exists():
         return
 
