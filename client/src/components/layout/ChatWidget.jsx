@@ -91,7 +91,7 @@ export default function ChatWidget() {
         lastIdRef.current = Math.max(lastIdRef.current, message.id)
         if (next.some(existing => existing.id === message.id)) return
 
-        const pendingIndex = next.findIndex(existing => existing.id?.startsWith('pending-') && existing.from === 'user' && existing.text === message.message && !message.is_admin && !message.is_ai)
+        const pendingIndex = next.findIndex(existing => typeof existing.id === 'string' && existing.id.startsWith('pending-') && existing.from === 'user' && existing.text === message.message && !message.is_admin && !message.is_ai)
         if (pendingIndex !== -1) {
           next[pendingIndex] = { ...next[pendingIndex], id: message.id }
           return
