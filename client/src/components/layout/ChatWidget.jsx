@@ -24,9 +24,12 @@ const getCsrfToken = () => {
 
 export default function ChatWidget() {
   const { search, hash } = useLocation()
+  const savedAccount = (() => {
+    try { return JSON.parse(localStorage.getItem('boldstone_customer_account') || 'null') } catch { return null }
+  })()
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState('info') // 'info' | 'chat'
-  const [account, setAccount] = useState(null)
+  const [account, setAccount] = useState(savedAccount)
   const [accountLoading, setAccountLoading] = useState(true)
   const [messages, setMessages] = useState([
     { from: 'bot', text: 'Hi! Welcome to Boldstone Investments. How can we help you today?' }
@@ -44,13 +47,25 @@ export default function ChatWidget() {
     }
     const controller = new AbortController()
     const timeout = window.setTimeout(() => controller.abort(), 3000)
+    const token = localStorage.getItem('boldstone_customer_token')
+    if (savedAccount && token) setStep('chat')
     fetch(`${API}/account/me`, { credentials: 'include', headers: customerHeaders(), signal: controller.signal })
-      .then(response => response.ok ? response.json() : Promise.reject())
+      .then(async response => {
+        if (response.status === 401) return { authenticated: false, invalidToken: true }
+        if (!response.ok) throw new Error('Account check failed')
+        return response.json()
+      })
       .then(data => {
         if (data.authenticated && data.user) {
           setAccount(data.user)
+          localStorage.setItem('boldstone_customer_account', JSON.stringify(data.user))
           setStep('chat')
           if (googleToken) setOpen(true)
+        } else if (data.invalidToken) {
+          localStorage.removeItem('boldstone_customer_token')
+          localStorage.removeItem('boldstone_customer_account')
+          setAccount(null)
+          setStep('info')
         }
       })
       .catch(() => {})
@@ -68,6 +83,7 @@ export default function ChatWidget() {
     const handleAuthenticated = event => {
       if (!event.detail) return
       setAccount(event.detail)
+      localStorage.setItem('boldstone_customer_account', JSON.stringify(event.detail))
       setStep('chat')
       setOpen(true)
       setAccountLoading(false)

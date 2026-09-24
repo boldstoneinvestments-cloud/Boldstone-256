@@ -28,6 +28,7 @@ export default function AccountAuth({ mode }) {
     if (!response?.ok) setError(data.error || 'Unable to access your account.')
     else {
       localStorage.setItem('boldstone_customer_token', data.token)
+      localStorage.setItem('boldstone_customer_account', JSON.stringify(data.user))
       window.dispatchEvent(new CustomEvent('boldstone-account-authenticated', { detail: data.user }))
       navigate(location.state?.from || '/')
     }
