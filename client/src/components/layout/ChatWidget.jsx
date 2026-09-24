@@ -22,6 +22,8 @@ const getCsrfToken = () => {
   return csrfTokenPromise
 }
 
+const AI_WAITING_MESSAGES = ['Thinking...', 'Getting your response ready...', 'Working on it...', 'Almost ready...']
+
 export default function ChatWidget() {
   const { search, hash } = useLocation()
   const savedAccount = (() => {
@@ -37,8 +39,20 @@ export default function ChatWidget() {
   const [input, setInput] = useState('')
   const [attachments, setAttachments] = useState([])
   const [sending, setSending] = useState(false)
+  const [waitingMessageIndex, setWaitingMessageIndex] = useState(0)
   const bottomRef = useRef(null)
   const lastIdRef = useRef(0)
+
+  useEffect(() => {
+    if (!sending) {
+      setWaitingMessageIndex(0)
+      return undefined
+    }
+    const interval = window.setInterval(() => {
+      setWaitingMessageIndex(index => (index + 1) % AI_WAITING_MESSAGES.length)
+    }, 1800)
+    return () => window.clearInterval(interval)
+  }, [sending])
 
   useEffect(() => {
     const googleToken = new URLSearchParams(hash.replace(/^#/, '')).get('google_token')
@@ -245,11 +259,11 @@ export default function ChatWidget() {
           {/* Header */}
           <div style={{ background: 'linear-gradient(135deg, #0f8972, #12a688)', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <svg width={18} height={18} fill="none" stroke="#fff" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+              {(sending || messages[messages.length - 1]?.is_ai) ? <img src="/images/AI%20icon.png" alt="AI assistant" style={{ width: 32, height: 32, objectFit: 'contain' }} /> : <svg width={18} height={18} fill="none" stroke="#fff" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>}
             </div>
             <div>
-              <p style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: 0 }}>{messages.some(message => message.is_ai) ? 'Boldstone AI' : 'Boldstone Support'}</p>
-              <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, margin: 0 }}>{messages.some(message => message.is_ai) ? 'Friendly answers from Boldstone AI' : 'We typically reply within a few hours'}</p>
+              <p style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: 0 }}>{(sending || messages[messages.length - 1]?.is_ai) ? 'Boldstone AI' : 'Boldstone Support'}</p>
+              <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, margin: 0 }}>{sending ? AI_WAITING_MESSAGES[waitingMessageIndex] : (messages[messages.length - 1]?.is_ai ? 'Friendly answers from Boldstone AI' : 'We typically reply within a few hours')}</p>
             </div>
           </div>
 

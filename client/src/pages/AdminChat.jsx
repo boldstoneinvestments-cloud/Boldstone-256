@@ -87,23 +87,30 @@ export default function AdminChat() {
     }
 
     const orderedMessages = [...thread.messages].sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+    const latestMessage = orderedMessages[orderedMessages.length - 1]
+    const aiThinking = latestMessage && !latestMessage.is_admin && !latestMessage.is_ai
     return <section className="admin-content-page admin-chat-page">
       <div className="admin-page-heading admin-chat-heading">
         <div>
           <Link className="admin-chat-back" to="/admin/chat">Back to chats</Link>
           <span className="admin-eyebrow">Chat detail</span>
-          <h1>{thread.name}</h1>
+          <h1 className="admin-chat-detail-title">{thread.name}{(latestMessage?.is_ai || aiThinking) && <img className={`admin-chat-header-ai-icon${aiThinking ? ' is-thinking' : ''}`} src="/images/AI%20icon.png" alt="AI is in control" />}</h1>
           <p><a href={`mailto:${thread.email}`}><FontAwesomeIcon icon={faEnvelope} />{thread.email}</a></p>
         </div>
         <span className="admin-status">Closed</span>
       </div>
       <article className="admin-chat-thread admin-chat-detail">
         <div className="admin-chat-thread-messages">
-          {orderedMessages.map(message => <div className={`admin-chat-bubble${message.is_admin ? ' is-admin' : ''}`} key={message.id}>
+          {orderedMessages.map(message => <div className={`admin-chat-bubble${message.is_admin ? ' is-admin' : ''}${message.is_ai ? ' is-ai' : ''}`} key={message.id}>
+            <span className="admin-chat-sender">{message.is_ai ? <><img className="admin-chat-ai-icon" src="/images/AI%20icon.png" alt="AI" />Boldstone AI</> : (message.is_admin ? (message.admin_name || 'Sent by admin') : thread.name)}</span>
             <p>{message.message}</p>
             {message.attachment_url && <a className="admin-chat-attachment" href={`${BACKEND}${message.attachment_url}`} target="_blank" rel="noreferrer">Open attachment: {message.attachment_name || 'file'}</a>}
             <time dateTime={message.created_at}>{message.is_ai ? 'Boldstone AI' : (message.is_admin ? (message.admin_name || 'Admin') : thread.name)} · {new Date(message.created_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</time>
           </div>)}
+          {aiThinking && <div className="admin-chat-bubble is-ai admin-chat-thinking" aria-label="Boldstone AI is thinking">
+            <span className="admin-chat-sender"><img className="admin-chat-ai-icon is-thinking" src="/images/AI%20icon.png" alt="AI" />Boldstone AI</span>
+            <span className="admin-chat-thinking-dots"><i /><i /><i /></span>
+          </div>}
         </div>
         {identityPromptOpen && <div className="admin-modal-backdrop" role="presentation" onClick={() => setIdentityPromptOpen(false)}>
           <section className="admin-identity-modal" role="dialog" aria-modal="true" aria-labelledby="identity-modal-title" onClick={event => event.stopPropagation()}>

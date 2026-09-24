@@ -1,0 +1,36 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="18" y1="12" x2="110" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4D77D"/>
+      <stop offset="1" stop-color="#C69A32"/>
+    </linearGradient>
+    <linearGradient id="face" x1="36" y1="31" x2="91" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFDF4"/>
+      <stop offset="1" stop-color="#EAE2C5"/>
+    </linearGradient>
+    <filter id="shadow" x="18" y="18" width="92" height="96" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#765B19" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <path d="M64 4C94 4 116 25 117 56C118 86 99 113 70 122C42 131 14 113 8 84C2 56 13 27 38 12C46 7 55 4 64 4Z" fill="url(#bg)"/>
+  <path d="M64 4C94 4 116 25 117 56C118 86 99 113 70 122C42 131 14 113 8 84C2 56 13 27 38 12C46 7 55 4 64 4Z" stroke="#A77D20" stroke-opacity="0.35" stroke-width="2"/>
+  <path d="M65 14C56 28 53 42 56 57C59 72 68 83 70 96C72 105 69 113 64 119" stroke="#8F6A1E" stroke-opacity="0.6" stroke-width="4" stroke-linecap="round"/>
+
+  <g filter="url(#shadow)">
+    <path d="M64 24V14" stroke="#594716" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="64" cy="11" r="6" fill="#0F8972" stroke="#FFFDF4" stroke-width="3"/>
+
+    <path d="M29 59H20M108 59H99" stroke="#594716" stroke-width="5" stroke-linecap="round"/>
+    <rect x="27" y="29" width="74" height="68" rx="19" fill="url(#face)" stroke="#594716" stroke-width="5"/>
+
+    <rect x="40" y="48" width="15" height="15" rx="7.5" fill="#0F8972"/>
+    <rect x="73" y="48" width="15" height="15" rx="7.5" fill="#0F8972"/>
+    <circle cx="45" cy="53" r="3" fill="#DFF8F1"/>
+    <circle cx="78" cy="53" r="3" fill="#DFF8F1"/>
+
+    <path d="M47 78C51.5 83 56.5 85 64 85C71.5 85 76.5 83 81 78" stroke="#594716" stroke-width="5" stroke-linecap="round"/>
+    <path d="M36 101V108M92 101V108" stroke="#594716" stroke-width="5" stroke-linecap="round"/>
+    <path d="M34 108H44M84 108H94" stroke="#594716" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>

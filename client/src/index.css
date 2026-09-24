@@ -60,6 +60,9 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-empty { padding: 70px 24px; color: #8a9a96; text-align: center; }
 .admin-empty svg { margin-bottom: 12px; font-size: 30px; color: #8bc9bc; }
 .admin-chat-heading { align-items: center; }
+.admin-chat-detail-title { display: flex; align-items: center; gap: 9px; }
+.admin-chat-header-ai-icon { width: 34px; height: 34px; object-fit: contain; }
+.admin-chat-header-ai-icon.is-thinking { animation: admin-ai-thinking 2.2s ease-in-out infinite; transform-origin: 50% 80%; }
 .admin-refresh-button { display: inline-flex; align-items: center; gap: 8px; padding: 10px 13px; border: 1px solid #cfe0db; border-radius: 8px; background: #fff; color: #0f8972; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
 .admin-refresh-button:disabled { cursor: wait; opacity: .65; }
 .admin-chat-summary { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 18px; padding: 14px 17px; border: 1px solid #dbe9e5; border-radius: 12px; background: #fff; }
@@ -87,8 +90,31 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-chat-thread-footer strong { margin-left: auto; color: #0f8972; font-size: 12px; }
 .admin-chat-detail { max-width: 920px; margin-top: 8px; padding-bottom: 110px; border: 0; background: transparent; box-shadow: none; }
 .admin-chat-thread-messages { display: grid; gap: 12px; margin-top: 18px; }
-.admin-chat-bubble { max-width: 82%; padding: 11px 14px; border-radius: 11px 11px 11px 2px; background: #f1f7f5; color: #315d54; }
-.admin-chat-bubble.is-admin { justify-self: end; border-radius: 11px 11px 2px 11px; background: #0f8972; color: #fff; }
+.admin-chat-bubble { max-width: 82%; padding: 11px 14px; border: 1px solid #dceae6; border-radius: 14px 14px 14px 3px; background: #fff; color: #315d54; box-shadow: 0 5px 14px rgba(13,31,28,.05); }
+.admin-chat-bubble.is-admin { justify-self: end; border-color: #0f8972; border-radius: 14px 14px 3px 14px; background: #0f8972; color: #fff; box-shadow: 0 5px 14px rgba(15,137,114,.18); }
+.admin-chat-bubble.is-ai { border-color: #d9c98f; background: #fff9e8; color: #5d5026; box-shadow: 0 5px 14px rgba(161,130,34,.1); }
+.admin-chat-sender { display: flex; align-items: center; gap: 5px; margin-bottom: 4px; color: #0f8972; font-size: 10px; font-weight: 800; letter-spacing: .2px; line-height: 1.2; }
+.admin-chat-ai-icon { width: 36px; height: 36px; flex: 0 0 36px; object-fit: contain; image-rendering: auto; }
+.admin-chat-ai-icon.is-thinking { animation: admin-ai-thinking 2.2s ease-in-out infinite; transform-origin: 50% 80%; }
+.admin-chat-bubble.is-admin .admin-chat-sender { color: rgba(255,255,255,.78); }
+.admin-chat-bubble.is-ai .admin-chat-sender { color: #a27d16; }
+.admin-chat-thinking { min-width: 118px; }
+.admin-chat-thinking-dots { display: inline-flex; align-items: center; gap: 4px; height: 16px; }
+.admin-chat-thinking-dots i { width: 5px; height: 5px; border-radius: 50%; background: #a27d16; animation: admin-ai-dot 1.2s ease-in-out infinite; }
+.admin-chat-thinking-dots i:nth-child(2) { animation-delay: .15s; }
+.admin-chat-thinking-dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes admin-ai-thinking {
+  0%, 100% { transform: translateY(0) rotate(0deg); filter: drop-shadow(0 0 0 rgba(194,151,38,0)); }
+  35% { transform: translateY(-2px) rotate(-4deg); filter: drop-shadow(0 3px 5px rgba(194,151,38,.25)); }
+  65% { transform: translateY(-1px) rotate(4deg); filter: drop-shadow(0 2px 5px rgba(194,151,38,.2)); }
+}
+@keyframes admin-ai-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: .4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-chat-ai-icon.is-thinking, .admin-chat-thinking-dots i { animation: none; }
+}
 .admin-chat-bubble p { font-size: 13px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
 .admin-chat-attachment { display: block; margin-top: 7px; color: #0f8972; font-size: 11px; text-decoration: underline; overflow-wrap: anywhere; }
 .admin-chat-bubble time { display: block; margin-top: 7px; color: #8a9a96; font-size: 10px; }
