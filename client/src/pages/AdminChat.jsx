@@ -38,7 +38,11 @@ export default function AdminChat() {
       .catch(() => setStatus('error'))
   }, [])
 
-  useEffect(() => { loadMessages() }, [loadMessages])
+  useEffect(() => {
+    loadMessages()
+    const interval = window.setInterval(loadMessages, 5000)
+    return () => window.clearInterval(interval)
+  }, [loadMessages])
 
   const sendReply = async (event, email, name) => {
     event.preventDefault()
