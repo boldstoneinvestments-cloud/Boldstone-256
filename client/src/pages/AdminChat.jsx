@@ -95,6 +95,12 @@ export default function AdminChat() {
     if (response?.ok) navigate('/admin/chat')
   }
 
+  const deleteAllChats = async () => {
+    if (!messages?.length || !window.confirm(`Delete all ${messages.length} chat messages? This cannot be undone.`)) return
+    const response = await fetch(`${BACKEND}/api/admin/chat/delete-all`, { method: 'DELETE', credentials: 'include' }).catch(() => null)
+    if (response?.ok) setMessages([])
+  }
+
   if (status === 'loading' && messages === null) return <div className="admin-state">Loading chat messages...</div>
   if (status === 'error') return <Navigate to="/admin/sign-in" replace />
 
@@ -182,10 +188,14 @@ export default function AdminChat() {
         <h1>Chat messages</h1>
         <p>Messages sent by visitors through the website chat.</p>
       </div>
-      <button className="admin-refresh-button" type="button" onClick={loadMessages} disabled={status === 'loading'}>
-        <FontAwesomeIcon icon={faRotate} spin={status === 'loading'} />
-        Refresh
-      </button>
+      <div className="admin-chat-inbox-actions">
+        <button className="admin-chat-delete-all-button" type="button" onClick={deleteAllChats} disabled={!messages.length}>
+          <FontAwesomeIcon icon={faTrash} /> Delete all chats
+        </button>
+        <button className="admin-refresh-button" type="button" onClick={loadMessages} disabled={status === 'loading'}>
+          <FontAwesomeIcon icon={faRotate} spin={status === 'loading'} /> Refresh
+        </button>
+      </div>
     </div>
 
     <div className="admin-chat-summary">

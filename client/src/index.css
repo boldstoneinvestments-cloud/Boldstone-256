@@ -60,6 +60,10 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-empty { padding: 70px 24px; color: #8a9a96; text-align: center; }
 .admin-empty svg { margin-bottom: 12px; font-size: 30px; color: #8bc9bc; }
 .admin-chat-heading { align-items: center; }
+.admin-chat-inbox-actions { display: flex; align-items: center; gap: 8px; }
+.admin-chat-delete-all-button { display: inline-flex; align-items: center; gap: 8px; padding: 10px 13px; border: 1px solid #e7c9c5; border-radius: 8px; background: #fff; color: #b64035; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.admin-chat-delete-all-button:hover { background: #fff3f1; }
+.admin-chat-delete-all-button:disabled { cursor: not-allowed; opacity: .5; }
 .admin-chat-detail-title { display: flex; align-items: center; gap: 9px; }
 .admin-chat-header-ai-icon { width: 34px; height: 34px; object-fit: contain; }
 .admin-chat-header-ai-icon.is-thinking { animation: admin-ai-thinking 2.2s ease-in-out infinite; transform-origin: 50% 80%; }
