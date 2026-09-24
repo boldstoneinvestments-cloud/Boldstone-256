@@ -35,7 +35,7 @@ export default function ChatWidget() {
     { from: 'bot', text: 'Hi! Welcome to Boldstone Investments. How can we help you today?' }
   ])
   const [input, setInput] = useState('')
-  const [attachment, setAttachment] = useState(null)
+  const [attachments, setAttachments] = useState([])
   const [sending, setSending] = useState(false)
   const bottomRef = useRef(null)
   const lastIdRef = useRef(0)
@@ -160,16 +160,16 @@ export default function ChatWidget() {
   const send = async e => {
     e.preventDefault()
     const text = input.trim()
-    if ((!text && !attachment) || sending) return
+    if ((!text && !attachments.length) || sending) return
     setInput('')
     setSending(true)
     const pendingId = `pending-${Date.now()}`
-    setMessages(messages => [...messages, { from: 'user', text, id: pendingId, attachment_name: attachment?.name }])
+    setMessages(messages => [...messages, { from: 'user', text, id: pendingId, attachment_name: attachments[0]?.name }])
     try {
       const csrfToken = await getCsrfToken()
       const formData = new FormData()
       formData.append('message', text)
-      if (attachment) formData.append('attachment', attachment)
+      attachments.forEach(attachment => formData.append('attachment', attachment))
       const response = await fetch(`${API}/chat`, {
         method: 'POST',
         headers: { ...customerHeaders(), 'X-CSRFToken': csrfToken },
@@ -179,9 +179,11 @@ export default function ChatWidget() {
       if (!response.ok) throw new Error('Message failed')
       const data = await response.json()
       setMessages(messages => {
-        const updated = messages.map(message => message.id === pendingId ? { ...message, id: data.message.id, attachment_url: data.message.attachment_url, attachment_name: data.message.attachment_name } : message)
-        if (!data.ai_message || updated.some(message => message.id === data.ai_message.id)) return updated
-        return [...updated, { from: 'bot', text: data.ai_message.message, id: data.ai_message.id, is_ai: true }]
+        const returnedMessages = data.messages || [data.message]
+        const updated = messages.map(message => message.id === pendingId ? { ...message, id: returnedMessages[0].id, text: returnedMessages[0].message, attachment_url: returnedMessages[0].attachment_url, attachment_name: returnedMessages[0].attachment_name } : message)
+        const extraMessages = returnedMessages.slice(1).map(message => ({ from: 'user', text: message.message, id: message.id, attachment_url: message.attachment_url, attachment_name: message.attachment_name }))
+        if (!data.ai_message || updated.some(message => message.id === data.ai_message.id)) return [...updated, ...extraMessages]
+        return [...updated, ...extraMessages, { from: 'bot', text: data.ai_message.message, id: data.ai_message.id, is_ai: true }]
       })
     } catch {
       setMessages(messages => [
@@ -189,7 +191,7 @@ export default function ChatWidget() {
         { from: 'bot', text: 'Sorry, something went wrong. Please try again or email us directly.' },
       ])
     }
-    setAttachment(null)
+    setAttachments([])
     setSending(false)
   }
 
@@ -291,7 +293,7 @@ export default function ChatWidget() {
               {(
                 <form onSubmit={send} style={{ position: 'sticky', bottom: 0, padding: '10px 12px 14px', display: 'flex', gap: 8, borderTop: '1px solid rgba(255,255,255,0.07)', background: '#0a1628' }}>
                   <label title="Attach a file under 5 MB" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#8be1cd', cursor: 'pointer', flexShrink: 0 }}>
-                    <input type="file" accept="image/*,.pdf,.doc,.docx,.txt,.csv" hidden onChange={event => setAttachment(event.target.files?.[0] || null)} />
+                    <input type="file" accept="image/*,.pdf,.doc,.docx,.txt,.csv" multiple hidden onChange={event => setAttachments(Array.from(event.target.files || []))} />
                     <span aria-hidden="true" style={{ fontSize: 20 }}>+</span>
                   </label>
                   <input
@@ -305,7 +307,7 @@ export default function ChatWidget() {
                     onFocus={e => e.target.style.borderColor = 'rgba(15,137,114,0.6)'}
                     onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
                   />
-                  <button type="submit" disabled={sending || (!input.trim() && !attachment)} style={{
+                  <button type="submit" disabled={sending || (!input.trim() && !attachments.length)} style={{
                     background: 'linear-gradient(135deg,#0f8972,#12a688)', border: 'none',
                     borderRadius: 8, width: 40, height: 40, cursor: 'pointer', flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',

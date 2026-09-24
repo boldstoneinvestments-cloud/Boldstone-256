@@ -21,7 +21,7 @@ export default function AdminChat() {
   const [adminIdentity, setAdminIdentity] = useState('')
   const [identityMenuOpen, setIdentityMenuOpen] = useState(false)
   const [identityPromptOpen, setIdentityPromptOpen] = useState(false)
-  const [attachment, setAttachment] = useState(null)
+  const [attachments, setAttachments] = useState([])
 
   const loadMessages = useCallback(() => {
     setStatus('loading')
@@ -39,7 +39,7 @@ export default function AdminChat() {
   const sendReply = async (event, email, name) => {
     event.preventDefault()
     const message = (replies[email] || '').trim()
-    if ((!message && !attachment) || sending) return
+    if ((!message && !attachments.length) || sending) return
     let identity = ADMIN_IDENTITIES.find(item => item.name === adminIdentity)
     if (!identity) {
       setIdentityMenuOpen(true)
@@ -52,7 +52,7 @@ export default function AdminChat() {
     formData.append('email', email)
     formData.append('message', message)
     formData.append('admin_name', identity.name)
-    if (attachment) formData.append('attachment', attachment)
+    attachments.forEach(attachment => formData.append('attachment', attachment))
     const response = await fetch(`${BACKEND}/api/admin/chat/reply`, {
       method: 'POST',
       credentials: 'include',
@@ -60,9 +60,9 @@ export default function AdminChat() {
     }).catch(() => null)
     if (response?.ok) {
       const data = await response.json()
-      setMessages(current => [data.message, ...(current || [])])
+      setMessages(current => [...(data.messages || [data.message]).reverse(), ...(current || [])])
       setReplies(current => ({ ...current, [email]: '' }))
-      setAttachment(null)
+      setAttachments([])
     }
     setSending('')
   }
@@ -129,7 +129,7 @@ export default function AdminChat() {
             </div>}
           </div>
           <label className="admin-chat-attach-button" title="Attach a file under 5 MB">
-            <input type="file" accept="image/*,.pdf,.doc,.docx,.txt,.csv" onChange={event => setAttachment(event.target.files?.[0] || null)} />
+            <input type="file" accept="image/*,.pdf,.doc,.docx,.txt,.csv" multiple onChange={event => setAttachments(Array.from(event.target.files || []))} />
             <FontAwesomeIcon icon={faPlus} />
           </label>
           <input value={replies[thread.email] || ''} onChange={event => setReplies(current => ({ ...current, [thread.email]: event.target.value }))} placeholder="Write a reply..." aria-label={`Reply to ${thread.name}`} />
