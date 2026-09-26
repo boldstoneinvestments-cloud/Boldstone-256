@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
@@ -7,8 +7,6 @@ const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app')
   ? configuredBackend.replace(/\/$/, '')
   : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || ''
-
 export default function AdminLogin() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -17,74 +15,8 @@ export default function AdminLogin() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [captchaToken, setCaptchaToken] = useState('')
-  const [captchaError, setCaptchaError] = useState('')
-  const captchaContainer = useRef(null)
-  const captchaWidget = useRef(null)
-
-  useEffect(() => {
-    if (!RECAPTCHA_SITE_KEY || !captchaContainer.current) return undefined
-    let active = true
-    let attempts = 0
-    let retryTimer = null
-    let script = document.querySelector('script[data-google-recaptcha]')
-    const renderCaptcha = () => {
-      if (!active || captchaWidget.current !== null || !captchaContainer.current) return
-      if (typeof window.grecaptcha?.render !== 'function') {
-        if (attempts++ >= 100) {
-          setCaptchaError('reCAPTCHA could not load. Refresh the page and try again.')
-          return
-        }
-        if (retryTimer === null) {
-          retryTimer = window.setTimeout(() => {
-            retryTimer = null
-            renderCaptcha()
-          }, 100)
-        }
-        return
-      }
-      captchaWidget.current = window.grecaptcha.render(captchaContainer.current, {
-        sitekey: RECAPTCHA_SITE_KEY,
-        callback: token => {
-          setCaptchaToken(token)
-          setCaptchaError('')
-        },
-        'expired-callback': () => setCaptchaToken(''),
-        'error-callback': () => {
-          setCaptchaToken('')
-          setCaptchaError('reCAPTCHA rejected the key or could not connect. Check that it is a v2 checkbox key and both site domains are allowed.')
-        },
-      })
-    }
-    const handleLoad = () => renderCaptcha()
-    const handleError = () => setCaptchaError('reCAPTCHA could not load. Refresh the page and try again.')
-    if (!script) {
-      script = document.createElement('script')
-      script.src = 'https://www.google.com/recaptcha/api.js?render=explicit'
-      script.async = true
-      script.defer = true
-      script.dataset.googleRecaptcha = 'true'
-    }
-    script.addEventListener('load', handleLoad, { once: true })
-    script.addEventListener('error', handleError, { once: true })
-    if (!script.isConnected) document.head.appendChild(script)
-    if (window.grecaptcha?.ready) window.grecaptcha.ready(renderCaptcha)
-    else renderCaptcha()
-
-    return () => {
-      active = false
-      if (retryTimer !== null) window.clearTimeout(retryTimer)
-      script?.removeEventListener('load', handleLoad)
-      script?.removeEventListener('error', handleError)
-    }
-  }, [])
-
   const submit = async (event) => {
     event.preventDefault()
-    if (!captchaToken) {
-      setCaptchaError('Please complete the reCAPTCHA check before signing in.')
-      return
-    }
     setLoading(true)
     setError('')
     try {
@@ -92,12 +24,10 @@ export default function AdminLogin() {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, recaptcha_token: captchaToken }),
+        body: JSON.stringify({ username, password }),
       })
       if (!response.ok) {
         const data = await response.json().catch(() => ({}))
-        setCaptchaToken('')
-        if (captchaWidget.current !== null && window.grecaptcha) window.grecaptcha.reset(captchaWidget.current)
         throw new Error(data.error || 'Unable to sign in. Please try again.')
       }
       navigate('/admin')
@@ -121,13 +51,9 @@ export default function AdminLogin() {
             <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} aria-hidden="true" />
           </button>
         </div>
-        <div className="signup-recaptcha">
-          {RECAPTCHA_SITE_KEY ? <div ref={captchaContainer} /> : <p className="account-error">reCAPTCHA verification is not configured. Please try again later.</p>}
-          {captchaError && <p className="account-error" role="alert">{captchaError}</p>}
-        </div>
         <p style={{ textAlign: 'right', margin: '0 0 8px', fontSize: 12 }}><Link to="/admin/password-reset" style={{ color: '#0f8972', fontWeight: 700, textDecoration: 'none' }}>Forgot password?</Link></p>
         {error && <p style={{ color: '#dc2626', fontSize: 13, margin: '4px 0 12px' }}>{error}</p>}
-        <button type="submit" disabled={loading || !RECAPTCHA_SITE_KEY || !captchaToken} style={{ width: '100%', background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: 13, borderRadius: 0, border: 'none', cursor: loading ? 'wait' : 'pointer', marginTop: 8 }}>
+        <button type="submit" disabled={loading} style={{ width: '100%', background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: 13, borderRadius: 0, border: 'none', cursor: loading ? 'wait' : 'pointer', marginTop: 8 }}>
           {loading ? 'Signing in...' : 'Sign in'}
         </button>
         <div className="account-divider"><span>or</span></div>

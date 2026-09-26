@@ -24,128 +24,39 @@ class PasswordResetTests(TestCase):
             is_staff=True,
         )
 
-    @patch.dict('os.environ', {'RECAPTCHA_SECRET_KEY': 'test-secret'})
-    @patch('api.admin_views.verify_recaptcha', return_value=False)
-    def test_admin_signin_rejects_unverified_recaptcha(self, verify_captcha):
-        response = self.client.post(
-            '/api/admin/login',
-            {'username': self.admin.username, 'password': 'old-admin-password', 'recaptcha_token': 'invalid-token'},
-            content_type='application/json',
-        )
-
-        self.assertEqual(response.status_code, 400)
-        self.assertNotIn('_auth_user_id', self.client.session)
-        verify_captcha.assert_called_once()
-
-    @patch.dict('os.environ', {'RECAPTCHA_SECRET_KEY': 'test-secret'})
-    @patch('api.admin_views.verify_recaptcha', return_value=True)
-    def test_admin_signin_succeeds_after_recaptcha_verifies(self, verify_captcha):
-        response = self.client.post(
-            '/api/admin/login',
-            {'username': self.admin.username, 'password': 'old-admin-password', 'recaptcha_token': 'verified-token'},
-            content_type='application/json',
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(response.json()['success'])
-        verify_captcha.assert_called_once()
-
-    @patch.dict('os.environ', {'RECAPTCHA_SECRET_KEY': ''})
-    @patch('api.admin_views.verify_recaptcha')
-    def test_admin_signin_fails_closed_when_recaptcha_secret_is_missing(self, verify_captcha):
+    def test_admin_signin_succeeds(self):
         response = self.client.post(
             '/api/admin/login',
             {'username': self.admin.username, 'password': 'old-admin-password'},
             content_type='application/json',
         )
 
-        self.assertEqual(response.status_code, 503)
-        verify_captcha.assert_not_called()
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()['success'])
 
-    @patch.dict('os.environ', {'RECAPTCHA_SECRET_KEY': 'test-secret'})
-    @patch('api.views.verify_recaptcha', return_value=False)
-    def test_signup_rejects_unverified_recaptcha(self, verify_captcha):
+    def test_signup_creates_account(self):
         response = self.client.post(
             '/api/account/sign-up',
             {
                 'name': 'New Customer',
                 'email': 'new@example.com',
                 'password': 'valid-password',
-                'recaptcha_token': 'invalid-token',
-            },
-            content_type='application/json',
-        )
-
-        self.assertEqual(response.status_code, 400)
-        self.assertFalse(User.objects.filter(email='new@example.com').exists())
-        verify_captcha.assert_called_once()
-
-    @patch.dict('os.environ', {'RECAPTCHA_SECRET_KEY': 'test-secret'})
-    @patch('api.views.verify_recaptcha', return_value=True)
-    def test_signup_creates_account_after_recaptcha_verifies(self, verify_captcha):
-        response = self.client.post(
-            '/api/account/sign-up',
-            {
-                'name': 'New Customer',
-                'email': 'new@example.com',
-                'password': 'valid-password',
-                'recaptcha_token': 'verified-token',
             },
             content_type='application/json',
         )
 
         self.assertEqual(response.status_code, 201)
         self.assertTrue(User.objects.filter(email='new@example.com').exists())
-        verify_captcha.assert_called_once()
 
-    @patch.dict('os.environ', {'RECAPTCHA_SECRET_KEY': ''})
-    @patch('api.views.verify_recaptcha')
-    def test_signup_fails_closed_when_recaptcha_secret_is_missing(self, verify_captcha):
-        response = self.client.post(
-            '/api/account/sign-up',
-            {'name': 'New Customer', 'email': 'new@example.com', 'password': 'valid-password'},
-            content_type='application/json',
-        )
-
-        self.assertEqual(response.status_code, 503)
-        verify_captcha.assert_not_called()
-
-    @patch.dict('os.environ', {'RECAPTCHA_SECRET_KEY': 'test-secret'})
-    @patch('api.views.verify_recaptcha', return_value=False)
-    def test_signin_rejects_unverified_recaptcha(self, verify_captcha):
-        response = self.client.post(
-            '/api/account/sign-in',
-            {'email': self.customer.email, 'password': 'old-customer-password', 'recaptcha_token': 'invalid-token'},
-            content_type='application/json',
-        )
-
-        self.assertEqual(response.status_code, 400)
-        verify_captcha.assert_called_once()
-
-    @patch.dict('os.environ', {'RECAPTCHA_SECRET_KEY': 'test-secret'})
-    @patch('api.views.verify_recaptcha', return_value=True)
-    def test_signin_succeeds_after_recaptcha_verifies(self, verify_captcha):
-        response = self.client.post(
-            '/api/account/sign-in',
-            {'email': self.customer.email, 'password': 'old-customer-password', 'recaptcha_token': 'verified-token'},
-            content_type='application/json',
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['user']['email'], self.customer.email)
-        verify_captcha.assert_called_once()
-
-    @patch.dict('os.environ', {'RECAPTCHA_SECRET_KEY': ''})
-    @patch('api.views.verify_recaptcha')
-    def test_signin_fails_closed_when_recaptcha_secret_is_missing(self, verify_captcha):
+    def test_signin_succeeds(self):
         response = self.client.post(
             '/api/account/sign-in',
             {'email': self.customer.email, 'password': 'old-customer-password'},
             content_type='application/json',
         )
 
-        self.assertEqual(response.status_code, 503)
-        verify_captcha.assert_not_called()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['user']['email'], self.customer.email)
 
     def test_admin_session_and_api_require_staff(self):
         self.assertEqual(self.client.get('/api/admin/session').status_code, 401)
