@@ -296,6 +296,16 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-identity-options button:hover, .admin-identity-options button:focus-visible { border-color: #0f8972; background: #f3faf7; }
 .admin-identity-options button:disabled { cursor: wait; opacity: .65; }
 .admin-identity-options img, .admin-sidebar-identity img { width: 48px; height: 48px; flex: 0 0 auto; border-radius: 50%; object-fit: cover; }
+.admin-identity-setup { display: grid; gap: 10px; margin: 20px 0; text-align: left; }
+.admin-identity-setup > code, .admin-identity-setup details code { display: block; padding: 12px; background: #f4f8f7; color: #173b34; font-size: 13px; overflow-wrap: anywhere; }
+.admin-identity-setup button, .admin-identity-panel form button, .admin-identity-panel > button:not(.admin-identity-signout) { min-height: 42px; padding: 10px 14px; border: 1px solid #0f8972; border-radius: 4px; background: #0f8972; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+.admin-identity-setup button { justify-self: start; background: #fff; color: #0f8972; }
+.admin-identity-panel form { display: grid; gap: 10px; margin-top: 16px; }
+.admin-identity-panel form input { width: 100%; min-height: 46px; box-sizing: border-box; padding: 12px; border: 1px solid #cbd9d5; border-radius: 4px; font: inherit; font-size: 16px; text-align: center; }
+.admin-identity-panel form button:disabled, .admin-identity-panel > button:disabled { cursor: wait; opacity: .65; }
+.admin-identity-recovery-toggle, .admin-identity-panel .admin-identity-recovery-toggle { justify-self: end; min-height: auto; padding: 6px 0; border: 0; background: transparent; color: #0f8972; font-size: 13px; cursor: pointer; }
+.admin-identity-recovery-codes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 18px 0; text-align: center; }
+.admin-identity-recovery-codes code { padding: 10px 6px; background: #f4f8f7; color: #173b34; font-size: 13px; }
 .admin-identity-signout { padding: 9px 0; border: 0; background: transparent; color: #8a4d46; font: inherit; font-size: 13px; cursor: pointer; }
 .admin-sidebar-identity { display: flex; align-items: center; gap: 10px; margin-top: auto; padding: 16px 10px; border-top: 1px solid rgba(255,255,255,.12); }
 .admin-sidebar-identity img { width: 36px; height: 36px; }

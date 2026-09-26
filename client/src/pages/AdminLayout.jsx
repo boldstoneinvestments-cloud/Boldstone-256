@@ -23,6 +23,11 @@ export default function AdminLayout() {
   const [identities, setIdentities] = useState([])
   const [identitySaving, setIdentitySaving] = useState(false)
   const [identityError, setIdentityError] = useState('')
+  const [twoFactor, setTwoFactor] = useState(null)
+  const [pendingIdentity, setPendingIdentity] = useState(null)
+  const [verificationCode, setVerificationCode] = useState('')
+  const [useRecoveryCode, setUseRecoveryCode] = useState(false)
+  const [recoveryCodes, setRecoveryCodes] = useState([])
 
   useEffect(() => {
     let active = true
@@ -69,7 +74,14 @@ export default function AdminLayout() {
       })
       const data = await response.json().catch(() => ({}))
       if (!response.ok) throw new Error(data.error || 'Unable to save the selected identity.')
-      setIdentity(data.identity)
+      if (data.two_factor_required) {
+        setPendingIdentity(identities.find(option => option.name === identityName))
+        setTwoFactor(data)
+        setVerificationCode('')
+        setUseRecoveryCode(false)
+      } else {
+        setIdentity(data.identity)
+      }
     } catch (error) {
       setIdentityError(error.message || 'Unable to save the selected identity.')
     } finally {
@@ -89,6 +101,8 @@ export default function AdminLayout() {
       })
       if (!response.ok) throw new Error('Unable to change the selected identity.')
       setIdentity(null)
+      setTwoFactor(null)
+      setPendingIdentity(null)
     } catch (error) {
       setIdentityError(error.message || 'Unable to change the selected identity.')
     } finally {
@@ -101,20 +115,87 @@ export default function AdminLayout() {
     navigate('/admin/sign-in')
   }
 
+  const verifyIdentity = async event => {
+    event.preventDefault()
+    setIdentitySaving(true)
+    setIdentityError('')
+    try {
+      const response = await fetch(`${API}/api/admin/2fa/verify`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(useRecoveryCode
+          ? { recovery_code: verificationCode }
+          : { token: verificationCode }),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(data.error || 'Verification failed. Try again.')
+      if (data.recovery_codes?.length) {
+        setRecoveryCodes(data.recovery_codes)
+        setTwoFactor({ recovery_codes_ready: true })
+      } else {
+        setIdentity(pendingIdentity)
+        setTwoFactor(null)
+      }
+    } catch (error) {
+      setIdentityError(error.message || 'Verification failed. Try again.')
+    } finally {
+      setIdentitySaving(false)
+    }
+  }
+
+  const finishRecoverySetup = () => {
+    setIdentity(pendingIdentity)
+    setTwoFactor(null)
+    setPendingIdentity(null)
+    setRecoveryCodes([])
+  }
+
+  const copySetupSecret = async () => {
+    try {
+      await navigator.clipboard.writeText(twoFactor.secret)
+    } catch {
+      setIdentityError('Copy failed. Select and copy the setup key instead.')
+    }
+  }
+
   if (!authorized) return <main className="admin-auth-check" aria-busy="true">Checking admin access...</main>
   if (!identity) return <main className="admin-identity-page">
     <section className="admin-identity-panel">
       <span className="admin-eyebrow">Admin sign-in</span>
-      <h1>Choose your identity</h1>
-      <p>Your activity and chat replies will be attributed to this profile.</p>
-      <div className="admin-identity-options">
-        {identities.map(option => <button key={option.name} type="button" disabled={identitySaving} onClick={() => chooseIdentity(option.name)}>
-          <img src={option.avatar} alt="" />
-          <span>{option.name}</span>
-        </button>)}
-      </div>
+      {!twoFactor && <>
+        <h1>Choose your identity</h1>
+        <p>Your activity and chat replies will be attributed to this profile.</p>
+        <div className="admin-identity-options">
+          {identities.map(option => <button key={option.name} type="button" disabled={identitySaving} onClick={() => chooseIdentity(option.name)}>
+            <img src={option.avatar} alt="" />
+            <span>{option.name}</span>
+          </button>)}
+        </div>
+      </>}
+      {twoFactor && !twoFactor.recovery_codes_ready && <>
+        <h1>{twoFactor.setup_required ? `Set up 2FA for ${pendingIdentity?.name}` : `Verify ${pendingIdentity?.name}`}</h1>
+        <p>{twoFactor.setup_required ? 'Add this identity to your authenticator app, then enter its six-digit code.' : 'Enter the current code from the authenticator assigned to this identity.'}</p>
+        {twoFactor.setup_required && <div className="admin-identity-setup">
+          <code>{twoFactor.secret}</code>
+          <button type="button" onClick={copySetupSecret}>Copy setup key</button>
+          <details><summary>Manual setup details</summary><p>Time-based one-time password (TOTP), 6 digits, 30-second interval.</p><code>{twoFactor.provisioning_uri}</code></details>
+        </div>}
+        <form onSubmit={verifyIdentity}>
+          <input autoFocus value={verificationCode} onChange={event => setVerificationCode(event.target.value)} placeholder={useRecoveryCode ? 'Recovery code' : '6-digit code'} inputMode={useRecoveryCode ? 'text' : 'numeric'} autoComplete="one-time-code" maxLength={useRecoveryCode ? 13 : 6} required />
+          {!twoFactor.setup_required && <button type="button" className="admin-identity-recovery-toggle" onClick={() => { setUseRecoveryCode(value => !value); setVerificationCode('') }}>{useRecoveryCode ? 'Use authenticator code' : 'Use recovery code'}</button>}
+          <button type="submit" disabled={identitySaving || !verificationCode}>{identitySaving ? 'Verifying...' : twoFactor.setup_required ? 'Verify and enable' : 'Verify identity'}</button>
+        </form>
+      </>}
+      {twoFactor?.recovery_codes_ready && <>
+        <h1>Save {pendingIdentity?.name} recovery codes</h1>
+        <p>Each code works once. Store these securely before continuing.</p>
+        <div className="admin-identity-recovery-codes">{recoveryCodes.map(code => <code key={code}>{code}</code>)}</div>
+        <button className="admin-identity-recovery-toggle" type="button" onClick={() => navigator.clipboard.writeText(recoveryCodes.join('\n')).catch(() => setIdentityError('Copy failed. Select and copy the codes instead.'))}>Copy recovery codes</button>
+        <button type="button" disabled={identitySaving} onClick={finishRecoverySetup}>I saved the recovery codes</button>
+      </>}
       {identityError && <p className="account-error" role="alert">{identityError}</p>}
-      <button className="admin-identity-signout" type="button" onClick={logout}>Sign out</button>
+      {!twoFactor && <button className="admin-identity-signout" type="button" onClick={logout}>Sign out</button>}
     </section>
   </main>
 

@@ -2,7 +2,7 @@ import os
 
 from django.http import HttpResponseRedirect
 
-from api.admin_two_factor import VERIFIED_SESSION_KEY, begin_admin_two_factor
+from api.admin_two_factor import IDENTITY_SELECTION_SESSION_KEY, VERIFIED_SESSION_KEY
 
 
 class RequireAdminTwoFactorMiddleware:
@@ -17,7 +17,9 @@ class RequireAdminTwoFactorMiddleware:
             and request.user.is_staff
             and not request.session.get(VERIFIED_SESSION_KEY)
         ):
-            begin_admin_two_factor(request, request.user)
+            request.session[IDENTITY_SELECTION_SESSION_KEY] = True
+            request.session.pop('admin_identity_name', None)
+            request.session.modified = True
             frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:5173').strip().rstrip('/')
-            return HttpResponseRedirect(f'{frontend_url}/admin/sign-in?two_factor=required')
+            return HttpResponseRedirect(f'{frontend_url}/admin')
         return self.get_response(request)

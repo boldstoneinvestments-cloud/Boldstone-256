@@ -16,7 +16,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
-from .admin_two_factor import begin_admin_two_factor
+from .admin_two_factor import IDENTITY_SELECTION_SESSION_KEY, VERIFIED_SESSION_KEY
 from .models import ChatMessage, ContactMessage, CustomerProfile, Lease, LeaseApplication, Order
 from email_service import send_lease_application_confirmation, send_password_reset_email
 
@@ -193,8 +193,12 @@ def google_callback(request):
         user = User.objects.filter(email__iexact=email, is_staff=True, is_active=True).first()
         if user is None:
             return redirect(f'{frontend_url}/admin/sign-in?error=google_not_admin')
-        begin_admin_two_factor(request, user)
-        return redirect(f'{frontend_url}/admin/sign-in?two_factor=required')
+        login(request, user)
+        request.session[IDENTITY_SELECTION_SESSION_KEY] = True
+        request.session.pop(VERIFIED_SESSION_KEY, None)
+        request.session.pop('admin_identity_name', None)
+        request.session.modified = True
+        return redirect(f'{frontend_url}/admin')
 
     user = User.objects.filter(email__iexact=email, is_staff=False).first()
     if user is None:

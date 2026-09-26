@@ -40,19 +40,29 @@ class PasswordResetTests(TestCase):
                 content_type='application/json',
             )
 
-    def authenticate_admin_with_totp(self):
-        self.client.post(
+    def start_admin_identity_setup(self, identity_name):
+        login_response = self.client.post(
             '/api/admin/login',
             {'username': self.admin.username, 'password': 'old-admin-password'},
             content_type='application/json',
         )
-        device = TOTPDevice.objects.get(user=self.admin, name='admin')
+        self.assertEqual(login_response.status_code, 200)
+        return self.client.post(
+            '/api/admin/identity',
+            {'identity_name': identity_name},
+            content_type='application/json',
+        )
+
+    def authenticate_admin_with_totp(self, identity_name='SSEMATA SABIRA'):
+        setup = self.start_admin_identity_setup(identity_name)
+        self.assertTrue(setup.json()['setup_required'])
+        device = TOTPDevice.objects.get(user=self.admin, name=f'admin:{identity_name}')
         timestamp = int(time.time()) + 60
         response = self.verify_admin_code(self.totp_code(device, timestamp), timestamp)
         self.assertEqual(response.status_code, 200)
         return response
 
-    def test_admin_signin_requires_totp_enrollment(self):
+    def test_admin_signin_requires_identity_selection_before_totp(self):
         response = self.client.post(
             '/api/admin/login',
             {'username': self.admin.username, 'password': 'old-admin-password'},
@@ -60,19 +70,19 @@ class PasswordResetTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response.json()['two_factor_required'])
-        self.assertTrue(response.json()['setup_required'])
-        self.assertNotIn('_auth_user_id', self.client.session)
-        self.assertTrue(response.json()['provisioning_uri'].startswith('otpauth://totp/'))
+        self.assertTrue(response.json()['identity_selection_required'])
+        self.assertEqual(TOTPDevice.objects.filter(user=self.admin).count(), 0)
+        session = self.client.get('/api/admin/session')
+        self.assertEqual(session.status_code, 200)
+        self.assertIsNone(session.json()['identity'])
+        self.assertEqual(len(session.json()['identities']), 3)
+        self.assertEqual(self.client.get('/api/admin/users').status_code, 401)
 
     def test_admin_totp_enrollment_and_recovery_codes(self):
-        start = self.client.post(
-            '/api/admin/login',
-            {'username': self.admin.username, 'password': 'old-admin-password'},
-            content_type='application/json',
-        )
-        self.assertEqual(start.status_code, 200)
-        device = TOTPDevice.objects.get(user=self.admin, name='admin')
+        start = self.start_admin_identity_setup('SSEMATA SABIRA')
+        self.assertTrue(start.json()['setup_required'])
+        self.assertTrue(start.json()['provisioning_uri'].startswith('otpauth://totp/'))
+        device = TOTPDevice.objects.get(user=self.admin, name='admin:SSEMATA SABIRA')
         timestamp = int(time.time()) + 60
 
         verified = self.verify_admin_code(self.totp_code(device, timestamp), timestamp)
@@ -80,14 +90,33 @@ class PasswordResetTests(TestCase):
         self.assertEqual(verified.status_code, 200)
         self.assertTrue(device.__class__.objects.get(pk=device.pk).confirmed)
         self.assertEqual(len(verified.json()['recovery_codes']), 10)
-        self.assertEqual(self.client.get('/api/admin/session').status_code, 200)
+        self.assertEqual(self.client.get('/api/admin/session').json()['identity']['name'], 'SSEMATA SABIRA')
+
+    def test_each_admin_identity_has_independent_first_time_setup(self):
+        identity_names = ['SSEMATA SABIRA', 'MOSES ALICWAMU', 'HABIB TUMWESIGE']
+
+        for index, identity_name in enumerate(identity_names):
+            if index:
+                start = self.client.post(
+                    '/api/admin/identity',
+                    {'identity_name': identity_name},
+                    content_type='application/json',
+                )
+            else:
+                start = self.start_admin_identity_setup(identity_name)
+            self.assertEqual(start.status_code, 200)
+            self.assertTrue(start.json()['setup_required'], identity_name)
+            device = TOTPDevice.objects.get(user=self.admin, name=f'admin:{identity_name}')
+            timestamp = int(time.time()) + 60 + (index * 30)
+            verified = self.verify_admin_code(self.totp_code(device, timestamp), timestamp)
+            self.assertEqual(verified.status_code, 200, identity_name)
+            self.assertEqual(verified.json()['identity_name'], identity_name)
+
+        self.assertEqual(TOTPDevice.objects.filter(user=self.admin, confirmed=True).count(), 3)
+        self.assertEqual(self.client.get('/api/admin/identity').status_code, 200)
 
     def test_admin_totp_rejects_invalid_code(self):
-        self.client.post(
-            '/api/admin/login',
-            {'username': self.admin.username, 'password': 'old-admin-password'},
-            content_type='application/json',
-        )
+        self.start_admin_identity_setup('SSEMATA SABIRA')
 
         response = self.client.post(
             '/api/admin/2fa/verify',
@@ -96,16 +125,12 @@ class PasswordResetTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertNotIn('_auth_user_id', self.client.session)
-        self.assertFalse(TOTPDevice.objects.get(user=self.admin, name='admin').confirmed)
+        self.assertEqual(self.client.get('/api/admin/users').status_code, 401)
+        self.assertFalse(TOTPDevice.objects.get(user=self.admin, name='admin:SSEMATA SABIRA').confirmed)
 
     def test_admin_can_use_each_recovery_code_once(self):
-        self.client.post(
-            '/api/admin/login',
-            {'username': self.admin.username, 'password': 'old-admin-password'},
-            content_type='application/json',
-        )
-        device = TOTPDevice.objects.get(user=self.admin, name='admin')
+        self.start_admin_identity_setup('SSEMATA SABIRA')
+        device = TOTPDevice.objects.get(user=self.admin, name='admin:SSEMATA SABIRA')
         timestamp = int(time.time()) + 60
         enrollment = self.verify_admin_code(self.totp_code(device, timestamp), timestamp)
         recovery_code = enrollment.json()['recovery_codes'][0]
@@ -116,7 +141,13 @@ class PasswordResetTests(TestCase):
             {'username': self.admin.username, 'password': 'old-admin-password'},
             content_type='application/json',
         )
-        self.assertFalse(start.json()['setup_required'])
+        self.assertTrue(start.json()['identity_selection_required'])
+        selected = self.client.post(
+            '/api/admin/identity',
+            {'identity_name': 'SSEMATA SABIRA'},
+            content_type='application/json',
+        )
+        self.assertFalse(selected.json()['setup_required'])
         recovered = self.client.post(
             '/api/admin/2fa/verify',
             {'recovery_code': recovery_code},
@@ -130,13 +161,18 @@ class PasswordResetTests(TestCase):
             {'username': self.admin.username, 'password': 'old-admin-password'},
             content_type='application/json',
         )
+        self.client.post(
+            '/api/admin/identity',
+            {'identity_name': 'SSEMATA SABIRA'},
+            content_type='application/json',
+        )
         reused = self.client.post(
             '/api/admin/2fa/verify',
             {'recovery_code': recovery_code},
             content_type='application/json',
         )
         self.assertEqual(reused.status_code, 400)
-        self.assertNotIn('_auth_user_id', self.client.session)
+        self.assertEqual(self.client.get('/api/admin/users').status_code, 401)
 
     def test_signup_creates_account(self):
         response = self.client.post(
@@ -177,7 +213,8 @@ class PasswordResetTests(TestCase):
         session = self.client.get('/api/admin/session')
         self.assertEqual(session.status_code, 200, session.content)
         self.assertTrue(session.json()['authenticated'])
-        self.assertEqual(self.client.get('/api/admin/users').status_code, 409)
+        self.assertEqual(session.json()['identity']['name'], 'SSEMATA SABIRA')
+        self.assertEqual(self.client.get('/api/admin/users').status_code, 200)
         identity = self.client.post(
             '/api/admin/identity',
             {'identity_name': 'SSEMATA SABIRA'},
@@ -186,14 +223,16 @@ class PasswordResetTests(TestCase):
         self.assertEqual(identity.status_code, 200)
         self.assertEqual(self.client.get('/api/admin/users').status_code, 200)
 
-    def test_django_admin_redirects_staff_to_totp_challenge(self):
+    def test_django_admin_redirects_staff_to_identity_selection(self):
         self.client.force_login(self.admin)
 
         response = self.client.get('/admin/')
 
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response['Location'].endswith('/admin/sign-in?two_factor=required'))
-        self.assertTrue(self.client.get('/api/admin/2fa/status').json()['pending'])
+        self.assertTrue(response['Location'].endswith('/admin'))
+        session = self.client.get('/api/admin/session')
+        self.assertEqual(len(session.json()['identities']), 3)
+        self.assertIsNone(session.json()['identity'])
 
     def test_selected_identity_stamps_chat_and_page_activity(self):
         self.authenticate_admin_with_totp()
@@ -231,8 +270,7 @@ class PasswordResetTests(TestCase):
         self.assertEqual(admin_presence['last_visited_page'], '/admin/chat')
 
     def test_blog_actions_are_recorded_for_selected_identity(self):
-        self.authenticate_admin_with_totp()
-        self.client.post('/api/admin/identity', {'identity_name': 'MOSES ALICWAMU'}, content_type='application/json')
+        self.authenticate_admin_with_totp('MOSES ALICWAMU')
         response = self.client.post(
             '/api/admin/activity',
             {'action': 'blog.post.created', 'target_id': 27, 'details': {'title': 'Coffee update'}, 'page': '/admin/blog'},
@@ -330,7 +368,7 @@ class PasswordResetTests(TestCase):
         'GOOGLE_REDIRECT_URI': 'https://backend.example.com/api/account/google/callback',
     })
     @patch('api.views.urlopen')
-    def test_admin_google_callback_requires_totp(self, mock_urlopen):
+    def test_admin_google_callback_requires_identity_two_factor(self, mock_urlopen):
         token_response = MagicMock()
         token_response.__enter__.return_value.read.return_value = b'{"access_token":"access-token"}'
         profile_response = MagicMock()
@@ -346,7 +384,10 @@ class PasswordResetTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertIn('/admin/sign-in?two_factor=required', response['Location'])
-        self.assertNotIn('_auth_user_id', self.client.session)
-        challenge = self.client.get('/api/admin/2fa/status')
-        self.assertTrue(challenge.json()['pending'])
+        self.assertTrue(response['Location'].endswith('/admin'))
+        self.assertIn('_auth_user_id', self.client.session)
+        session = self.client.get('/api/admin/session')
+        self.assertTrue(session.json()['authenticated'])
+        self.assertIsNone(session.json()['identity'])
+        self.assertEqual(len(session.json()['identities']), 3)
+        self.assertEqual(TOTPDevice.objects.filter(user=self.admin).count(), 0)

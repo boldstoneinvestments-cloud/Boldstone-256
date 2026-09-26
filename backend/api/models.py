@@ -64,6 +64,7 @@ class AdminPresence(models.Model):
 class AdminRecoveryCodes(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='admin_recovery_codes')
     code_hashes = models.JSONField(default=list, blank=True)
+    identity_code_hashes = models.JSONField(default=dict, blank=True)
 
 
 class AdminActivity(models.Model):
