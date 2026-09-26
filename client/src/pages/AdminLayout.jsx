@@ -162,6 +162,10 @@ export default function AdminLayout() {
   if (!authorized) return <main className="admin-auth-check" aria-busy="true">Checking admin access...</main>
   if (!identity) return <main className="admin-identity-page">
     <section className="admin-identity-panel">
+      {!twoFactor && <div className="admin-identity-2fa-banner" role="note">
+        <strong>Authenticator setup required</strong>
+        <span>Each admin identity has its own two-factor setup. Select a profile to set it up if this is its first use; otherwise, enter that profile's authenticator code.</span>
+      </div>}
       <span className="admin-eyebrow">Admin sign-in</span>
       {!twoFactor && <>
         <h1>Choose your identity</h1>
