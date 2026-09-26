@@ -56,17 +56,3 @@ jobs:
           publish_dir: ./client/dist
           force_orphan: true
 
-  deploy-backend:
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Deploy backend to Railway
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_BACKEND_SERVICE_ID: ${{ vars.RAILWAY_BACKEND_SERVICE_ID }}
-        run: npx --yes @railway/cli up ./backend --path-as-root --service "$RAILWAY_BACKEND_SERVICE_ID" --environment production --ci --message "GitHub Actions $GITHUB_SHA"
