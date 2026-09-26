@@ -27,10 +27,10 @@ export default function AdminLogin() {
     let active = true
     let attempts = 0
     let retryTimer = null
-    let script = document.querySelector('script[data-google-recaptcha]')
+    let script = document.querySelector('script[data-google-recaptcha-enterprise]')
     const renderCaptcha = () => {
       if (!active || captchaWidget.current !== null || !captchaContainer.current) return
-      if (typeof window.grecaptcha?.render !== 'function') {
+      if (typeof window.grecaptcha?.enterprise?.render !== 'function') {
         if (attempts++ >= 100) {
           setCaptchaError('reCAPTCHA could not load. Refresh the page and try again.')
           return
@@ -43,7 +43,7 @@ export default function AdminLogin() {
         }
         return
       }
-      captchaWidget.current = window.grecaptcha.render(captchaContainer.current, {
+      captchaWidget.current = window.grecaptcha.enterprise.render(captchaContainer.current, {
         sitekey: RECAPTCHA_SITE_KEY,
         callback: token => {
           setCaptchaToken(token)
@@ -60,15 +60,15 @@ export default function AdminLogin() {
     const handleError = () => setCaptchaError('reCAPTCHA could not load. Refresh the page and try again.')
     if (!script) {
       script = document.createElement('script')
-      script.src = 'https://www.google.com/recaptcha/api.js?render=explicit'
+      script.src = 'https://www.google.com/recaptcha/enterprise.js?render=explicit'
       script.async = true
       script.defer = true
-      script.dataset.googleRecaptcha = 'true'
+      script.dataset.googleRecaptchaEnterprise = 'true'
     }
     script.addEventListener('load', handleLoad, { once: true })
     script.addEventListener('error', handleError, { once: true })
     if (!script.isConnected) document.head.appendChild(script)
-    if (window.grecaptcha?.ready) window.grecaptcha.ready(renderCaptcha)
+    if (window.grecaptcha?.enterprise?.ready) window.grecaptcha.enterprise.ready(renderCaptcha)
     else renderCaptcha()
 
     return () => {
@@ -97,7 +97,7 @@ export default function AdminLogin() {
       if (!response.ok) {
         const data = await response.json().catch(() => ({}))
         setCaptchaToken('')
-        if (captchaWidget.current !== null && window.grecaptcha) window.grecaptcha.reset(captchaWidget.current)
+        if (captchaWidget.current !== null && window.grecaptcha?.enterprise) window.grecaptcha.enterprise.reset(captchaWidget.current)
         throw new Error(data.error || 'Unable to sign in. Please try again.')
       }
       navigate('/admin')
