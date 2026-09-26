@@ -17,7 +17,9 @@ const links = [
 
 export default function AdminLayout() {
   const navigate = useNavigate()
-  const { pathname } = useLocation()
+  const location = useLocation()
+  const { pathname } = location
+  const [loginSession] = useState(() => location.state?.adminSession || null)
   const [open, setOpen] = useState(false)
   const [authorized, setAuthorized] = useState(false)
   const [identity, setIdentity] = useState(null)
@@ -32,6 +34,12 @@ export default function AdminLayout() {
 
   useEffect(() => {
     let active = true
+    if (loginSession?.authenticated && Array.isArray(loginSession.identities)) {
+      setIdentities(loginSession.identities)
+      setIdentity(loginSession.identity || null)
+      setAuthorized(true)
+      return () => { active = false }
+    }
     fetch(`${API}/api/admin/session`, { credentials: 'include' })
       .then(response => response.ok ? response.json() : null)
       .then(session => {
@@ -48,7 +56,7 @@ export default function AdminLayout() {
         if (active) navigate('/admin/sign-in', { replace: true })
       })
     return () => { active = false }
-  }, [navigate])
+  }, [loginSession, navigate])
 
   useEffect(() => {
     if (!authorized || !identity) return undefined

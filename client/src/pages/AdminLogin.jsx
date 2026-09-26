@@ -30,7 +30,11 @@ export default function AdminLogin() {
       if (!response.ok) {
         throw new Error(data.error || 'Unable to sign in. Please try again.')
       }
-      navigate('/admin')
+      navigate('/admin', {
+        state: data.identity_selection_required && Array.isArray(data.identities)
+          ? { adminSession: { authenticated: true, identities: data.identities, identity: null } }
+          : undefined,
+      })
     } catch (requestError) {
       setError(requestError.message || 'Invalid admin credentials. Please try again.')
     } finally {
