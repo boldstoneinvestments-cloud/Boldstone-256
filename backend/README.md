@@ -20,6 +20,8 @@ Set `ADMIN_USERNAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in Railway variables. 
 
 Admin sign-in requires an authenticator app for each selected admin identity. After entering the admin credentials, choose Ssemata, Moses, or Habib; each identity must be enrolled separately the first time it is selected. Enter that identity's six-digit authenticator code on later sign-ins. Save the one-time recovery codes shown after each enrollment; each code works once for that identity.
 
+After deploying an admin-auth change, confirm the Railway startup logs apply migration `0012_adminrecoverycodes_identity_code_hashes` and that `GET /api/admin/2fa/status` returns JSON rather than 404. A 404 means the backend service is still running an older deployment.
+
 For personalized lease application confirmations, set `RESEND_API_KEY`, `RESEND_FROM_EMAIL` (a verified Resend sender), and `RESEND_FROM_NAME=Boldstone Investments Team`. The applicant receives a formal confirmation email after the application is saved.
 
 Shop orders collect structured delivery details and send the customer a Resend confirmation with an invoice number, item summary, quantities, address, and total.
