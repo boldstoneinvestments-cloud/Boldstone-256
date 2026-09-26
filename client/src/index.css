@@ -60,6 +60,10 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-empty { padding: 70px 24px; color: #8a9a96; text-align: center; }
 .admin-empty svg { margin-bottom: 12px; font-size: 30px; color: #8bc9bc; }
 .admin-chat-heading { align-items: center; }
+.admin-chat-inbox-actions { display: flex; align-items: center; gap: 8px; }
+.admin-chat-delete-all-button { display: inline-flex; align-items: center; gap: 8px; padding: 10px 13px; border: 1px solid #e7c9c5; border-radius: 8px; background: #fff; color: #b64035; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.admin-chat-delete-all-button:hover { background: #fff3f1; }
+.admin-chat-delete-all-button:disabled { cursor: not-allowed; opacity: .5; }
 .admin-chat-detail-title { display: flex; align-items: center; gap: 9px; }
 .admin-chat-header-ai-icon { width: 34px; height: 34px; object-fit: contain; }
 .admin-chat-header-ai-icon.is-thinking { animation: admin-ai-thinking 2.2s ease-in-out infinite; transform-origin: 50% 80%; }
@@ -99,6 +103,31 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-chat-bubble.is-admin .admin-chat-sender { color: rgba(255,255,255,.78); }
 .admin-chat-bubble.is-ai .admin-chat-sender { color: #a27d16; }
 .chat-ai-thinking-icon { width: 32px; height: 32px; flex: 0 0 32px; object-fit: contain; animation: admin-ai-thinking 2.2s ease-in-out infinite; transform-origin: 50% 80%; }
+.admin-chat-bubble { position: relative; }
+.admin-chat-detail-actions { display: flex; align-items: center; gap: 10px; }
+.admin-chat-delete-button { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid #e7c9c5; border-radius: 8px; background: #fff; color: #b64035; cursor: pointer; }
+.admin-chat-delete-button:hover { background: #fff3f1; }
+.admin-chat-message-actions { position: absolute; top: 5px; right: 7px; }
+.admin-chat-message-actions > button { width: 22px; height: 20px; border: 0; border-radius: 5px; background: rgba(255,255,255,.18); color: currentColor; cursor: pointer; }
+.admin-chat-message-menu { position: absolute; top: 23px; right: 0; z-index: 5; display: grid; min-width: 75px; padding: 4px; border: 1px solid #dbe9e5; border-radius: 7px; background: #fff; box-shadow: 0 8px 20px rgba(13,31,28,.16); }
+.admin-chat-message-menu button { padding: 6px 8px; border: 0; border-radius: 4px; background: transparent; color: #315d54; font: inherit; font-size: 11px; text-align: left; cursor: pointer; }
+.admin-chat-message-menu button:hover { background: #edf7f4; color: #0f8972; }
+.admin-chat-edit textarea { width: 100%; min-height: 58px; padding: 7px; border: 1px solid #cfe0db; border-radius: 6px; background: rgba(255,255,255,.15); color: inherit; font: inherit; font-size: 12px; resize: vertical; }
+.admin-chat-edit span { display: flex; justify-content: flex-end; gap: 5px; margin-top: 5px; }
+.admin-chat-edit button { padding: 4px 7px; border: 0; border-radius: 5px; background: #8be1cd; color: #07382f; font-size: 10px; cursor: pointer; }
+.chat-ai-thinking-icon { width: 32px; height: 32px; flex: 0 0 32px; object-fit: contain; animation: admin-ai-thinking 2.2s ease-in-out infinite; transform-origin: 50% 80%; }
+.chat-message-bubble { position: relative; }
+.chat-message-actions { position: absolute; top: 4px; right: 5px; }
+.chat-message-actions > button { width: 22px; height: 20px; border: 0; border-radius: 5px; background: rgba(255,255,255,.16); color: #fff; font-size: 14px; line-height: 12px; cursor: pointer; }
+.chat-message-actions > button:hover { background: rgba(255,255,255,.28); }
+.chat-message-menu { position: absolute; top: 24px; right: 0; z-index: 10; display: grid; min-width: 90px; padding: 4px; border: 1px solid rgba(255,255,255,.12); border-radius: 8px; background: #102536; box-shadow: 0 8px 20px rgba(0,0,0,.3); }
+.chat-message-menu button { padding: 7px 9px; border: 0; border-radius: 5px; background: transparent; color: #fff; font: inherit; font-size: 11px; text-align: left; cursor: pointer; }
+.chat-message-menu button:hover { background: rgba(255,255,255,.1); }
+.chat-message-edit textarea { width: 100%; min-height: 58px; padding: 7px; border: 1px solid rgba(255,255,255,.35); border-radius: 6px; background: rgba(0,0,0,.15); color: #fff; font: inherit; font-size: 12px; resize: vertical; }
+.chat-message-edit span { display: flex; gap: 5px; justify-content: flex-end; margin-top: 5px; }
+.chat-message-edit button, .chat-reply-context button { border: 0; border-radius: 5px; padding: 4px 7px; background: #8be1cd; color: #07382f; font-size: 10px; cursor: pointer; }
+.chat-reply-context { position: absolute; right: 52px; bottom: 58px; left: 52px; padding: 6px 8px; border-radius: 6px; background: rgba(15,137,114,.18); color: #b8ddd4; font-size: 10px; }
+.chat-reply-context button { float: right; padding: 1px 5px; }
 .admin-chat-thinking { min-width: 118px; }
 .admin-chat-thinking-dots { display: inline-flex; align-items: center; gap: 4px; height: 16px; }
 .admin-chat-thinking-dots i { width: 5px; height: 5px; border-radius: 50%; background: #a27d16; animation: admin-ai-dot 1.2s ease-in-out infinite; }
