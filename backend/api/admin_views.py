@@ -1,4 +1,5 @@
 import json
+import os
 from functools import wraps
 from pathlib import Path
 from datetime import timedelta
@@ -10,6 +11,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import AdminActivity, AdminPresence, ChatMessage, LeaseApplication, Order
+from .views import verify_recaptcha
 from shop.models import ShopOrder
 
 MAX_CHAT_FILE_SIZE = 5 * 1024 * 1024
@@ -100,6 +102,11 @@ def login_admin(request):
         data = json.loads(request.body or '{}')
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    if not os.getenv('RECAPTCHA_SECRET_KEY', '').strip():
+        return JsonResponse({'error': 'Sign-in verification is not configured. Please try again later.'}, status=503)
+    if not verify_recaptcha(data.get('recaptcha_token', ''), request.META.get('REMOTE_ADDR', '')):
+        return JsonResponse({'error': 'Please complete the reCAPTCHA check and try again.'}, status=400)
 
     user = authenticate(username=data.get('username', ''), password=data.get('password', ''))
     if user is None or not user.is_staff:
