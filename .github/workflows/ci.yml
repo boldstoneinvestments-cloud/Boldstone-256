@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -32,7 +33,14 @@ jobs:
 
       - name: Build client
         working-directory: client
-        run: npm run build
+        env:
+          VITE_RECAPTCHA_SITE_KEY: ${{ vars.VITE_RECAPTCHA_SITE_KEY || secrets.VITE_RECAPTCHA_SITE_KEY }}
+        run: |
+          if [ "$GITHUB_REF" = "refs/heads/main" ] && [ -z "$VITE_RECAPTCHA_SITE_KEY" ]; then
+            echo "::error::Add VITE_RECAPTCHA_SITE_KEY as a GitHub Actions variable or secret before deploying GitHub Pages."
+            exit 1
+          fi
+          npm run build
 
       - name: Set up Python
         uses: actions/setup-python@v5

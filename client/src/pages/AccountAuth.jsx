@@ -127,7 +127,7 @@ export default function AccountAuth({ mode }) {
           </button>
         </div></label>
         <div className="signup-recaptcha">
-          {RECAPTCHA_SITE_KEY ? <div ref={captchaContainer} /> : <p className="account-error">reCAPTCHA site key is missing. Set VITE_RECAPTCHA_SITE_KEY on the Railway client service and redeploy.</p>}
+          {RECAPTCHA_SITE_KEY ? <div ref={captchaContainer} /> : <p className="account-error">reCAPTCHA site key is missing from the GitHub Pages build. Add VITE_RECAPTCHA_SITE_KEY as a GitHub Actions variable or secret, then redeploy.</p>}
           {captchaError && <p className="account-error" role="alert">{captchaError}</p>}
         </div>
         {!isSignup && <p className="account-switch account-forgot"><Link to="/account/password-reset">Forgot password?</Link></p>}
