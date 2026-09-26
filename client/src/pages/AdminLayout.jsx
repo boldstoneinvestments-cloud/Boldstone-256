@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { QRCodeSVG } from 'qrcode.react'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const API = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app') ? configuredBackend.replace(/\/$/, '') : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
@@ -181,9 +182,12 @@ export default function AdminLayout() {
         <h1>{twoFactor.setup_required ? `Set up 2FA for ${pendingIdentity?.name}` : `Verify ${pendingIdentity?.name}`}</h1>
         <p>{twoFactor.setup_required ? 'Add this identity to your authenticator app, then enter its six-digit code.' : 'Enter the current code from the authenticator assigned to this identity.'}</p>
         {twoFactor.setup_required && <div className="admin-identity-setup">
-          <code>{twoFactor.secret}</code>
+          <div className="admin-identity-qr">
+            <QRCodeSVG value={twoFactor.provisioning_uri} size={208} level="M" includeMargin title={`Authenticator setup QR code for ${pendingIdentity?.name || 'admin identity'}`} />
+          </div>
+          <p className="admin-identity-qr-help">Scan with Google Authenticator, Microsoft Authenticator, or another TOTP app.</p>
           <button type="button" onClick={copySetupSecret}>Copy setup key</button>
-          <details><summary>Manual setup details</summary><p>Time-based one-time password (TOTP), 6 digits, 30-second interval.</p><code>{twoFactor.provisioning_uri}</code></details>
+          <details><summary>Can't scan? Enter setup key manually</summary><code>{twoFactor.secret}</code><p>Time-based one-time password (TOTP), 6 digits, 30-second interval.</p></details>
         </div>}
         <form onSubmit={verifyIdentity}>
           <input autoFocus value={verificationCode} onChange={event => setVerificationCode(event.target.value)} placeholder={useRecoveryCode ? 'Recovery code' : '6-digit code'} inputMode={useRecoveryCode ? 'text' : 'numeric'} autoComplete="one-time-code" maxLength={useRecoveryCode ? 13 : 6} required />
