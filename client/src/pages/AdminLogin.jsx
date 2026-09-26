@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app')
@@ -13,6 +15,7 @@ export default function AdminLogin() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const submit = async (event) => {
     event.preventDefault()
@@ -40,11 +43,16 @@ export default function AdminLogin() {
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#0f8972', margin: '0 0 8px' }}>Boldstone</p>
         <h1 style={{ fontSize: 24, fontWeight: 900, color: '#0d1f1c', margin: '0 0 8px' }}>Admin sign in</h1>
         <p style={{ fontSize: 13, color: '#777', margin: '0 0 28px' }}>Sign in to view shop orders.</p>
-        <input type="text" placeholder="Username" value={username} onChange={event => setUsername(event.target.value)} required autoComplete="username" style={{ width: '100%', border: '1px solid #e0e0e0', borderRadius: 8, padding: '12px 14px', fontSize: 14, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }} />
-        <input type="password" placeholder="Password" value={password} onChange={event => setPassword(event.target.value)} required autoComplete="current-password" style={{ width: '100%', border: '1px solid #e0e0e0', borderRadius: 8, padding: '12px 14px', fontSize: 14, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }} />
+        <input type="text" placeholder="Username" value={username} onChange={event => setUsername(event.target.value)} required autoComplete="username" style={{ width: '100%', border: '1px solid #e0e0e0', borderRadius: 0, padding: '12px 14px', fontSize: 14, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }} />
+        <div className="admin-login-password-field" style={{ position: 'relative', width: '100%' }}>
+          <input type={showPassword ? 'text' : 'password'} placeholder="Password" value={password} onChange={event => setPassword(event.target.value)} required autoComplete="current-password" style={{ width: '100%', border: '1px solid #e0e0e0', borderRadius: 0, padding: '12px 42px 12px 14px', fontSize: 14, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }} />
+          <button className="password-visibility-toggle" type="button" onClick={() => setShowPassword(value => !value)} aria-label={showPassword ? 'Hide password' : 'Show password'} title={showPassword ? 'Hide password' : 'Show password'} style={{ position: 'absolute', top: 0, right: 0, display: 'grid', placeItems: 'center', width: 40, height: 44, padding: 0, border: 0, borderRadius: 0, background: 'transparent', color: '#56736d', cursor: 'pointer' }}>
+            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} aria-hidden="true" />
+          </button>
+        </div>
         <p style={{ textAlign: 'right', margin: '0 0 8px', fontSize: 12 }}><Link to="/admin/password-reset" style={{ color: '#0f8972', fontWeight: 700, textDecoration: 'none' }}>Forgot password?</Link></p>
         {error && <p style={{ color: '#dc2626', fontSize: 13, margin: '4px 0 12px' }}>{error}</p>}
-        <button type="submit" disabled={loading} style={{ width: '100%', background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: 13, borderRadius: 8, border: 'none', cursor: loading ? 'wait' : 'pointer', marginTop: 8 }}>
+        <button type="submit" disabled={loading} style={{ width: '100%', background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: 13, borderRadius: 0, border: 'none', cursor: loading ? 'wait' : 'pointer', marginTop: 8 }}>
           {loading ? 'Signing in...' : 'Sign in'}
         </button>
         <div className="account-divider"><span>or</span></div>

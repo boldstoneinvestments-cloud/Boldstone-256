@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = (configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app') ? configuredBackend : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')).replace(/\/api\/?$/, '')
@@ -13,6 +15,7 @@ export default function AccountAuth({ mode }) {
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const submit = async event => {
     event.preventDefault()
@@ -43,7 +46,12 @@ export default function AccountAuth({ mode }) {
       <form onSubmit={submit}>
         {isSignup && <label>Name<input value={form.name} onChange={event => setForm({ ...form, name: event.target.value })} autoComplete="name" required /></label>}
         <label>Email<input type="email" value={form.email} onChange={event => setForm({ ...form, email: event.target.value })} autoComplete="email" required /></label>
-        <label>Password<input type="password" minLength="8" value={form.password} onChange={event => setForm({ ...form, password: event.target.value })} autoComplete={isSignup ? 'new-password' : 'current-password'} required /></label>
+        <label>Password<div className="account-password-field" style={{ position: 'relative', width: '100%' }}>
+          <input type={showPassword ? 'text' : 'password'} minLength="8" value={form.password} onChange={event => setForm({ ...form, password: event.target.value })} autoComplete={isSignup ? 'new-password' : 'current-password'} required style={{ borderRadius: 0, paddingRight: 44 }} />
+          <button className="password-visibility-toggle" type="button" onClick={() => setShowPassword(value => !value)} aria-label={showPassword ? 'Hide password' : 'Show password'} title={showPassword ? 'Hide password' : 'Show password'} style={{ position: 'absolute', top: 0, right: 0, display: 'grid', placeItems: 'center', width: 40, height: 44, padding: 0, border: 0, borderRadius: 0, background: 'transparent', color: '#56736d', cursor: 'pointer' }}>
+            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} aria-hidden="true" />
+          </button>
+        </div></label>
         {!isSignup && <p className="account-switch account-forgot"><Link to="/account/password-reset">Forgot password?</Link></p>}
         {error && <p className="account-error">{error}</p>}
         <button type="submit" disabled={saving}>{saving ? 'Please wait...' : isSignup ? 'Create account' : 'Sign in'}</button>

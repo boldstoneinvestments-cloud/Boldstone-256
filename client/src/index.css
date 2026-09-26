@@ -240,13 +240,18 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .account-panel > p { color: #70817c; font-size: 13px; line-height: 1.6; }
 .account-panel form { display: grid; gap: 15px; margin-top: 25px; }
 .account-panel label { display: grid; gap: 7px; color: #315d54; font-size: 12px; font-weight: 800; }
-.account-panel input { width: 100%; padding: 12px; border: 1px solid #cfe0db; border-radius: 8px; color: #0d1f1c; font: inherit; outline: none; }
+.account-panel input { width: 100%; padding: 12px; border: 1px solid #cfe0db; border-radius: 0; color: #0d1f1c; font: inherit; outline: none; }
+.account-password-field, .admin-login-password-field { position: relative; width: 100%; }
+.account-password-field input { padding-right: 44px; }
+.admin-login-password-field input { display: block; }
+.password-visibility-toggle { position: absolute; top: 0; right: 0; display: grid; place-items: center; width: 40px; height: 44px; border: 0; background: transparent; color: #56736d; cursor: pointer; }
+.password-visibility-toggle:focus-visible { outline: 2px solid #0f8972; outline-offset: -3px; }
 .account-panel input:focus { border-color: #0f8972; box-shadow: 0 0 0 3px rgba(15,137,114,.12); }
-.account-panel form button { padding: 12px; border: 0; border-radius: 8px; background: #0f8972; color: #fff; font: inherit; font-weight: 800; cursor: pointer; }
+.account-panel form button { padding: 12px; border: 0; border-radius: 0; background: #0f8972; color: #fff; font: inherit; font-weight: 800; cursor: pointer; }
 .account-panel form button:disabled { cursor: wait; opacity: .65; }
 .account-divider { display: flex; align-items: center; gap: 10px; margin: 20px 0; color: #8a9a96; font-size: 11px; }
 .account-divider::before, .account-divider::after { content: ''; height: 1px; flex: 1; background: #edf1ef; }
-.google-account-button { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 11px; border: 1px solid #cfe0db; border-radius: 8px; background: #fff; color: #315d54; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
+.google-account-button { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 11px; border: 1px solid #cfe0db; border-radius: 0; background: #fff; color: #315d54; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
 .google-account-button .google-mark { width: 18px; height: 18px; }
 .account-error { color: #b64035 !important; font-size: 12px !important; }
 .account-switch { margin-top: 20px; text-align: center; }
