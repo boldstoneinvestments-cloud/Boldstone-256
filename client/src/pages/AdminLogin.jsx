@@ -62,7 +62,7 @@ export default function AdminLogin() {
           <p style={{ textAlign: 'right', margin: '0 0 8px', fontSize: 12 }}><Link to="/admin/password-reset" style={{ color: '#0f8972', fontWeight: 700, textDecoration: 'none' }}>Forgot password?</Link></p>
         {error && <p style={{ color: '#dc2626', fontSize: 13, margin: '4px 0 12px' }}>{error}</p>}
         <button type="submit" disabled={loading} style={{ width: '100%', background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: 13, borderRadius: 0, border: 'none', cursor: loading ? 'wait' : 'pointer', marginTop: 8 }}>
-          {loading ? 'Signing in...' : 'Sign in'}
+          {loading ? <span className="admin-login-loading"><span className="admin-loading-spinner" aria-hidden="true" />Opening admin...</span> : 'Sign in'}
         </button>
         <div className="account-divider"><span>or</span></div>
         <button type="button" className="google-account-button" onClick={() => { window.location.href = `${BACKEND}/api/admin/google/start` }}>

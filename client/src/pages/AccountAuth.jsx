@@ -47,7 +47,7 @@ export default function AccountAuth({ mode }) {
       <span className="admin-eyebrow">Boldstone account</span>
       <h1>{isSignup ? 'Create your account' : 'Sign in to continue'}</h1>
       <p>{isSignup ? 'Create a private account before starting a support chat.' : 'Your conversations are visible only to you and the Boldstone team.'}</p>
-      <form onSubmit={submit}>
+      <form onSubmit={submit} aria-busy={saving}>
         {isSignup && <label>Name<input value={form.name} onChange={event => setForm({ ...form, name: event.target.value })} autoComplete="name" required /></label>}
         <label>Email<input type="email" value={form.email} onChange={event => setForm({ ...form, email: event.target.value })} autoComplete="email" required /></label>
         <label>Password<div className="account-password-field" style={{ position: 'relative', width: '100%' }}>
@@ -58,7 +58,11 @@ export default function AccountAuth({ mode }) {
         </div></label>
         {!isSignup && <p className="account-switch account-forgot"><Link to="/account/password-reset">Forgot password?</Link></p>}
         {error && <p className="account-error">{error}</p>}
-        <button type="submit" disabled={saving}>{saving ? 'Please wait...' : isSignup ? 'Create account' : 'Sign in'}</button>
+        <button type="submit" disabled={saving}>
+          {saving
+            ? <span className="auth-action-progress" role="status"><span className="admin-loading-spinner" aria-hidden="true" />{isSignup ? 'Creating account...' : 'Signing in...'}</span>
+            : isSignup ? 'Create account' : 'Sign in'}
+        </button>
       </form>
       <div className="account-divider"><span>or</span></div>
       <button className="google-account-button" type="button" onClick={() => { window.location.href = `${BACKEND}/api/account/google/start` }}>

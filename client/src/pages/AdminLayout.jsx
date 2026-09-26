@@ -168,7 +168,7 @@ export default function AdminLayout() {
     }
   }
 
-  if (!authorized) return <main className="admin-auth-check" aria-busy="true">Checking admin access...</main>
+  if (!authorized) return <main className="admin-auth-check" aria-busy="true"><span className="admin-loading-spinner" aria-hidden="true" /><span>Opening admin...</span></main>
   if (!identity) return <main className="admin-identity-page">
     <section className="admin-identity-panel">
       {!twoFactor && <div className="admin-identity-2fa-banner" role="note">
@@ -197,10 +197,14 @@ export default function AdminLayout() {
           <button type="button" onClick={copySetupSecret}>Copy setup key</button>
           <details><summary>Can't scan? Enter setup key manually</summary><code>{twoFactor.secret}</code><p>Time-based one-time password (TOTP), 6 digits, 30-second interval.</p></details>
         </div>}
-        <form onSubmit={verifyIdentity}>
+        <form onSubmit={verifyIdentity} aria-busy={identitySaving}>
           <input autoFocus value={verificationCode} onChange={event => setVerificationCode(event.target.value)} placeholder={useRecoveryCode ? 'Recovery code' : '6-digit code'} inputMode={useRecoveryCode ? 'text' : 'numeric'} autoComplete="one-time-code" maxLength={useRecoveryCode ? 13 : 6} required />
           {!twoFactor.setup_required && <button type="button" className="admin-identity-recovery-toggle" onClick={() => { setUseRecoveryCode(value => !value); setVerificationCode('') }}>{useRecoveryCode ? 'Use authenticator code' : 'Use recovery code'}</button>}
-          <button type="submit" disabled={identitySaving || !verificationCode}>{identitySaving ? 'Verifying...' : twoFactor.setup_required ? 'Verify and enable' : 'Verify identity'}</button>
+          <button type="submit" disabled={identitySaving || !verificationCode}>
+            {identitySaving
+              ? <span className="auth-action-progress" role="status"><span className="admin-loading-spinner" aria-hidden="true" />Checking authenticator code...</span>
+              : twoFactor.setup_required ? 'Verify and enable' : 'Verify identity'}
+          </button>
         </form>
       </>}
       {twoFactor?.recovery_codes_ready && <>
