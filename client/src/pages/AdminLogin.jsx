@@ -41,6 +41,10 @@ export default function AdminLogin() {
   return (
     <div style={{ minHeight: '60vh', background: '#f4f8f7', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(20px, 6vw, 48px) 16px' }}>
       <form onSubmit={submit} style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 16, padding: 'clamp(28px, 8vw, 48px) clamp(20px, 7vw, 40px)', width: '100%', maxWidth: 400, textAlign: 'center', boxSizing: 'border-box' }}>
+        <div className="admin-identity-2fa-banner" role="note">
+          <strong>Authenticator setup required</strong>
+          <span>After signing in, choose Ssemata, Moses, or Habib. Set up an authenticator the first time you use each identity; later sign-ins require its code.</span>
+        </div>
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#0f8972', margin: '0 0 8px' }}>Boldstone</p>
         <h1 style={{ fontSize: 24, fontWeight: 900, color: '#0d1f1c', margin: '0 0 8px' }}>Admin sign in</h1>
         <p style={{ fontSize: 13, color: '#777', margin: '0 0 28px' }}>Sign in to view shop orders.</p>
