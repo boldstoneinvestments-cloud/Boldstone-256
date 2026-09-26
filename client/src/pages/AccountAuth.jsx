@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = (configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app') ? configuredBackend : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')).replace(/\/api\/?$/, '')
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || ''
 
 const getCsrfToken = async () => (await (await fetch(`${BACKEND}/api/account/csrf`, { credentials: 'include' })).json()).csrfToken
 
@@ -16,26 +17,82 @@ export default function AccountAuth({ mode }) {
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState('')
+  const [captchaError, setCaptchaError] = useState('')
+  const captchaContainer = useRef(null)
+  const captchaWidget = useRef(null)
+
+  useEffect(() => {
+    if (!isSignup || !RECAPTCHA_SITE_KEY || !captchaContainer.current) return undefined
+    let active = true
+    const renderCaptcha = () => {
+      if (!active || !window.grecaptcha || captchaWidget.current !== null || !captchaContainer.current) return
+      captchaWidget.current = window.grecaptcha.render(captchaContainer.current, {
+        sitekey: RECAPTCHA_SITE_KEY,
+        callback: token => {
+          setCaptchaToken(token)
+          setCaptchaError('')
+        },
+        'expired-callback': () => setCaptchaToken(''),
+        'error-callback': () => {
+          setCaptchaToken('')
+          setCaptchaError('reCAPTCHA could not load. Refresh the page and try again.')
+        },
+      })
+    }
+
+    if (window.grecaptcha) {
+      window.grecaptcha.ready(renderCaptcha)
+    } else {
+      let script = document.querySelector('script[data-google-recaptcha]')
+      if (!script) {
+        script = document.createElement('script')
+        script.src = 'https://www.google.com/recaptcha/api.js?render=explicit'
+        script.async = true
+        script.defer = true
+        script.dataset.googleRecaptcha = 'true'
+        document.head.appendChild(script)
+      }
+      script.addEventListener('load', renderCaptcha)
+      script.addEventListener('error', () => setCaptchaError('reCAPTCHA could not load. Refresh the page and try again.'), { once: true })
+    }
+
+    return () => { active = false }
+  }, [isSignup])
 
   const submit = async event => {
     event.preventDefault()
+    if (isSignup && !captchaToken) {
+      setCaptchaError('Please complete the reCAPTCHA check before creating your account.')
+      return
+    }
     setSaving(true)
     setError('')
-    const csrfToken = await getCsrfToken()
-    const response = await fetch(`${BACKEND}/api/account/${mode}`, {
-      method: 'POST', credentials: 'include',
-      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
-      body: JSON.stringify(form),
-    }).catch(() => null)
-    const data = response ? await response.json().catch(() => ({})) : {}
-    if (!response?.ok) setError(data.error || 'Unable to access your account.')
-    else {
-      localStorage.setItem('boldstone_customer_token', data.token)
-      localStorage.setItem('boldstone_customer_account', JSON.stringify(data.user))
-      window.dispatchEvent(new CustomEvent('boldstone-account-authenticated', { detail: data.user }))
-      navigate(location.state?.from || '/')
+    try {
+      const csrfToken = await getCsrfToken()
+      const response = await fetch(`${BACKEND}/api/account/${mode}`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        body: JSON.stringify(isSignup ? { ...form, recaptcha_token: captchaToken } : form),
+      }).catch(() => null)
+      const data = response ? await response.json().catch(() => ({})) : {}
+      if (!response?.ok) {
+        setError(data.error || 'Unable to access your account.')
+        if (isSignup) {
+          setCaptchaToken('')
+          if (captchaWidget.current !== null && window.grecaptcha) window.grecaptcha.reset(captchaWidget.current)
+        }
+      } else {
+        localStorage.setItem('boldstone_customer_token', data.token)
+        localStorage.setItem('boldstone_customer_account', JSON.stringify(data.user))
+        window.dispatchEvent(new CustomEvent('boldstone-account-authenticated', { detail: data.user }))
+        navigate(location.state?.from || '/')
+      }
+    } catch {
+      setError('Unable to access your account. Please try again.')
+    } finally {
+      setSaving(false)
     }
-    setSaving(false)
   }
 
   return <main className="account-page">
@@ -52,9 +109,13 @@ export default function AccountAuth({ mode }) {
             <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} aria-hidden="true" />
           </button>
         </div></label>
+        {isSignup && <div className="signup-recaptcha">
+          {RECAPTCHA_SITE_KEY ? <div ref={captchaContainer} /> : <p className="account-error">Signup verification is not configured. Please try again later.</p>}
+          {captchaError && <p className="account-error" role="alert">{captchaError}</p>}
+        </div>}
         {!isSignup && <p className="account-switch account-forgot"><Link to="/account/password-reset">Forgot password?</Link></p>}
         {error && <p className="account-error">{error}</p>}
-        <button type="submit" disabled={saving}>{saving ? 'Please wait...' : isSignup ? 'Create account' : 'Sign in'}</button>
+        <button type="submit" disabled={saving || (isSignup && (!RECAPTCHA_SITE_KEY || !captchaToken))}>{saving ? 'Please wait...' : isSignup ? 'Create account' : 'Sign in'}</button>
       </form>
       <div className="account-divider"><span>or</span></div>
       <button className="google-account-button" type="button" onClick={() => { window.location.href = `${BACKEND}/api/account/google/start` }}>
