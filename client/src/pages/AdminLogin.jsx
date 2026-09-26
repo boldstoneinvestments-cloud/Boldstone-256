@@ -31,8 +31,12 @@ export default function AdminLogin() {
         throw new Error(data.error || 'Unable to sign in. Please try again.')
       }
       navigate('/admin', {
-        state: data.identity_selection_required && Array.isArray(data.identities)
-          ? { adminSession: { authenticated: true, identities: data.identities, identity: null } }
+        state: Array.isArray(data.identities)
+          ? {
+            adminSession: { authenticated: true, identities: data.identities, identity: null },
+            twoFactor: data.two_factor || null,
+            pendingIdentity: data.pending_identity || null,
+          }
           : undefined,
       })
     } catch (requestError) {
