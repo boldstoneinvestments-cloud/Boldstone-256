@@ -44,6 +44,7 @@ export default function AccountAuth({ mode }) {
         {isSignup && <label>Name<input value={form.name} onChange={event => setForm({ ...form, name: event.target.value })} autoComplete="name" required /></label>}
         <label>Email<input type="email" value={form.email} onChange={event => setForm({ ...form, email: event.target.value })} autoComplete="email" required /></label>
         <label>Password<input type="password" minLength="8" value={form.password} onChange={event => setForm({ ...form, password: event.target.value })} autoComplete={isSignup ? 'new-password' : 'current-password'} required /></label>
+        {!isSignup && <p className="account-switch account-forgot"><Link to="/account/password-reset">Forgot password?</Link></p>}
         {error && <p className="account-error">{error}</p>}
         <button type="submit" disabled={saving}>{saving ? 'Please wait...' : isSignup ? 'Create account' : 'Sign in'}</button>
       </form>

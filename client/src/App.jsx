@@ -27,6 +27,7 @@ import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
 import Shop from './pages/Shop'
 import AccountAuth from './pages/AccountAuth'
+import PasswordReset from './pages/PasswordReset'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -67,8 +68,12 @@ function AppInner() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/admin/sign-in" element={<AdminLogin />} />
+          <Route path="/admin/password-reset" element={<PasswordReset admin />} />
+          <Route path="/admin/password-reset/confirm/:uid/:token" element={<PasswordReset admin />} />
           <Route path="/account/sign-in" element={<AccountAuth mode="sign-in" />} />
           <Route path="/account/sign-up" element={<AccountAuth mode="sign-up" />} />
+          <Route path="/account/password-reset" element={<PasswordReset />} />
+          <Route path="/account/password-reset/confirm/:uid/:token" element={<PasswordReset />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="orders" element={<AdminOrders />} />

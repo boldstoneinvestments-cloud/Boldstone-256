@@ -1,9 +1,13 @@
 from django.urls import path
 from . import admin_views
+from . import views
 
 urlpatterns = [
     path('login', admin_views.login_admin),
     path('logout', admin_views.logout_admin),
+    path('password-reset', views.request_admin_password_reset),
+    path('password-reset/confirm', views.confirm_admin_password_reset),
+    path('google/start', views.google_start_admin),
     path('users', admin_views.admin_users),
     path('users/<int:user_id>', admin_views.admin_user_detail),
     path('customers', admin_views.admin_customers),
@@ -14,5 +18,8 @@ urlpatterns = [
     path('lease-applications/<int:application_id>', admin_views.admin_delete_lease_application),
     path('chat', admin_views.admin_chat_messages),
     path('chat/reply', admin_views.admin_chat_reply),
+    path('chat/messages/<int:message_id>', admin_views.admin_chat_message_actions),
+    path('chat/<str:email>/delete', admin_views.admin_delete_chat),
+    path('chat/delete-all', admin_views.admin_delete_all_chats),
     path('presence', admin_views.admin_presence),
 ]

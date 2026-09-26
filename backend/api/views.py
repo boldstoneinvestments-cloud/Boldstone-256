@@ -7,14 +7,17 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.http import FileResponse, JsonResponse, StreamingHttpResponse
 from django.middleware.csrf import get_token
 from django.core import signing
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
 from .models import ChatMessage, ContactMessage, CustomerProfile, Lease, LeaseApplication, Order
-from email_service import send_lease_application_confirmation
+from email_service import send_lease_application_confirmation, send_password_reset_email
 
 ESTATE = {
     'name': 'Kyenjojo Coffee Estate',
@@ -28,6 +31,7 @@ ESTATE = {
 User = get_user_model()
 MAX_CHAT_FILE_SIZE = 5 * 1024 * 1024
 ALLOWED_CHAT_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.pdf', '.doc', '.docx', '.txt', '.csv'}
+CUSTOMER_TOKEN_MAX_AGE = 60 * 60 * 24 * 365 * 10
 
 
 def chat_attachment_url(message):
@@ -61,8 +65,11 @@ def process_chat_ai_followup(user_id, message_id):
     if user is None or message is None or ChatMessage.objects.filter(user=user, is_admin=True).exists():
         return
 
-    from .gemini import generate_supported_reply
-    ai_text = generate_supported_reply(chat_history_for(user))
+    try:
+        from .gemini import generate_supported_reply
+        ai_text = generate_supported_reply(chat_history_for(user))
+    except Exception:
+        ai_text = None
     if ChatMessage.objects.filter(user=user, is_admin=True).exists():
         return
 
@@ -86,7 +93,7 @@ def token_user(request):
     if not header.startswith('Bearer '):
         return None
     try:
-        payload = signing.loads(header[7:], salt='customer-auth', max_age=60 * 60 * 24 * 30)
+        payload = signing.loads(header[7:], salt='customer-auth', max_age=CUSTOMER_TOKEN_MAX_AGE)
         return User.objects.filter(id=payload.get('user_id'), is_active=True, is_staff=False).first()
     except (signing.BadSignature, TypeError, ValueError):
         return None
@@ -124,12 +131,13 @@ def account_csrf(request):
     return JsonResponse({'csrfToken': get_token(request)})
 
 
-def google_start(request):
+def google_start(request, admin=False):
     client_id = os.getenv('GOOGLE_CLIENT_ID', '').strip()
     redirect_uri = os.getenv('GOOGLE_REDIRECT_URI', '').strip()
     if not client_id or not redirect_uri:
         return JsonResponse({'error': 'Google sign-in is not configured'}, status=503)
-    state = signing.dumps({'nonce': secrets.token_urlsafe(32)}, salt='google-oauth-state')
+    flow = 'admin' if admin or request.GET.get('flow') == 'admin' else 'customer'
+    state = signing.dumps({'nonce': secrets.token_urlsafe(32), 'flow': flow}, salt='google-oauth-state')
     query = urlencode({
         'client_id': client_id,
         'redirect_uri': redirect_uri,
@@ -145,11 +153,14 @@ def google_start(request):
 def google_callback(request):
     from django.shortcuts import redirect
     frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:5173').strip().rstrip('/')
-    if request.GET.get('error'):
-        return redirect(f'{frontend_url}/account/sign-in?error=google_cancelled')
     try:
-        signing.loads(request.GET.get('state', ''), salt='google-oauth-state', max_age=600)
+        state = signing.loads(request.GET.get('state', ''), salt='google-oauth-state', max_age=600)
     except signing.BadSignature:
+        state = {}
+    admin_flow = isinstance(state, dict) and state.get('flow') == 'admin'
+    if request.GET.get('error'):
+        return redirect(f'{frontend_url}/admin/sign-in?error=google_cancelled' if admin_flow else f'{frontend_url}/account/sign-in?error=google_cancelled')
+    if not isinstance(state, dict) or not state:
         return JsonResponse({'error': 'Invalid Google OAuth state'}, status=400)
 
     client_id = os.getenv('GOOGLE_CLIENT_ID', '').strip()
@@ -175,7 +186,14 @@ def google_callback(request):
         if not email or not profile.get('email_verified'):
             raise ValueError('Google email is not verified')
     except Exception:
-        return redirect(f'{frontend_url}/account/sign-in?error=google_failed')
+        return redirect(f'{frontend_url}/admin/sign-in?error=google_failed' if admin_flow else f'{frontend_url}/account/sign-in?error=google_failed')
+
+    if admin_flow:
+        user = User.objects.filter(email__iexact=email, is_staff=True, is_active=True).first()
+        if user is None:
+            return redirect(f'{frontend_url}/admin/sign-in?error=google_not_admin')
+        login(request, user)
+        return redirect(f'{frontend_url}/admin')
 
     user = User.objects.filter(email__iexact=email, is_staff=False).first()
     if user is None:
@@ -221,6 +239,55 @@ def account_login(request):
         return JsonResponse({'error': 'Invalid email or password'}, status=401)
     login(request, user)
     return JsonResponse({'user': serialize_account(user), 'token': customer_token(user)})
+
+
+def request_password_reset(request, admin=False):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    data = body(request) or {}
+    email = str(data.get('email', '')).strip().lower()
+    role_filter = {'is_staff': True} if admin else {'is_staff': False}
+    user = User.objects.filter(email__iexact=email, is_active=True, **role_filter).first() if email else None
+    if user and user.has_usable_password():
+        frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:5173').strip().rstrip('/')
+        role_path = 'admin' if admin else 'account'
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        reset_url = f'{frontend_url}/{role_path}/password-reset/confirm/{uid}/{token}'
+        send_password_reset_email(user, reset_url)
+    return JsonResponse({'success': True, 'message': 'If an account matches that email, a reset link has been sent.'})
+
+
+def confirm_password_reset(request, admin=False):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    data = body(request) or {}
+    password = str(data.get('password', ''))
+    if len(password) < 8:
+        return JsonResponse({'error': 'Password must be at least 8 characters'}, status=400)
+    try:
+        user_id = force_str(urlsafe_base64_decode(str(data.get('uid', ''))))
+        user = User.objects.get(pk=user_id, is_active=True, is_staff=admin)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    token = str(data.get('token', ''))
+    if user is None or not default_token_generator.check_token(user, token):
+        return JsonResponse({'error': 'This reset link is invalid or has expired. Request a new link.'}, status=400)
+    user.set_password(password)
+    user.save(update_fields=['password'])
+    return JsonResponse({'success': True})
+
+
+def request_admin_password_reset(request):
+    return request_password_reset(request, admin=True)
+
+
+def confirm_admin_password_reset(request):
+    return confirm_password_reset(request, admin=True)
+
+
+def google_start_admin(request):
+    return google_start(request, admin=True)
 
 
 def account_me(request):
@@ -341,6 +408,26 @@ def chat_attachment(request, message_id):
     if message is None or not message.attachment:
         return JsonResponse({'error': 'Attachment not found'}, status=404)
     return FileResponse(message.attachment.open('rb'), as_attachment=False, filename=message.attachment.name.rsplit('/', 1)[-1])
+
+
+@csrf_exempt
+@customer_required
+def chat_message_actions(request, message_id):
+    message = ChatMessage.objects.filter(id=message_id, user=request.api_user, is_admin=False, is_ai=False).first()
+    if message is None:
+        return JsonResponse({'error': 'Message not found'}, status=404)
+    if request.method == 'DELETE':
+        message.delete()
+        return JsonResponse({'success': True, 'id': message_id})
+    if request.method not in ('PATCH', 'PUT'):
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    data = body(request)
+    text = str((data or {}).get('message', '')).strip()
+    if not text:
+        return JsonResponse({'error': 'Message cannot be empty'}, status=400)
+    message.message = text
+    message.save(update_fields=['message'])
+    return JsonResponse({'success': True, 'message': chat_message_payload(message)})
 
 
 @customer_required

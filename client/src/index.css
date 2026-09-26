@@ -98,6 +98,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-chat-ai-icon.is-thinking { animation: admin-ai-thinking 2.2s ease-in-out infinite; transform-origin: 50% 80%; }
 .admin-chat-bubble.is-admin .admin-chat-sender { color: rgba(255,255,255,.78); }
 .admin-chat-bubble.is-ai .admin-chat-sender { color: #a27d16; }
+.chat-ai-thinking-icon { width: 32px; height: 32px; flex: 0 0 32px; object-fit: contain; animation: admin-ai-thinking 2.2s ease-in-out infinite; transform-origin: 50% 80%; }
 .admin-chat-thinking { min-width: 118px; }
 .admin-chat-thinking-dots { display: inline-flex; align-items: center; gap: 4px; height: 16px; }
 .admin-chat-thinking-dots i { width: 5px; height: 5px; border-radius: 50%; background: #a27d16; animation: admin-ai-dot 1.2s ease-in-out infinite; }
@@ -250,6 +251,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .account-error { color: #b64035 !important; font-size: 12px !important; }
 .account-switch { margin-top: 20px; text-align: center; }
 .account-switch a { color: #0f8972; font-weight: 800; text-decoration: none; }
+.account-forgot { margin: -6px 0 0; text-align: right; }
 
 @media (min-width: 761px) {
   .admin-sidebar { position: sticky; top: 0; height: 100vh; max-height: 100vh; overflow-y: auto; align-self: flex-start; }
