@@ -26,10 +26,10 @@ export default function AccountAuth({ mode }) {
     let active = true
     let attempts = 0
     let retryTimer = null
-    let script = document.querySelector('script[data-google-recaptcha-enterprise]')
+    let script = document.querySelector('script[data-google-recaptcha]')
     const renderCaptcha = () => {
       if (!active || captchaWidget.current !== null || !captchaContainer.current) return
-      if (typeof window.grecaptcha?.enterprise?.render !== 'function') {
+      if (typeof window.grecaptcha?.render !== 'function') {
         if (attempts++ >= 100) {
           setCaptchaError('reCAPTCHA could not load. Refresh the page and try again.')
           return
@@ -42,7 +42,7 @@ export default function AccountAuth({ mode }) {
         }
         return
       }
-      captchaWidget.current = window.grecaptcha.enterprise.render(captchaContainer.current, {
+      captchaWidget.current = window.grecaptcha.render(captchaContainer.current, {
         sitekey: RECAPTCHA_SITE_KEY,
         callback: token => {
           setCaptchaToken(token)
@@ -51,7 +51,7 @@ export default function AccountAuth({ mode }) {
         'expired-callback': () => setCaptchaToken(''),
         'error-callback': () => {
           setCaptchaToken('')
-          setCaptchaError('reCAPTCHA could not load. Refresh the page and try again.')
+          setCaptchaError('reCAPTCHA rejected the key or could not connect. Check that it is a v2 checkbox key and both site domains are allowed.')
         },
       })
     }
@@ -60,15 +60,15 @@ export default function AccountAuth({ mode }) {
     const handleScriptError = () => setCaptchaError('reCAPTCHA could not load. Refresh the page and try again.')
     if (!script) {
       script = document.createElement('script')
-      script.src = 'https://www.google.com/recaptcha/enterprise.js?render=explicit'
+      script.src = 'https://www.google.com/recaptcha/api.js?render=explicit'
       script.async = true
       script.defer = true
-      script.dataset.googleRecaptchaEnterprise = 'true'
+      script.dataset.googleRecaptcha = 'true'
     }
     script.addEventListener('load', handleScriptLoad, { once: true })
     script.addEventListener('error', handleScriptError, { once: true })
     if (!script.isConnected) document.head.appendChild(script)
-    if (window.grecaptcha?.enterprise?.ready) window.grecaptcha.enterprise.ready(renderCaptcha)
+    if (window.grecaptcha?.ready) window.grecaptcha.ready(renderCaptcha)
     else renderCaptcha()
 
     return () => {
@@ -98,7 +98,7 @@ export default function AccountAuth({ mode }) {
       if (!response?.ok) {
         setError(data.error || 'Unable to access your account.')
         setCaptchaToken('')
-        if (captchaWidget.current !== null && window.grecaptcha?.enterprise) window.grecaptcha.enterprise.reset(captchaWidget.current)
+        if (captchaWidget.current !== null && window.grecaptcha) window.grecaptcha.reset(captchaWidget.current)
       } else {
         localStorage.setItem('boldstone_customer_token', data.token)
         localStorage.setItem('boldstone_customer_account', JSON.stringify(data.user))
