@@ -252,6 +252,55 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .account-switch { margin-top: 20px; text-align: center; }
 .account-switch a { color: #0f8972; font-weight: 800; text-decoration: none; }
 .account-forgot { margin: -6px 0 0; text-align: right; }
+.admin-auth-check { min-height: 100vh; display: grid; place-items: center; background: #f4f8f7; color: #315d54; font-size: 14px; }
+.admin-identity-page { min-height: 100vh; display: grid; place-items: center; padding: 28px 16px; box-sizing: border-box; background: #f4f8f7; }
+.admin-identity-panel { width: min(100%, 560px); padding: 34px; border: 1px solid #dbe9e5; border-radius: 12px; background: #fff; box-shadow: 0 18px 42px rgba(13,31,28,.08); }
+.admin-identity-panel h1 { margin: 10px 0 8px; color: #0d1f1c; font-size: 28px; }
+.admin-identity-panel > p { color: #70817c; font-size: 13px; line-height: 1.6; }
+.admin-identity-options { display: grid; gap: 10px; margin: 24px 0 12px; }
+.admin-identity-options button { display: flex; align-items: center; gap: 14px; min-height: 74px; padding: 10px 14px; border: 1px solid #dbe9e5; border-radius: 8px; background: #fff; color: #173b34; font: inherit; font-weight: 800; text-align: left; cursor: pointer; }
+.admin-identity-options button:hover, .admin-identity-options button:focus-visible { border-color: #0f8972; background: #f3faf7; }
+.admin-identity-options button:disabled { cursor: wait; opacity: .65; }
+.admin-identity-options img, .admin-sidebar-identity img { width: 48px; height: 48px; flex: 0 0 auto; border-radius: 50%; object-fit: cover; }
+.admin-identity-signout { padding: 9px 0; border: 0; background: transparent; color: #8a4d46; font: inherit; font-size: 13px; cursor: pointer; }
+.admin-sidebar-identity { display: flex; align-items: center; gap: 10px; margin-top: auto; padding: 16px 10px; border-top: 1px solid rgba(255,255,255,.12); }
+.admin-sidebar-identity img { width: 36px; height: 36px; }
+.admin-sidebar-identity div { min-width: 0; flex: 1; }
+.admin-sidebar-identity small, .admin-sidebar-identity strong { display: block; }
+.admin-sidebar-identity small { color: #91c9bc; font-size: 10px; }
+.admin-sidebar-identity strong { margin-top: 3px; color: #fff; font-size: 11px; overflow-wrap: anywhere; }
+.admin-sidebar-identity button { padding: 5px 7px; border: 1px solid rgba(255,255,255,.2); border-radius: 5px; background: transparent; color: #d8ebe6; font: inherit; font-size: 10px; cursor: pointer; }
+.admin-sidebar-identity button:disabled { cursor: wait; opacity: .6; }
+.admin-activity-section { margin: 30px 0; }
+.admin-activity-section-heading { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 12px; }
+.admin-activity-section-heading h2 { display: flex; align-items: center; gap: 10px; margin: 0; color: #173b34; font-size: 18px; }
+.admin-activity-section-heading h2 svg { color: #0f8972; }
+.admin-activity-section-heading > span { color: #70817c; font-size: 12px; }
+.admin-presence-list, .admin-audit-list { border-top: 1px solid #dbe9e5; }
+.admin-presence-row, .admin-audit-row { display: grid; grid-template-columns: 42px minmax(140px, 1fr) 86px minmax(150px, 1.2fr) minmax(145px, auto); align-items: center; gap: 14px; padding: 14px 10px; border-bottom: 1px solid #e7efec; background: #fff; }
+.admin-presence-row > img, .admin-presence-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.admin-presence-avatar { display: grid; place-items: center; background: #e4f2ed; color: #0f8972; font-weight: 800; }
+.admin-presence-person strong, .admin-presence-person small, .admin-presence-page small, .admin-presence-page strong, .admin-presence-page span, .admin-audit-actor strong, .admin-audit-actor small, .admin-audit-description strong, .admin-audit-description span, .admin-audit-description small, .admin-audit-page small, .admin-audit-page strong { display: block; }
+.admin-presence-person strong, .admin-audit-actor strong { color: #173b34; font-size: 13px; }
+.admin-presence-person small, .admin-audit-actor small, .admin-presence-page small, .admin-audit-page small, .admin-audit-description span, .admin-audit-description small { margin-top: 4px; color: #70817c; font-size: 11px; }
+.admin-presence-status { display: flex; align-items: center; gap: 6px; color: #7a8581; font-size: 11px; }
+.admin-presence-status i { width: 7px; height: 7px; border-radius: 50%; background: #9ca8a4; }
+.admin-presence-status.is-online i { background: #15936f; box-shadow: 0 0 0 3px rgba(21,147,111,.12); }
+.admin-presence-page strong, .admin-audit-page strong { margin-top: 4px; color: #173b34; font-size: 12px; }
+.admin-presence-page span { margin-top: 3px; color: #70817c; font-size: 10px; overflow-wrap: anywhere; }
+.admin-presence-row time, .admin-audit-row time { color: #70817c; font-size: 11px; text-align: right; }
+.admin-audit-row { grid-template-columns: minmax(160px, .9fr) minmax(200px, 1.5fr) minmax(130px, .8fr) minmax(145px, auto); }
+.admin-audit-description strong { color: #173b34; font-size: 13px; }
+.admin-activity-empty { padding: 20px 10px; border-bottom: 1px solid #e7efec; color: #70817c; font-size: 13px; }
+
+@media (max-width: 760px) {
+  .admin-identity-panel { padding: 26px 20px; }
+  .admin-presence-row, .admin-audit-row { grid-template-columns: 40px minmax(0, 1fr) auto; gap: 10px; }
+  .admin-presence-status { justify-self: end; }
+  .admin-presence-page, .admin-audit-description, .admin-audit-page { grid-column: 2 / -1; }
+  .admin-presence-row time, .admin-audit-row time { grid-column: 2 / -1; text-align: left; }
+  .admin-audit-actor { grid-column: 1 / -1; }
+}
 
 @media (min-width: 761px) {
   .admin-sidebar { position: sticky; top: 0; height: 100vh; max-height: 100vh; overflow-y: auto; align-self: flex-start; }

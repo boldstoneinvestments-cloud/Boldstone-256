@@ -1,26 +1,18 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useOutletContext, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faComments, faEnvelope, faPaperPlane, faPlus, faRotate, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faComments, faEnvelope, faPaperPlane, faPlus, faRotate } from '@fortawesome/free-solid-svg-icons'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app') ? configuredBackend.replace(/\/$/, '') : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
-const ADMIN_IDENTITIES = [
-  { name: 'SSEMATA SABIRA', avatar: 'https://address-restaurant2.odoo.com/web/image/1888-df4ef49b/Sabira.webp' },
-  { name: 'MOSES ALICWAMU', avatar: 'https://address-restaurant2.odoo.com/web/image/1571-51dfbae5/Moses%20Photo%20-%20up%20to%20date.webp' },
-  { name: 'HABIB TUMWESIGE', avatar: 'https://address-restaurant2.odoo.com/web/image/1982-2595a3af/Habib%20Salah.webp' },
-]
-
 export default function AdminChat() {
+  const { identity } = useOutletContext()
   const { email: encodedEmail } = useParams()
   const selectedEmail = encodedEmail ? decodeURIComponent(encodedEmail) : null
   const [messages, setMessages] = useState(null)
   const [status, setStatus] = useState('loading')
   const [replies, setReplies] = useState({})
   const [sending, setSending] = useState('')
-  const [adminIdentity, setAdminIdentity] = useState('')
-  const [identityMenuOpen, setIdentityMenuOpen] = useState(false)
-  const [identityPromptOpen, setIdentityPromptOpen] = useState(false)
   const [attachments, setAttachments] = useState([])
 
   const loadMessages = useCallback(() => {
@@ -40,18 +32,11 @@ export default function AdminChat() {
     event.preventDefault()
     const message = (replies[email] || '').trim()
     if ((!message && !attachments.length) || sending) return
-    let identity = ADMIN_IDENTITIES.find(item => item.name === adminIdentity)
-    if (!identity) {
-      setIdentityMenuOpen(true)
-      setIdentityPromptOpen(true)
-      return
-    }
     setSending(email)
     const formData = new FormData()
     formData.append('name', name)
     formData.append('email', email)
     formData.append('message', message)
-    formData.append('admin_name', identity.name)
     attachments.forEach(attachment => formData.append('attachment', attachment))
     const response = await fetch(`${BACKEND}/api/admin/chat/reply`, {
       method: 'POST',
@@ -112,29 +97,8 @@ export default function AdminChat() {
             <span className="admin-chat-thinking-dots"><i /><i /><i /></span>
           </div>}
         </div>
-        {identityPromptOpen && <div className="admin-modal-backdrop" role="presentation" onClick={() => setIdentityPromptOpen(false)}>
-          <section className="admin-identity-modal" role="dialog" aria-modal="true" aria-labelledby="identity-modal-title" onClick={event => event.stopPropagation()}>
-            <div className="admin-identity-modal-icon"><FontAwesomeIcon icon={faUser} /></div>
-            <h2 id="identity-modal-title">Select your identity</h2>
-            <p>Please choose the profile that is replying before sending this message.</p>
-            <div className="admin-identity-modal-actions">
-              <button type="button" className="admin-user-cancel" onClick={() => setIdentityPromptOpen(false)}>Cancel</button>
-              <button type="button" className="admin-user-submit" onClick={() => { setIdentityPromptOpen(false); setIdentityMenuOpen(true) }}>Choose profile</button>
-            </div>
-          </section>
-        </div>}
         <form className="admin-chat-reply" onSubmit={event => sendReply(event, thread.email, thread.name)}>
-          <div className="admin-chat-identity-picker">
-            <button className="admin-chat-reply-avatar" type="button" onClick={() => setIdentityMenuOpen(open => !open)} aria-label={adminIdentity ? `Replying as ${adminIdentity}. Change profile` : 'Select profile for reply'} title={adminIdentity ? `Replying as ${adminIdentity}. Change profile` : 'Select profile for reply'}>
-              {adminIdentity ? <img src={ADMIN_IDENTITIES.find(identity => identity.name === adminIdentity).avatar} alt="" /> : <FontAwesomeIcon icon={faUser} />}
-            </button>
-            {identityMenuOpen && <div className="admin-chat-identity-menu" role="menu">
-              {ADMIN_IDENTITIES.map(identity => <button key={identity.name} type="button" role="menuitem" className={identity.name === adminIdentity ? 'is-selected' : ''} onClick={() => { setAdminIdentity(identity.name); setIdentityMenuOpen(false) }}>
-                <img src={identity.avatar} alt="" />
-                <span>{identity.name}</span>
-              </button>)}
-            </div>}
-          </div>
+          <div className="admin-chat-current-identity"><img src={identity.avatar} alt="" /><span>{identity.name}</span></div>
           <label className="admin-chat-attach-button" title="Attach a file under 5 MB">
             <input type="file" accept="image/*,.pdf,.doc,.docx,.txt,.csv" multiple onChange={event => setAttachments(Array.from(event.target.files || []))} />
             <FontAwesomeIcon icon={faPlus} />

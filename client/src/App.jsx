@@ -21,6 +21,7 @@ import AdminDashboard from './pages/AdminDashboard'
 import AdminApplications from './pages/AdminApplications'
 import AdminChat from './pages/AdminChat'
 import AdminUsers from './pages/AdminUsers'
+import AdminActivity from './pages/AdminActivity'
 import NotFound from './pages/NotFound'
 import ChatWidget from './components/layout/ChatWidget'
 import Terms from './pages/Terms'
@@ -82,6 +83,7 @@ function AppInner() {
             <Route path="chat" element={<AdminChat />} />
             <Route path="chat/:email" element={<AdminChat />} />
             <Route path="users" element={<AdminUsers />} />
+            <Route path="activity" element={<AdminActivity />} />
             <Route path="blog" element={<AdminBlog />} />
           </Route>
           <Route path="/terms" element={<Terms />} />

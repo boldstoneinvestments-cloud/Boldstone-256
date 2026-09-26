@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faTrash, faPlus, faLock, faImage } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faTrash, faPlus, faImage } from '@fortawesome/free-solid-svg-icons'
 
-const ADMIN_PASSWORD = 'boldstone2026'
 const STORAGE_KEY = 'boldstone_blog_posts'
+const configuredBackend = import.meta.env.VITE_API_URL
+const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app') ? configuredBackend.replace(/\/$/, '') : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
 
 const categoryColors = {
   News: { bg: '#e6f4f1', color: '#0f8972' },
@@ -21,22 +22,27 @@ function savePosts(posts) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(posts))
 }
 
+function recordBlogActivity(action, post) {
+  fetch(`${BACKEND}/api/admin/activity`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action,
+      target_id: post.id,
+      details: { title: post.title },
+      page: '/admin/blog',
+    }),
+  }).catch(() => {})
+}
+
 const emptyForm = { title: '', category: 'News', author: '', date: '', image: '', imagePreview: '', excerpt: '', body: '' }
 
 export default function AdminBlog() {
-  const [authed, setAuthed] = useState(false)
-  const [pw, setPw] = useState('')
-  const [pwErr, setPwErr] = useState(false)
   const [posts, setPosts] = useState(getPosts)
   const [form, setForm] = useState(emptyForm)
   const [success, setSuccess] = useState(false)
   const [view, setView] = useState('list') // 'list' | 'new'
-
-  const login = e => {
-    e.preventDefault()
-    if (pw === ADMIN_PASSWORD) { setAuthed(true); setPwErr(false) }
-    else setPwErr(true)
-  }
 
   const handle = e => setForm({ ...form, [e.target.name]: e.target.value })
 
@@ -62,6 +68,7 @@ export default function AdminBlog() {
     }
     const updated = [newPost, ...posts]
     savePosts(updated)
+    recordBlogActivity('blog.post.created', newPost)
     setPosts(updated)
     setForm(emptyForm)
     setSuccess(true)
@@ -70,34 +77,11 @@ export default function AdminBlog() {
   }
 
   const deletePost = (id) => {
+    const post = posts.find(item => item.id === id)
     const updated = posts.filter(p => p.id !== id)
     savePosts(updated)
+    if (post) recordBlogActivity('blog.post.deleted', post)
     setPosts(updated)
-  }
-
-  if (!authed) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#f4f8f7', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-        <form onSubmit={login} style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 16, padding: '48px 40px', width: '100%', maxWidth: 400, textAlign: 'center' }}>
-          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(15,137,114,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-            <FontAwesomeIcon icon={faLock} style={{ color: '#0f8972', fontSize: 22 }} />
-          </div>
-          <h2 style={{ fontSize: 22, fontWeight: 900, color: '#0d1f1c', marginBottom: 6 }}>Admin Access</h2>
-          <p style={{ fontSize: 13, color: '#777', marginBottom: 28 }}>Enter the password to manage blog posts</p>
-          <input
-            type="password"
-            placeholder="Password"
-            value={pw}
-            onChange={e => setPw(e.target.value)}
-            style={{ width: '100%', border: `1px solid ${pwErr ? '#f87171' : '#e0e0e0'}`, borderRadius: 8, padding: '12px 14px', fontSize: 14, outline: 'none', marginBottom: 8, boxSizing: 'border-box' }}
-          />
-          {pwErr && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>Incorrect password</p>}
-          <button type="submit" style={{ width: '100%', background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: '13px', borderRadius: 8, border: 'none', cursor: 'pointer', marginTop: 8 }}>
-            Login
-          </button>
-        </form>
-      </div>
-    )
   }
 
   return (
