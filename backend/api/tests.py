@@ -1,9 +1,12 @@
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 from urllib.parse import parse_qs, urlparse
+import time
 
 from django.contrib.auth import get_user_model
 from django.core import signing
 from django.test import TestCase
+from django_otp.oath import TOTP
+from django_otp.plugins.otp_totp.models import TOTPDevice
 from api.models import AdminActivity, AdminPresence, ChatMessage
 
 
@@ -24,7 +27,32 @@ class PasswordResetTests(TestCase):
             is_staff=True,
         )
 
-    def test_admin_signin_succeeds(self):
+    def totp_code(self, device, timestamp):
+        totp = TOTP(device.bin_key, device.step, device.t0, device.digits, device.drift)
+        totp.time = timestamp
+        return str(totp.token()).zfill(device.digits)
+
+    def verify_admin_code(self, code, timestamp):
+        with patch('django_otp.plugins.otp_totp.models.time.time', return_value=timestamp):
+            return self.client.post(
+                '/api/admin/2fa/verify',
+                {'token': code},
+                content_type='application/json',
+            )
+
+    def authenticate_admin_with_totp(self):
+        self.client.post(
+            '/api/admin/login',
+            {'username': self.admin.username, 'password': 'old-admin-password'},
+            content_type='application/json',
+        )
+        device = TOTPDevice.objects.get(user=self.admin, name='admin')
+        timestamp = int(time.time()) + 60
+        response = self.verify_admin_code(self.totp_code(device, timestamp), timestamp)
+        self.assertEqual(response.status_code, 200)
+        return response
+
+    def test_admin_signin_requires_totp_enrollment(self):
         response = self.client.post(
             '/api/admin/login',
             {'username': self.admin.username, 'password': 'old-admin-password'},
@@ -32,7 +60,83 @@ class PasswordResetTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response.json()['success'])
+        self.assertTrue(response.json()['two_factor_required'])
+        self.assertTrue(response.json()['setup_required'])
+        self.assertNotIn('_auth_user_id', self.client.session)
+        self.assertTrue(response.json()['provisioning_uri'].startswith('otpauth://totp/'))
+
+    def test_admin_totp_enrollment_and_recovery_codes(self):
+        start = self.client.post(
+            '/api/admin/login',
+            {'username': self.admin.username, 'password': 'old-admin-password'},
+            content_type='application/json',
+        )
+        self.assertEqual(start.status_code, 200)
+        device = TOTPDevice.objects.get(user=self.admin, name='admin')
+        timestamp = int(time.time()) + 60
+
+        verified = self.verify_admin_code(self.totp_code(device, timestamp), timestamp)
+
+        self.assertEqual(verified.status_code, 200)
+        self.assertTrue(device.__class__.objects.get(pk=device.pk).confirmed)
+        self.assertEqual(len(verified.json()['recovery_codes']), 10)
+        self.assertEqual(self.client.get('/api/admin/session').status_code, 200)
+
+    def test_admin_totp_rejects_invalid_code(self):
+        self.client.post(
+            '/api/admin/login',
+            {'username': self.admin.username, 'password': 'old-admin-password'},
+            content_type='application/json',
+        )
+
+        response = self.client.post(
+            '/api/admin/2fa/verify',
+            {'token': 'invalid'},
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertNotIn('_auth_user_id', self.client.session)
+        self.assertFalse(TOTPDevice.objects.get(user=self.admin, name='admin').confirmed)
+
+    def test_admin_can_use_each_recovery_code_once(self):
+        self.client.post(
+            '/api/admin/login',
+            {'username': self.admin.username, 'password': 'old-admin-password'},
+            content_type='application/json',
+        )
+        device = TOTPDevice.objects.get(user=self.admin, name='admin')
+        timestamp = int(time.time()) + 60
+        enrollment = self.verify_admin_code(self.totp_code(device, timestamp), timestamp)
+        recovery_code = enrollment.json()['recovery_codes'][0]
+        self.client.logout()
+
+        start = self.client.post(
+            '/api/admin/login',
+            {'username': self.admin.username, 'password': 'old-admin-password'},
+            content_type='application/json',
+        )
+        self.assertFalse(start.json()['setup_required'])
+        recovered = self.client.post(
+            '/api/admin/2fa/verify',
+            {'recovery_code': recovery_code},
+            content_type='application/json',
+        )
+        self.assertEqual(recovered.status_code, 200)
+        self.client.logout()
+
+        self.client.post(
+            '/api/admin/login',
+            {'username': self.admin.username, 'password': 'old-admin-password'},
+            content_type='application/json',
+        )
+        reused = self.client.post(
+            '/api/admin/2fa/verify',
+            {'recovery_code': recovery_code},
+            content_type='application/json',
+        )
+        self.assertEqual(reused.status_code, 400)
+        self.assertNotIn('_auth_user_id', self.client.session)
 
     def test_signup_creates_account(self):
         response = self.client.post(
@@ -67,8 +171,11 @@ class PasswordResetTests(TestCase):
         self.assertEqual(self.client.get('/api/admin/users').status_code, 403)
 
         self.client.force_login(self.admin)
+        self.assertEqual(self.client.get('/api/admin/session').status_code, 401)
+        self.client.logout()
+        self.authenticate_admin_with_totp()
         session = self.client.get('/api/admin/session')
-        self.assertEqual(session.status_code, 200)
+        self.assertEqual(session.status_code, 200, session.content)
         self.assertTrue(session.json()['authenticated'])
         self.assertEqual(self.client.get('/api/admin/users').status_code, 409)
         identity = self.client.post(
@@ -79,8 +186,17 @@ class PasswordResetTests(TestCase):
         self.assertEqual(identity.status_code, 200)
         self.assertEqual(self.client.get('/api/admin/users').status_code, 200)
 
-    def test_selected_identity_stamps_chat_and_page_activity(self):
+    def test_django_admin_redirects_staff_to_totp_challenge(self):
         self.client.force_login(self.admin)
+
+        response = self.client.get('/admin/')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response['Location'].endswith('/admin/sign-in?two_factor=required'))
+        self.assertTrue(self.client.get('/api/admin/2fa/status').json()['pending'])
+
+    def test_selected_identity_stamps_chat_and_page_activity(self):
+        self.authenticate_admin_with_totp()
         identity = self.client.post(
             '/api/admin/identity',
             {'identity_name': 'SSEMATA SABIRA'},
@@ -115,7 +231,7 @@ class PasswordResetTests(TestCase):
         self.assertEqual(admin_presence['last_visited_page'], '/admin/chat')
 
     def test_blog_actions_are_recorded_for_selected_identity(self):
-        self.client.force_login(self.admin)
+        self.authenticate_admin_with_totp()
         self.client.post('/api/admin/identity', {'identity_name': 'MOSES ALICWAMU'}, content_type='application/json')
         response = self.client.post(
             '/api/admin/activity',
@@ -207,3 +323,30 @@ class PasswordResetTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(signing.loads(state, salt='google-oauth-state')['flow'], 'admin')
+
+    @patch.dict('os.environ', {
+        'GOOGLE_CLIENT_ID': 'client-id',
+        'GOOGLE_CLIENT_SECRET': 'client-secret',
+        'GOOGLE_REDIRECT_URI': 'https://backend.example.com/api/account/google/callback',
+    })
+    @patch('api.views.urlopen')
+    def test_admin_google_callback_requires_totp(self, mock_urlopen):
+        token_response = MagicMock()
+        token_response.__enter__.return_value.read.return_value = b'{"access_token":"access-token"}'
+        profile_response = MagicMock()
+        profile_response.__enter__.return_value.read.return_value = (
+            f'{{"email":"{self.admin.email}","email_verified":true}}'.encode()
+        )
+        mock_urlopen.side_effect = [token_response, profile_response]
+        state = signing.dumps({'nonce': 'oauth-nonce', 'flow': 'admin'}, salt='google-oauth-state')
+
+        response = self.client.get(
+            '/api/account/google/callback',
+            {'code': 'authorization-code', 'state': state},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/admin/sign-in?two_factor=required', response['Location'])
+        self.assertNotIn('_auth_user_id', self.client.session)
+        challenge = self.client.get('/api/admin/2fa/status')
+        self.assertTrue(challenge.json()['pending'])

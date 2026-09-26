@@ -18,6 +18,8 @@ Create a Railway service from this repository with the service root directory se
 
 Set `ADMIN_USERNAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` in Railway variables. The deployment creates the admin account automatically, and you can view shop orders at `https://your-backend-domain/admin/shop/shoporder/`.
 
+Admin sign-in requires an authenticator app. On first sign-in, enter the displayed setup key in an app such as Google Authenticator, then enter its six-digit code. Save the one-time recovery codes shown after enrollment; each code can be used once if the authenticator is unavailable.
+
 For personalized lease application confirmations, set `RESEND_API_KEY`, `RESEND_FROM_EMAIL` (a verified Resend sender), and `RESEND_FROM_NAME=Boldstone Investments Team`. The applicant receives a formal confirmation email after the application is saved.
 
 Shop orders collect structured delivery details and send the customer a Resend confirmation with an invoice number, item summary, quantities, address, and total.

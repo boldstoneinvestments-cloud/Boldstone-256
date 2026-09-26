@@ -3,12 +3,13 @@ from functools import wraps
 from pathlib import Path
 from datetime import timedelta
 
-from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth import authenticate, get_user_model, logout
 from django.db import transaction
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
+from .admin_two_factor import VERIFIED_SESSION_KEY, admin_two_factor_status as get_admin_two_factor_status, begin_admin_two_factor, complete_admin_two_factor
 from .models import AdminActivity, AdminPresence, ChatMessage, LeaseApplication, Order
 from shop.models import ShopOrder
 
@@ -31,6 +32,8 @@ def staff_required(view):
             return JsonResponse({'error': 'Admin sign in required'}, status=401)
         if not request.user.is_active or not request.user.is_staff:
             return JsonResponse({'error': 'Admin access required'}, status=403)
+        if not request.session.get(VERIFIED_SESSION_KEY):
+            return JsonResponse({'error': 'Admin two-factor verification required'}, status=401)
         return view(request, *args, **kwargs)
     return wrapped
 
@@ -42,6 +45,8 @@ def admin_required(view):
             return JsonResponse({'error': 'Admin sign in required'}, status=401)
         if not request.user.is_active or not request.user.is_staff:
             return JsonResponse({'error': 'Admin access required'}, status=403)
+        if not request.session.get(VERIFIED_SESSION_KEY):
+            return JsonResponse({'error': 'Admin two-factor verification required'}, status=401)
         if request.session.get('admin_identity_name') not in ADMIN_IDENTITIES:
             return JsonResponse({'error': 'Choose your admin identity first'}, status=409)
         return view(request, *args, **kwargs)
@@ -104,8 +109,30 @@ def login_admin(request):
     user = authenticate(username=data.get('username', ''), password=data.get('password', ''))
     if user is None or not user.is_staff:
         return JsonResponse({'error': 'Invalid admin credentials'}, status=401)
-    login(request, user)
-    return JsonResponse({'success': True, 'username': user.username})
+    return JsonResponse({'two_factor_required': True, **begin_admin_two_factor(request, user)})
+
+
+@csrf_exempt
+def admin_two_factor_status(request):
+    if request.method != 'GET':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    return JsonResponse(get_admin_two_factor_status(request))
+
+
+@csrf_exempt
+def verify_admin_two_factor(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    try:
+        data = json.loads(request.body or '{}')
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    user, result, status = complete_admin_two_factor(
+        request,
+        token=data.get('token', ''),
+        recovery_code=data.get('recovery_code', ''),
+    )
+    return JsonResponse(result, status=status)
 
 
 @staff_required

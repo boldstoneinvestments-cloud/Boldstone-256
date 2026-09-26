@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
@@ -15,6 +15,33 @@ export default function AdminLogin() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [step, setStep] = useState('credentials')
+  const [setupRequired, setSetupRequired] = useState(false)
+  const [setupSecret, setSetupSecret] = useState('')
+  const [provisioningUri, setProvisioningUri] = useState('')
+  const [verificationCode, setVerificationCode] = useState('')
+  const [useRecoveryCode, setUseRecoveryCode] = useState(false)
+  const [recoveryCodes, setRecoveryCodes] = useState([])
+
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get('two_factor') !== 'required') return undefined
+    let active = true
+    fetch(`${BACKEND}/api/admin/2fa/status`, { credentials: 'include' })
+      .then(async response => {
+        const data = await response.json().catch(() => ({}))
+        if (!response.ok || !data.pending) throw new Error(data.error || 'Your verification session expired. Sign in again.')
+        if (!active) return
+        setStep('verification')
+        setSetupRequired(data.setup_required)
+        setSetupSecret(data.secret || '')
+        setProvisioningUri(data.provisioning_uri || '')
+      })
+      .catch(requestError => {
+        if (active) setError(requestError.message || 'Unable to resume admin verification.')
+      })
+    return () => { active = false }
+  }, [location.search])
+
   const submit = async (event) => {
     event.preventDefault()
     setLoading(true)
@@ -26,11 +53,14 @@ export default function AdminLogin() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       })
+      const data = await response.json().catch(() => ({}))
       if (!response.ok) {
-        const data = await response.json().catch(() => ({}))
         throw new Error(data.error || 'Unable to sign in. Please try again.')
       }
-      navigate('/admin')
+      setStep('verification')
+      setSetupRequired(data.setup_required)
+      setSetupSecret(data.secret || '')
+      setProvisioningUri(data.provisioning_uri || '')
     } catch (requestError) {
       setError(requestError.message || 'Invalid admin credentials. Please try again.')
     } finally {
@@ -38,21 +68,76 @@ export default function AdminLogin() {
     }
   }
 
+  const verifySecondFactor = async (event) => {
+    event.preventDefault()
+    setLoading(true)
+    setError('')
+    try {
+      const payload = useRecoveryCode
+        ? { recovery_code: verificationCode }
+        : { token: verificationCode }
+      const response = await fetch(`${BACKEND}/api/admin/2fa/verify`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(data.error || 'Verification failed. Try again.')
+      if (data.recovery_codes?.length) {
+        setRecoveryCodes(data.recovery_codes)
+        setStep('recovery')
+      } else {
+        navigate('/admin')
+      }
+    } catch (requestError) {
+      setError(requestError.message || 'Verification failed. Try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const copySetupSecret = async () => {
+    try {
+      await navigator.clipboard.writeText(setupSecret)
+    } catch {
+      setError('Copy failed. Select and copy the setup key instead.')
+    }
+  }
+
   return (
     <div style={{ minHeight: '60vh', background: '#f4f8f7', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(20px, 6vw, 48px) 16px' }}>
-      <form onSubmit={submit} style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 16, padding: 'clamp(28px, 8vw, 48px) clamp(20px, 7vw, 40px)', width: '100%', maxWidth: 400, textAlign: 'center', boxSizing: 'border-box' }}>
+      <form onSubmit={event => { if (step === 'credentials') submit(event); else if (step === 'verification') verifySecondFactor(event); else event.preventDefault() }} style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 16, padding: 'clamp(28px, 8vw, 48px) clamp(20px, 7vw, 40px)', width: '100%', maxWidth: 400, textAlign: 'center', boxSizing: 'border-box' }}>
         <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#0f8972', margin: '0 0 8px' }}>Boldstone</p>
-        <h1 style={{ fontSize: 24, fontWeight: 900, color: '#0d1f1c', margin: '0 0 8px' }}>Admin sign in</h1>
-        <p style={{ fontSize: 13, color: '#777', margin: '0 0 28px' }}>Sign in to view shop orders.</p>
-        <input type="text" placeholder="Username" value={username} onChange={event => setUsername(event.target.value)} required autoComplete="username" style={{ width: '100%', border: '1px solid #e0e0e0', borderRadius: 0, padding: '12px 14px', fontSize: 14, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }} />
-        <div className="admin-login-password-field" style={{ position: 'relative', width: '100%' }}>
-          <input type={showPassword ? 'text' : 'password'} placeholder="Password" value={password} onChange={event => setPassword(event.target.value)} required autoComplete="current-password" style={{ width: '100%', border: '1px solid #e0e0e0', borderRadius: 0, padding: '12px 42px 12px 14px', fontSize: 14, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }} />
-          <button className="password-visibility-toggle" type="button" onClick={() => setShowPassword(value => !value)} aria-label={showPassword ? 'Hide password' : 'Show password'} title={showPassword ? 'Hide password' : 'Show password'} style={{ position: 'absolute', top: 0, right: 0, display: 'grid', placeItems: 'center', width: 40, height: 44, padding: 0, border: 0, borderRadius: 0, background: 'transparent', color: '#56736d', cursor: 'pointer' }}>
-            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} aria-hidden="true" />
-          </button>
-        </div>
-        <p style={{ textAlign: 'right', margin: '0 0 8px', fontSize: 12 }}><Link to="/admin/password-reset" style={{ color: '#0f8972', fontWeight: 700, textDecoration: 'none' }}>Forgot password?</Link></p>
+        <h1 style={{ fontSize: 24, fontWeight: 900, color: '#0d1f1c', margin: '0 0 8px' }}>{step === 'credentials' ? 'Admin sign in' : step === 'recovery' ? 'Save recovery codes' : setupRequired ? 'Set up authenticator' : 'Verify your identity'}</h1>
+        <p style={{ fontSize: 13, color: '#777', margin: '0 0 28px' }}>{step === 'credentials' ? 'Sign in to view shop orders.' : step === 'recovery' ? 'Store these one-time codes securely. Each code works once.' : setupRequired ? 'Add this account to an authenticator app, then enter its six-digit code.' : 'Enter the current code from your authenticator app.'}</p>
+        {step === 'credentials' && <>
+          <input type="text" placeholder="Username" value={username} onChange={event => setUsername(event.target.value)} required autoComplete="username" style={{ width: '100%', border: '1px solid #e0e0e0', borderRadius: 0, padding: '12px 14px', fontSize: 14, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }} />
+          <div className="admin-login-password-field" style={{ position: 'relative', width: '100%' }}>
+            <input type={showPassword ? 'text' : 'password'} placeholder="Password" value={password} onChange={event => setPassword(event.target.value)} required autoComplete="current-password" style={{ width: '100%', border: '1px solid #e0e0e0', borderRadius: 0, padding: '12px 42px 12px 14px', fontSize: 14, outline: 'none', marginBottom: 10, boxSizing: 'border-box' }} />
+            <button className="password-visibility-toggle" type="button" onClick={() => setShowPassword(value => !value)} aria-label={showPassword ? 'Hide password' : 'Show password'} title={showPassword ? 'Hide password' : 'Show password'} style={{ position: 'absolute', top: 0, right: 0, display: 'grid', placeItems: 'center', width: 40, height: 44, padding: 0, border: 0, borderRadius: 0, background: 'transparent', color: '#56736d', cursor: 'pointer' }}>
+              <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} aria-hidden="true" />
+            </button>
+          </div>
+          <p style={{ textAlign: 'right', margin: '0 0 8px', fontSize: 12 }}><Link to="/admin/password-reset" style={{ color: '#0f8972', fontWeight: 700, textDecoration: 'none' }}>Forgot password?</Link></p>
+        </>}
+        {step === 'verification' && <div>
+          {setupRequired && <div style={{ textAlign: 'left', marginBottom: 16 }}>
+            <p style={{ fontSize: 13, color: '#555' }}>In your authenticator app, add an account using this setup key:</p>
+            <code style={{ display: 'block', overflowWrap: 'anywhere', padding: 12, background: '#f4f8f7', color: '#0d1f1c', fontSize: 15 }}>{setupSecret}</code>
+            <button type="button" onClick={copySetupSecret} style={{ marginTop: 8, background: 'transparent', border: 0, color: '#0f8972', cursor: 'pointer' }}>Copy setup key</button>
+            <details style={{ marginTop: 8, fontSize: 12 }}><summary>Manual setup details</summary><p>Choose time-based one-time password (TOTP), 6 digits, 30-second interval. Provisioning URI: <code style={{ overflowWrap: 'anywhere' }}>{provisioningUri}</code></p></details>
+          </div>}
+          <input autoFocus value={verificationCode} onChange={event => setVerificationCode(event.target.value)} placeholder={useRecoveryCode ? 'Recovery code' : '6-digit code'} inputMode={useRecoveryCode ? 'text' : 'numeric'} autoComplete="one-time-code" maxLength={useRecoveryCode ? 13 : 6} required style={{ width: '100%', border: '1px solid #e0e0e0', padding: 12, boxSizing: 'border-box', marginBottom: 12 }} />
+          {!setupRequired && <button type="button" onClick={() => { setUseRecoveryCode(value => !value); setVerificationCode('') }} style={{ display: 'block', margin: '0 0 12px auto', background: 'transparent', border: 0, color: '#0f8972', cursor: 'pointer' }}>{useRecoveryCode ? 'Use authenticator code' : 'Use a recovery code'}</button>}
+          <button type="submit" disabled={loading || !verificationCode} style={{ width: '100%', background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: 13, border: 'none', cursor: loading ? 'wait' : 'pointer' }}>{loading ? 'Verifying...' : setupRequired ? 'Verify and enable' : 'Verify and sign in'}</button>
+        </div>}
+        {step === 'recovery' && <>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, textAlign: 'left', marginBottom: 18 }}>{recoveryCodes.map(code => <code key={code} style={{ padding: 8, background: '#f4f8f7' }}>{code}</code>)}</div>
+          <button type="button" onClick={() => navigate('/admin')} style={{ width: '100%', background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: 13, border: 'none', cursor: 'pointer' }}>I saved my recovery codes</button>
+        </>}
         {error && <p style={{ color: '#dc2626', fontSize: 13, margin: '4px 0 12px' }}>{error}</p>}
+        {step === 'credentials' && <>
         <button type="submit" disabled={loading} style={{ width: '100%', background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: 13, borderRadius: 0, border: 'none', cursor: loading ? 'wait' : 'pointer', marginTop: 8 }}>
           {loading ? 'Signing in...' : 'Sign in'}
         </button>
@@ -66,6 +151,7 @@ export default function AdminLogin() {
           </svg>
           Sign in with Google
         </button>
+        </>}
         {new URLSearchParams(location.search).get('error') && <p style={{ color: '#dc2626', fontSize: 13, margin: '10px 0 0' }}>{new URLSearchParams(location.search).get('error') === 'google_not_admin' ? 'This Google account is not enabled for admin access.' : 'Google sign-in could not be completed. Please try again.'}</p>}
       </form>
     </div>
