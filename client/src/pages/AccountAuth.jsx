@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = (configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app') ? configuredBackend : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')).replace(/\/api\/?$/, '')
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || ''
 const getCsrfToken = async () => (await (await fetch(`${BACKEND}/api/account/csrf`, { credentials: 'include' })).json()).csrfToken
 
 export default function AccountAuth({ mode }) {
@@ -15,8 +17,18 @@ export default function AccountAuth({ mode }) {
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [recaptchaToken, setRecaptchaToken] = useState('')
+  const recaptchaRef = useRef(null)
   const submit = async event => {
     event.preventDefault()
+    if (!RECAPTCHA_SITE_KEY) {
+      setError('Account verification is not configured on this site. Please contact support.')
+      return
+    }
+    if (!recaptchaToken) {
+      setError('Complete the reCAPTCHA check before continuing.')
+      return
+    }
     setSaving(true)
     setError('')
     try {
@@ -24,7 +36,7 @@ export default function AccountAuth({ mode }) {
       const response = await fetch(`${BACKEND}/api/account/${mode}`, {
         method: 'POST', credentials: 'include',
         headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, recaptcha_token: recaptchaToken }),
       }).catch(() => null)
       const data = response ? await response.json().catch(() => ({})) : {}
       if (!response?.ok) {
@@ -39,6 +51,8 @@ export default function AccountAuth({ mode }) {
       setError('Unable to access your account. Please try again.')
     } finally {
       setSaving(false)
+      recaptchaRef.current?.reset()
+      setRecaptchaToken('')
     }
   }
 
@@ -57,8 +71,17 @@ export default function AccountAuth({ mode }) {
           </button>
         </div></label>
         {!isSignup && <p className="account-switch account-forgot"><Link to="/account/password-reset">Forgot password?</Link></p>}
+        {RECAPTCHA_SITE_KEY
+          ? <div className="account-recaptcha"><ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={RECAPTCHA_SITE_KEY}
+            onChange={token => { setRecaptchaToken(token || ''); if (token) setError('') }}
+            onExpired={() => setRecaptchaToken('')}
+            onErrored={() => { setRecaptchaToken(''); setError('reCAPTCHA could not load. Check your connection and try again.') }}
+          /></div>
+          : <p className="account-error" role="alert">Account verification is not configured on this site.</p>}
         {error && <p className="account-error">{error}</p>}
-        <button type="submit" disabled={saving}>
+        <button type="submit" disabled={saving || !RECAPTCHA_SITE_KEY || !recaptchaToken}>
           {saving
             ? <span className="auth-action-progress" role="status"><span className="admin-loading-spinner" aria-hidden="true" />{isSignup ? 'Creating account...' : 'Signing in...'}</span>
             : isSignup ? 'Create account' : 'Sign in'}
