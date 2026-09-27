@@ -301,8 +301,8 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-identity-2fa-banner strong { color: #173b34; font-size: 13px; }
 .admin-identity-panel h1 { margin: 10px 0 8px; color: #0d1f1c; font-size: 28px; }
 .admin-identity-panel > p { color: #70817c; font-size: 13px; line-height: 1.6; }
-.admin-identity-options { display: grid; gap: 10px; margin: 24px 0 12px; }
-.admin-identity-options button { display: flex; align-items: center; gap: 14px; min-height: 74px; padding: 10px 14px; border: 1px solid #dbe9e5; border-radius: 8px; background: #fff; color: #173b34; font: inherit; font-weight: 800; text-align: left; cursor: pointer; }
+.admin-identity-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 24px 0 12px; }
+.admin-identity-options button { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 74px; padding: 10px 10px; border: 1px solid #dbe9e5; border-radius: 8px; background: #fff; color: #173b34; font: inherit; font-weight: 800; text-align: center; cursor: pointer; }
 .admin-identity-options button:hover, .admin-identity-options button:focus-visible { border-color: #0f8972; background: #f3faf7; }
 .admin-identity-options button:disabled { cursor: wait; opacity: .65; }
 .admin-identity-options img, .admin-sidebar-identity img { width: 48px; height: 48px; flex: 0 0 auto; border-radius: 50%; object-fit: cover; }
@@ -354,6 +354,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 
 @media (max-width: 760px) {
   .admin-identity-panel { padding: 26px 20px; }
+  .admin-identity-options { grid-template-columns: 1fr; }
   .admin-presence-row, .admin-audit-row { grid-template-columns: 40px minmax(0, 1fr) auto; gap: 10px; }
   .admin-presence-status { justify-self: end; }
   .admin-presence-page, .admin-audit-description, .admin-audit-page { grid-column: 2 / -1; }
