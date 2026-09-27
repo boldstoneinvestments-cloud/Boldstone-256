@@ -114,6 +114,14 @@ def complete_admin_two_factor(request, token='', recovery_code=''):
         else:
             request.session.pop(RECOVERY_FAILURES_SESSION_KEY, None)
     else:
+        allowed, throttle = device.verify_is_allowed()
+        if not allowed:
+            locked_until = throttle.get('locked_until') if throttle else None
+            retry_after = max(1, int(locked_until.timestamp() - time.time()) + 1) if locked_until else 1
+            return None, {
+                'error': f'Too many verification attempts. Wait {retry_after} seconds, then enter the latest code.',
+                'retry_after': retry_after,
+            }, 429
         token_value = str(token).strip()
         valid = token_value.isdigit() and len(token_value) == device.digits and device.verify_token(int(token_value))
     if not valid:

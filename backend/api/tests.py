@@ -5,6 +5,7 @@ import time
 from django.contrib.auth import get_user_model
 from django.core import signing
 from django.test import TestCase
+from django.utils import timezone
 from django_otp.oath import TOTP
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from api.models import AdminActivity, AdminPresence, ChatMessage
@@ -127,6 +128,23 @@ class PasswordResetTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(self.client.get('/api/admin/users').status_code, 401)
         self.assertFalse(TOTPDevice.objects.get(user=self.admin, name='admin:SSEMATA SABIRA').confirmed)
+
+    def test_admin_totp_throttle_returns_retry_after(self):
+        self.start_admin_identity_setup('SSEMATA SABIRA')
+        device = TOTPDevice.objects.get(user=self.admin, name='admin:SSEMATA SABIRA')
+        device.throttling_failure_count = 2
+        device.throttling_failure_timestamp = timezone.now()
+        device.save(update_fields=['throttling_failure_count', 'throttling_failure_timestamp'])
+
+        response = self.client.post(
+            '/api/admin/2fa/verify',
+            {'token': '123456'},
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, 429)
+        self.assertIn('retry_after', response.json())
+        self.assertEqual(response['Retry-After'], str(response.json()['retry_after']))
 
     def test_admin_can_use_each_recovery_code_once(self):
         self.start_admin_identity_setup('SSEMATA SABIRA')

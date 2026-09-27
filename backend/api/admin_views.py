@@ -154,7 +154,10 @@ def verify_admin_two_factor(request):
             target_id=identity_name,
             identity_name=identity_name,
         )
-    return JsonResponse(result, status=status)
+    response = JsonResponse(result, status=status)
+    if status == 429 and result.get('retry_after'):
+        response['Retry-After'] = str(result['retry_after'])
+    return response
 
 
 @staff_required(allow_identity_selection=True)
