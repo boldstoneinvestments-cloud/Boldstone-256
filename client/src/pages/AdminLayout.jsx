@@ -172,52 +172,91 @@ export default function AdminLayout() {
 
   if (!authorized) return <main className="admin-auth-check" aria-busy="true"><span className="admin-loading-spinner" aria-hidden="true" /><span>Opening admin...</span></main>
   if (!identity) return <main className="admin-identity-page">
-    <section className="admin-identity-panel">
-      {!twoFactor && <div className="admin-identity-2fa-banner" role="note">
-        <strong>Authenticator setup required</strong>
-        <span>Each admin identity has its own two-factor setup. Select a profile to set it up if this is its first use; otherwise, enter that profile's authenticator code.</span>
-      </div>}
-      <span className="admin-eyebrow">Admin sign-in</span>
-      {!twoFactor && <>
-        <h1>Choose your identity</h1>
-        <p>Your activity and chat replies will be attributed to this profile.</p>
-        <div className="admin-identity-options">
-          {identities.map(option => <button key={option.name} type="button" disabled={identitySaving} onClick={() => chooseIdentity(option.name)}>
-            <img src={option.avatar} alt="" />
-            <span>{option.name}</span>
-          </button>)}
-        </div>
-      </>}
-      {twoFactor && !twoFactor.recovery_codes_ready && <>
-        <h1>{twoFactor.setup_required ? `Set up 2FA for ${pendingIdentity?.name}` : `Verify ${pendingIdentity?.name}`}</h1>
-        <p>{twoFactor.setup_required ? 'Add this identity to your authenticator app, then enter its six-digit code.' : 'Enter the current code from the authenticator assigned to this identity.'}</p>
-        {twoFactor.setup_required && <div className="admin-identity-setup">
-          <div className="admin-identity-qr">
-            <QRCodeSVG value={twoFactor.provisioning_uri} size={208} level="M" includeMargin title={`Authenticator setup QR code for ${pendingIdentity?.name || 'admin identity'}`} />
-          </div>
-          <p className="admin-identity-qr-help">Scan with Google Authenticator, Microsoft Authenticator, or another TOTP app.</p>
-          <button type="button" onClick={copySetupSecret}>Copy setup key</button>
-          <details><summary>Can't scan? Enter setup key manually</summary><code>{twoFactor.secret}</code><p>Time-based one-time password (TOTP), 6 digits, 30-second interval.</p></details>
+    <section className="admin-login-story admin-identity-story" aria-label="Boldstone admin workspace">
+      <div className="admin-login-story-top">
+        <img src="https://res.cloudinary.com/cwj8d38f/image/upload/v1789729870/Boldstone_logo_hiv7pl.jpg" alt="" />
+        <span>Boldstone <i /> Workspace</span>
+      </div>
+      <div className="admin-login-story-copy">
+        <span className="admin-login-kicker">A shared purpose</span>
+        <h2>One team.<br /><em>One identity.</em></h2>
+        <p>Choose the profile that represents you. Your actions and conversations will be connected to this identity.</p>
+      </div>
+      <div className="admin-login-story-foot">
+        <span className="admin-login-status-dot" />
+        <span>Private workspace <b>·</b> Secure access</span>
+        <span className="admin-login-story-index">02 <i /> 03</span>
+      </div>
+      <div className="admin-login-orbit admin-login-orbit-one" aria-hidden="true" />
+      <div className="admin-login-orbit admin-login-orbit-two" aria-hidden="true" />
+      <span className="admin-login-story-coordinate" aria-hidden="true">0° 20' 12.0&quot; N&nbsp;&nbsp; 32° 34' 55.0&quot; E</span>
+    </section>
+
+    <section className="admin-login-workspace admin-identity-workspace">
+      <div className="admin-login-mobile-brand"><span>Boldstone</span><i /> Admin workspace</div>
+      <div className="admin-identity-panel" aria-busy={identitySaving}>
+        {!twoFactor && <div className="admin-identity-2fa-banner" role="note">
+          <span className="admin-identity-banner-icon" aria-hidden="true">2F</span>
+          <span><strong>Authenticator setup required</strong><small>Each admin identity has its own two-factor setup. Select a profile to set it up if this is its first use; otherwise, enter that profile's authenticator code.</small></span>
         </div>}
-        <form onSubmit={verifyIdentity} aria-busy={identitySaving}>
-          <input autoFocus value={verificationCode} onChange={event => setVerificationCode(event.target.value)} placeholder={useRecoveryCode ? 'Recovery code' : '6-digit code'} inputMode={useRecoveryCode ? 'text' : 'numeric'} autoComplete="one-time-code" maxLength={useRecoveryCode ? 13 : 6} required />
-          {!twoFactor.setup_required && <button type="button" className="admin-identity-recovery-toggle" onClick={() => { setUseRecoveryCode(value => !value); setVerificationCode('') }}>{useRecoveryCode ? 'Use authenticator code' : 'Use recovery code'}</button>}
-          <button type="submit" disabled={identitySaving || !verificationCode}>
-            {identitySaving
-              ? <span className="auth-action-progress" role="status"><span className="admin-loading-spinner" aria-hidden="true" />Checking authenticator code...</span>
-              : twoFactor.setup_required ? 'Verify and enable' : 'Verify identity'}
-          </button>
-        </form>
-      </>}
-      {twoFactor?.recovery_codes_ready && <>
-        <h1>Save {pendingIdentity?.name} recovery codes</h1>
-        <p>Each code works once. Store these securely before continuing.</p>
-        <div className="admin-identity-recovery-codes">{recoveryCodes.map(code => <code key={code}>{code}</code>)}</div>
-        <button className="admin-identity-recovery-toggle" type="button" onClick={() => navigator.clipboard.writeText(recoveryCodes.join('\n')).catch(() => setIdentityError('Copy failed. Select and copy the codes instead.'))}>Copy recovery codes</button>
-        <button type="button" disabled={identitySaving} onClick={finishRecoverySetup}>I saved the recovery codes</button>
-      </>}
-      {identityError && <p className="account-error" role="alert">{identityError}</p>}
-      {!twoFactor && <button className="admin-identity-signout" type="button" onClick={logout}>Sign out</button>}
+        {!twoFactor && <>
+          <div className="admin-identity-heading">
+            <span className="admin-login-kicker">ADMIN SIGN-IN</span>
+            <span className="admin-identity-step"><b>01</b><i /><span>02</span></span>
+          </div>
+          <h1>Choose your identity</h1>
+          <p className="admin-identity-intro">Your activity and chat replies will be attributed to this profile.</p>
+          <div className="admin-identity-options">
+            {identities.map((option, index) => <button key={option.name} type="button" disabled={identitySaving} onClick={() => chooseIdentity(option.name)}>
+              <span className="admin-identity-avatar-wrap"><img src={option.avatar} alt="" />{identitySaving && <span className="admin-identity-avatar-spinner"><span className="admin-loading-spinner" /></span>}</span>
+              <span className="admin-identity-profile-copy"><small>PROFILE 0{index + 1}</small><strong>{option.name}</strong></span>
+              <span className="admin-identity-profile-arrow" aria-hidden="true">↗</span>
+            </button>)}
+          </div>
+        </>}
+        {twoFactor && !twoFactor.recovery_codes_ready && <>
+          <div className="admin-identity-heading">
+            <span className="admin-login-kicker">TWO-FACTOR AUTHENTICATION</span>
+            <span className="admin-identity-step"><b>02</b><i /><span>02</span></span>
+          </div>
+          <h1>{twoFactor.setup_required ? 'Set up your authenticator' : 'Verify your identity'}</h1>
+          <p className="admin-identity-intro">{twoFactor.setup_required ? `Set up two-factor authentication for ${pendingIdentity?.name}.` : `Enter the current code for ${pendingIdentity?.name}.`}</p>
+          {twoFactor.setup_required && <div className="admin-identity-setup">
+            <div className="admin-identity-qr">
+              <QRCodeSVG value={twoFactor.provisioning_uri} size={208} level="M" includeMargin title={`Authenticator setup QR code for ${pendingIdentity?.name || 'admin identity'}`} />
+            </div>
+            <p className="admin-identity-qr-help">Scan this code with Google Authenticator, Microsoft Authenticator, or another TOTP app.</p>
+            <button type="button" onClick={copySetupSecret}><span aria-hidden="true">▣</span> Copy setup key</button>
+            <details><summary>Can't scan? Enter setup key manually</summary><code>{twoFactor.secret}</code><p>Time-based one-time password (TOTP), 6 digits, 30-second interval.</p></details>
+          </div>}
+          <form className="admin-identity-verify-form" onSubmit={verifyIdentity} aria-busy={identitySaving}>
+            <label htmlFor="admin-verification-code">{useRecoveryCode ? 'Recovery code' : 'Authenticator code'}</label>
+            <input id="admin-verification-code" autoFocus value={verificationCode} onChange={event => setVerificationCode(event.target.value)} placeholder={useRecoveryCode ? 'Enter your recovery code' : '000 000'} inputMode={useRecoveryCode ? 'text' : 'numeric'} autoComplete="one-time-code" maxLength={useRecoveryCode ? 13 : 6} required />
+            {!twoFactor.setup_required && <button type="button" className="admin-identity-recovery-toggle" onClick={() => { setUseRecoveryCode(value => !value); setVerificationCode('') }}>{useRecoveryCode ? 'Use authenticator code' : 'Use recovery code'}</button>}
+            <button className="admin-identity-primary" type="submit" disabled={identitySaving || !verificationCode}>
+              {identitySaving
+                ? <span className="auth-action-progress" role="status"><span className="admin-loading-spinner" aria-hidden="true" />Checking code...</span>
+                : twoFactor.setup_required ? 'Verify and enable' : 'Verify identity'}
+              {!identitySaving && <span aria-hidden="true">→</span>}
+            </button>
+          </form>
+        </>}
+        {twoFactor?.recovery_codes_ready && <div className="admin-identity-recovery-state">
+          <span className="admin-identity-recovery-mark" aria-hidden="true">✓</span>
+          <div className="admin-identity-heading">
+            <span className="admin-login-kicker">SETUP COMPLETE</span>
+            <span className="admin-identity-step"><b>02</b><i /><span>02</span></span>
+          </div>
+          <h1>Save your recovery codes</h1>
+          <p className="admin-identity-intro">These codes work once each. Store them somewhere private before continuing.</p>
+          <div className="admin-identity-recovery-codes">{recoveryCodes.map(code => <code key={code}>{code}</code>)}</div>
+          <button className="admin-identity-copy-codes" type="button" onClick={() => navigator.clipboard.writeText(recoveryCodes.join('\n')).catch(() => setIdentityError('Copy failed. Select and copy the codes instead.'))}>Copy recovery codes</button>
+          <button className="admin-identity-primary" type="button" disabled={identitySaving} onClick={finishRecoverySetup}>I saved the recovery codes <span aria-hidden="true">→</span></button>
+        </div>}
+        {identityError && <p className="admin-identity-error" role="alert">{identityError}</p>}
+        {!twoFactor && <button className="admin-identity-signout" type="button" onClick={logout}>Sign out</button>}
+      </div>
+      <footer className="admin-login-footer"><span>© {new Date().getFullYear()} Boldstone Investments</span><span>Need help? <a href="mailto:boldstone.investments@gmail.com">Contact support</a></span></footer>
     </section>
   </main>
 
