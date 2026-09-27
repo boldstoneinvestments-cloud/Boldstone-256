@@ -378,7 +378,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-identity-story { min-width: 0; }
 .admin-identity-workspace { padding-right: clamp(28px, 5vw, 76px); padding-left: clamp(28px, 5vw, 76px); }
 .admin-identity-panel { width: min(100%, 530px); padding: 0; border: 0; background: transparent; box-shadow: none; }
-.admin-identity-2fa-banner { display: grid; grid-template-columns: 38px minmax(0, 1fr); align-items: center; gap: 12px; margin: 0 0 25px; padding: 14px 15px; border: 1px solid #dce8dc; border-left: 3px solid #0f8972; border-radius: 6px; background: #eff5ed; color: #52675c; font-size: 11px; line-height: 1.6; }
+.admin-identity-2fa-banner { display: grid; grid-template-columns: 38px minmax(0, 1fr); align-items: center; gap: 12px; margin: 0 0 25px; padding: 14px 15px; border: 1px solid #dce8dc; border-radius: 6px; background: #eff5ed; color: #52675c; font-size: 11px; line-height: 1.6; }
 .admin-identity-banner-icon { display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid #d3e2d4; border-radius: 50%; color: #0b705d; font-size: 10px; font-weight: 800; }
 .admin-identity-2fa-banner strong, .admin-identity-2fa-banner small { display: block; }
 .admin-identity-2fa-banner strong { margin-bottom: 3px; color: #254a3c; font-size: 11px; }
