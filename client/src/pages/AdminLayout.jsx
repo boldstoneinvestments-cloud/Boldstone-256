@@ -231,7 +231,10 @@ export default function AdminLayout() {
           </div>}
           <form className="admin-identity-verify-form" onSubmit={verifyIdentity} aria-busy={identitySaving}>
             <label htmlFor="admin-verification-code">{useRecoveryCode ? 'Recovery code' : 'Authenticator code'}</label>
-            <input id="admin-verification-code" autoFocus value={verificationCode} onChange={event => setVerificationCode(event.target.value)} placeholder={useRecoveryCode ? 'Enter your recovery code' : '000 000'} inputMode={useRecoveryCode ? 'text' : 'numeric'} autoComplete="one-time-code" maxLength={useRecoveryCode ? 13 : 6} required />
+            <input id="admin-verification-code" autoFocus value={verificationCode} onChange={event => setVerificationCode(useRecoveryCode
+              ? event.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 13)
+              : event.target.value.replace(/\D/g, '').slice(0, 6))} placeholder={useRecoveryCode ? 'Enter your recovery code' : '000000'} inputMode={useRecoveryCode ? 'text' : 'numeric'} autoComplete="one-time-code" maxLength={useRecoveryCode ? 24 : 16} required />
+            {!useRecoveryCode && <small className="admin-identity-code-hint">Enter the current six-digit code. It refreshes every 30 seconds.</small>}
             {!twoFactor.setup_required && <button type="button" className="admin-identity-recovery-toggle" onClick={() => { setUseRecoveryCode(value => !value); setVerificationCode('') }}>{useRecoveryCode ? 'Use authenticator code' : 'Use recovery code'}</button>}
             <button className="admin-identity-primary" type="submit" disabled={identitySaving || !verificationCode}>
               {identitySaving

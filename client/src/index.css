@@ -423,6 +423,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-identity-verify-form input::placeholder { color: #b1bcb4; }
 .admin-identity-verify-form input:focus { border-color: #0f8972; box-shadow: 0 0 0 3px rgba(15,137,114,.1); }
 .admin-identity-verify-form input[inputmode="text"] { font-size: 14px; letter-spacing: 1px; text-align: left; }
+.admin-identity-code-hint { color: #829087; font-size: 10px; line-height: 1.5; }
 .admin-identity-recovery-toggle { justify-self: end; min-height: 28px; padding: 5px 0; border: 0; background: transparent; color: #0b705d; font: inherit; font-size: 10px; font-weight: 700; cursor: pointer; }
 .admin-identity-primary { display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%; min-height: 47px; margin-top: 5px; padding: 10px 14px; border: 0; border-radius: 6px; background: #0c5d4d; color: #fff; font: inherit; font-size: 11px; font-weight: 750; cursor: pointer; transition: background .18s, transform .18s; }
 .admin-identity-primary:hover:not(:disabled) { transform: translateY(-1px); background: #084d40; }
