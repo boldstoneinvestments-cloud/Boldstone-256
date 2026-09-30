@@ -1,13 +1,42 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faPlus, faUpload } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faLink, faPlus, faUpload } from '@fortawesome/free-solid-svg-icons'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app')
   ? configuredBackend.replace(/\/$/, '')
   : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024
+const MAX_IMAGE_DIMENSION = 1800
+
+const optimizeProductImage = async file => {
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) return file
+
+  let bitmap
+  try {
+    bitmap = await createImageBitmap(file)
+    const maxDimension = Math.max(bitmap.width, bitmap.height)
+    const scale = Math.min(1, MAX_IMAGE_DIMENSION / maxDimension)
+    if (scale === 1 && file.size < 350 * 1024) return file
+
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale))
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale))
+    const context = canvas.getContext('2d')
+    if (!context) return file
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
+
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', 0.82))
+    if (!blob || blob.size >= file.size) return file
+    const name = file.name.replace(/\.[^.]+$/, '') || 'product-image'
+    return new File([blob], `${name}.webp`, { type: 'image/webp', lastModified: Date.now() })
+  } catch {
+    return file
+  } finally {
+    bitmap?.close()
+  }
+}
 
 const CATEGORIES = [
   { value: 'seedlings', label: 'Coffee Seedlings' },
@@ -40,6 +69,9 @@ export default function AdminProductEditor() {
   const [authed, setAuthed] = useState(null)
   const [saving, setSaving] = useState(false)
   const [uploadingImage, setUploadingImage] = useState(false)
+  const [preparingImage, setPreparingImage] = useState(false)
+  const [imageUploaded, setImageUploaded] = useState(false)
+  const [draggingImage, setDraggingImage] = useState(false)
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
 
@@ -49,6 +81,7 @@ export default function AdminProductEditor() {
       setLoading(false)
       setForm(emptyProduct())
       setDetails([newDetail()])
+      setImageUploaded(false)
       return undefined
     }
 
@@ -65,6 +98,7 @@ export default function AdminProductEditor() {
         if (current) {
           const product = data.product
           setForm({ ...product, price: String(product.price), varieties: (product.varieties || []).join('\n') })
+          setImageUploaded(product.image.includes('/boldstone/products/'))
           const productDetails = Object.entries(product.details || {}).map(([label, value]) => ({
             id: `${label}-${Math.random()}`,
             label,
@@ -88,16 +122,14 @@ export default function AdminProductEditor() {
   const updateField = event => {
     const { name, value, type, checked } = event.target
     setForm(current => ({ ...current, [name]: type === 'checkbox' ? checked : value }))
+    if (name === 'image') setImageUploaded(false)
   }
 
   const updateDetail = (id, field, value) => {
     setDetails(current => current.map(detail => detail.id === id ? { ...detail, [field]: value } : detail))
   }
 
-  const uploadImage = async event => {
-    const input = event.target
-    const file = input.files?.[0]
-    input.value = ''
+  const uploadImage = async file => {
     if (!file) return
     if (!file.type.startsWith('image/')) {
       setError('Choose an image file.')
@@ -108,9 +140,12 @@ export default function AdminProductEditor() {
       return
     }
     setUploadingImage(true)
+    setPreparingImage(true)
     setError('')
     setMessage('')
     try {
+      const uploadFile = await optimizeProductImage(file)
+      setPreparingImage(false)
       const signatureResponse = await fetch(`${BACKEND}/api/admin/shop/products/upload-signature`, {
         method: 'POST',
         credentials: 'include',
@@ -123,7 +158,7 @@ export default function AdminProductEditor() {
       if (!signatureResponse.ok) throw new Error(signatureData.error || 'Cloudinary is not configured on the backend.')
 
       const uploadData = new FormData()
-      uploadData.append('file', file)
+      uploadData.append('file', uploadFile)
       uploadData.append('api_key', signatureData.api_key)
       uploadData.append('timestamp', signatureData.timestamp)
       uploadData.append('folder', signatureData.folder)
@@ -135,12 +170,27 @@ export default function AdminProductEditor() {
       const data = await response.json().catch(() => ({}))
       if (!response.ok || !data.secure_url) throw new Error(data.error?.message || 'Image upload failed.')
       setForm(current => ({ ...current, image: data.secure_url }))
+      setImageUploaded(true)
       setMessage('Image uploaded. Save the product to publish it.')
     } catch (uploadError) {
       setError(uploadError.message || 'Image upload failed. You can still use an image URL.')
     } finally {
+      setPreparingImage(false)
       setUploadingImage(false)
     }
+  }
+
+  const selectImage = event => {
+    const input = event.currentTarget
+    const file = input.files?.[0]
+    input.value = ''
+    uploadImage(file)
+  }
+
+  const handleImageDrop = event => {
+    event.preventDefault()
+    setDraggingImage(false)
+    uploadImage(event.dataTransfer.files?.[0])
   }
 
   const saveProduct = async event => {
@@ -211,16 +261,26 @@ export default function AdminProductEditor() {
         <label className="admin-product-field-wide">Product name<input name="name" value={form.name} onChange={updateField} maxLength="200" required /></label>
         <label>Price (UGX)<input name="price" type="number" min="0" step="1" value={form.price} onChange={updateField} required /></label>
         <label>Unit<input name="unit" value={form.unit} onChange={updateField} maxLength="50" placeholder="per kg" required /></label>
-        <div className="admin-product-image-field admin-product-field-wide">
-          <label htmlFor="product-image-url">Image URL</label>
-          <input id="product-image-url" name="image" type="url" value={form.image} onChange={updateField} placeholder="https://..." required />
-          <label className={`admin-product-upload-button${uploadingImage ? ' is-uploading' : ''}`} title="Upload a product photo">
-            <input type="file" accept="image/*" onChange={uploadImage} disabled={uploadingImage} />
-            <FontAwesomeIcon icon={faUpload} /> {uploadingImage ? 'Uploading photo...' : 'Upload photo'}
-          </label>
-          <small>Upload an image (max 10 MB) or paste an image URL. Uploads require Cloudinary credentials on the backend.</small>
+        <div
+          className={`admin-product-image-field admin-product-field-wide${draggingImage ? ' is-dragging' : ''}`}
+          onDragOver={event => { event.preventDefault(); setDraggingImage(true) }}
+          onDragLeave={() => setDraggingImage(false)}
+          onDrop={handleImageDrop}
+        >
+          {!imageUploaded && <>
+            <label htmlFor="product-image-url">Image URL</label>
+            <input id="product-image-url" name="image" type="url" value={form.image} onChange={updateField} placeholder="https://..." required />
+          </>}
+          <div className="admin-product-image-controls">
+            <label className={`admin-product-upload-button${uploadingImage ? ' is-uploading' : ''}`} title="Upload or drop a product photo">
+              <input type="file" accept="image/*" onChange={selectImage} disabled={uploadingImage} />
+              <FontAwesomeIcon icon={faUpload} /> {preparingImage ? 'Preparing photo...' : uploadingImage ? 'Uploading photo...' : 'Upload photo'}
+            </label>
+            {imageUploaded && <button className="admin-product-use-url-button" type="button" onClick={() => setImageUploaded(false)}><FontAwesomeIcon icon={faLink} /> Use image URL</button>}
+          </div>
+          <small>{draggingImage ? 'Drop image to upload' : imageUploaded ? 'Image uploaded. Drop another image to replace it.' : 'Drop an image here, upload a photo, or paste an image URL.'}</small>
         </div>
-        {form.image && <img className="admin-product-image-preview" src={form.image} alt="Product preview" />}
+        {form.image && <img className="admin-product-image-preview" src={form.image} alt="Full product image preview" loading="lazy" decoding="async" />}
         <label className="admin-product-field-wide">Description<textarea name="description" value={form.description} onChange={updateField} rows="4" /></label>
         <label>Badge<input name="badge" value={form.badge} onChange={updateField} maxLength="80" placeholder="Optional" /></label>
         <label className="admin-product-active"><input name="active" type="checkbox" checked={form.active} onChange={updateField} /> Show in public shop</label>

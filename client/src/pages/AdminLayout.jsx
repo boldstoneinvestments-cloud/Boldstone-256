@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
 
@@ -15,6 +15,22 @@ const links = [
   { to: '/admin/activity', label: 'Activity' },
   { to: '/admin/blog', label: 'Blog manager' },
 ]
+
+const adminPageLoaders = {
+  '/admin': () => import('./AdminDashboard'),
+  '/admin/orders': () => import('./AdminOrders'),
+  '/admin/products': () => Promise.all([import('./AdminProducts'), import('./AdminProductEditor')]),
+  '/admin/lease-applications': () => import('./AdminApplications'),
+  '/admin/chat': () => import('./AdminChat'),
+  '/admin/users': () => import('./AdminUsers'),
+  '/admin/activity': () => import('./AdminActivity'),
+  '/admin/blog': () => import('./AdminBlog'),
+}
+
+const preloadAdminPage = path => {
+  const load = adminPageLoaders[path]
+  if (load) load().catch(() => {})
+}
 
 export default function AdminLayout() {
   const navigate = useNavigate()
@@ -74,6 +90,20 @@ export default function AdminLayout() {
     const interval = window.setInterval(sendPresence, 20000)
     return () => window.clearInterval(interval)
   }, [authorized, identity, pathname])
+
+  useEffect(() => {
+    if (!authorized || !identity) return undefined
+    const preloadCommonPages = () => {
+      preloadAdminPage('/admin')
+      preloadAdminPage('/admin/products')
+    }
+    if (window.requestIdleCallback) {
+      const idleId = window.requestIdleCallback(preloadCommonPages, { timeout: 1500 })
+      return () => window.cancelIdleCallback(idleId)
+    }
+    const timeoutId = window.setTimeout(preloadCommonPages, 250)
+    return () => window.clearTimeout(timeoutId)
+  }, [authorized, identity])
 
   const chooseIdentity = async identityName => {
     setIdentitySaving(true)
@@ -300,7 +330,7 @@ export default function AdminLayout() {
         <div className="admin-sidebar-brand"><img className="admin-brand-mark" src="https://res.cloudinary.com/cwj8d38f/image/upload/v1789729870/Boldstone_logo_hiv7pl.jpg" alt="Boldstone Investments" /><div><strong>Boldstone</strong><small>Admin workspace</small></div><button className="admin-close-button" aria-label="Close admin menu" onClick={() => setOpen(false)}>Close</button></div>
         <nav className="admin-sidebar-nav" aria-label="Admin pages">
           <span className="admin-nav-label">Workspace</span>
-          {links.map(link => <NavLink key={link.to} to={link.to} end={link.end} onClick={() => setOpen(false)}><span>{link.label}</span></NavLink>)}
+          {links.map(link => <NavLink key={link.to} to={link.to} end={link.end} onPointerEnter={() => preloadAdminPage(link.to)} onFocus={() => preloadAdminPage(link.to)} onClick={() => setOpen(false)}><span>{link.label}</span></NavLink>)}
         </nav>
         <div className="admin-sidebar-identity">
           <img src={identity.avatar} alt="" />
@@ -312,7 +342,7 @@ export default function AdminLayout() {
           <button onClick={logout}>Sign out</button>
         </div>
       </aside>
-      <main className="admin-main"><Outlet context={{ identity }} /></main>
+      <main className="admin-main"><Suspense fallback={<div className="admin-auth-check" aria-busy="true"><span className="admin-loading-spinner" aria-hidden="true" /><span>Loading page...</span></div>}><Outlet context={{ identity }} /></Suspense></main>
     </div>
   )
 }
