@@ -69,7 +69,7 @@ export default function AdminProducts() {
             <td>{CATEGORIES[product.category] || product.category}</td>
             <td>UGX {Number(product.price).toLocaleString()} <small>{product.unit}</small></td>
             <td><small className={product.active ? 'admin-table-status' : 'admin-table-muted'}>{product.active ? 'Active' : 'Hidden'}</small></td>
-            <td><button className="admin-table-action" type="button" onClick={() => navigate(`/admin/products/${encodeURIComponent(product.id)}/edit`)}><FontAwesomeIcon icon={faPenToSquare} /> Edit</button></td>
+            <td><button className="admin-table-action" type="button" onClick={() => navigate(`/admin/products/${encodeURIComponent(product.slug || product.id)}/edit`)}><FontAwesomeIcon icon={faPenToSquare} /> Edit</button></td>
           </tr>)}</tbody>
         </table>
       </div>}

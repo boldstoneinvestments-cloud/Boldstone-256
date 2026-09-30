@@ -229,6 +229,9 @@ export default function AdminProductEditor() {
           value: String(value),
         }))
         setDetails(savedDetails.length ? savedDetails : [newDetail()])
+        if (data.product.slug && data.product.slug !== productId) {
+          navigate(`/admin/products/${encodeURIComponent(data.product.slug)}/edit`, { replace: true })
+        }
       } else {
         navigate('/admin/products', { replace: true, state: { message: 'Product added to the shop.' } })
       }
