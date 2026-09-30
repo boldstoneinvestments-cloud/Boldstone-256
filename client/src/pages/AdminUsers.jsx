@@ -21,6 +21,7 @@ export default function AdminUsers() {
   const [editForm, setEditForm] = useState(emptyForm)
   const [selectedCustomer, setSelectedCustomer] = useState(null)
   const [resetLink, setResetLink] = useState('')
+  const [resetEmailSent, setResetEmailSent] = useState(false)
   const [resetLinkLoading, setResetLinkLoading] = useState(false)
   const [resetLinkMessage, setResetLinkMessage] = useState('')
   const [resetLinkError, setResetLinkError] = useState('')
@@ -57,6 +58,7 @@ export default function AdminUsers() {
   const openCustomer = customer => {
     setSelectedCustomer(customer)
     setResetLink('')
+    setResetEmailSent(false)
     setResetLinkMessage('')
     setResetLinkError('')
   }
@@ -64,6 +66,7 @@ export default function AdminUsers() {
   const closeCustomer = () => {
     setSelectedCustomer(null)
     setResetLink('')
+    setResetEmailSent(false)
     setResetLinkMessage('')
     setResetLinkError('')
   }
@@ -81,6 +84,7 @@ export default function AdminUsers() {
     if (!selectedCustomer?.account_id) return
     setResetLinkLoading(true)
     setResetLink('')
+    setResetEmailSent(false)
     setResetLinkMessage('')
     setResetLinkError('')
     try {
@@ -94,7 +98,9 @@ export default function AdminUsers() {
         return
       }
       if (!response.ok) throw new Error(data.error || 'Could not create a password reset link.')
-      setResetLink(data.reset_url)
+      setResetEmailSent(data.email_sent === true)
+      setResetLink(data.reset_url || '')
+      setResetLinkMessage(data.message || '')
     } catch (resetError) {
       setResetLinkError(resetError.message || 'Could not create a password reset link.')
     } finally {
@@ -280,9 +286,9 @@ export default function AdminUsers() {
           <div className="admin-customer-password-reset">
             <h3>Password recovery</h3>
             {selectedCustomer.account_id ? <>
-              <p>Generate a secure, single-use reset link to share with this customer.</p>
+              <p>Send the reset link by email, or copy it to share directly if email delivery is unavailable.</p>
               <button className="admin-table-action" type="button" onClick={generateCustomerResetLink} disabled={resetLinkLoading}>
-                {resetLinkLoading ? 'Generating...' : resetLink ? 'Generate a new link' : 'Generate reset link'}
+                {resetLinkLoading ? 'Sending...' : resetEmailSent ? 'Send another reset email' : resetLink ? 'Generate a new reset link' : 'Send reset email'}
               </button>
               {resetLink && <div className="admin-customer-reset-link">
                 <label htmlFor="customer-reset-link">One-time reset link</label>
