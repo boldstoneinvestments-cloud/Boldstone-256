@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 
 const configuredBackend = import.meta.env.VITE_API_URL
@@ -20,6 +20,8 @@ export default function AdminUsers() {
   const [editingId, setEditingId] = useState(null)
   const [editForm, setEditForm] = useState(emptyForm)
   const [selectedCustomer, setSelectedCustomer] = useState(null)
+  const [customerRecordsLoading, setCustomerRecordsLoading] = useState(false)
+  const [customerRecordsError, setCustomerRecordsError] = useState('')
   const [resetLink, setResetLink] = useState('')
   const [resetEmailQueued, setResetEmailQueued] = useState(false)
   const [resetLinkLoading, setResetLinkLoading] = useState(false)
@@ -27,6 +29,7 @@ export default function AdminUsers() {
   const [resetLinkError, setResetLinkError] = useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const customerRecordsRequest = useRef(0)
 
   const loadUsers = async () => {
     try {
@@ -55,16 +58,44 @@ export default function AdminUsers() {
 
   const update = event => setForm(current => ({ ...current, [event.target.name]: event.target.value }))
 
-  const openCustomer = customer => {
-    setSelectedCustomer(customer)
+  const openCustomer = async customer => {
+    const requestId = ++customerRecordsRequest.current
+    setSelectedCustomer({ ...customer, records: [] })
+    setCustomerRecordsLoading(true)
+    setCustomerRecordsError('')
     setResetLink('')
     setResetEmailQueued(false)
     setResetLinkMessage('')
     setResetLinkError('')
+    try {
+      const response = await fetch(`${BACKEND}/api/admin/customers?email=${encodeURIComponent(customer.email)}`, { credentials: 'include' })
+      const data = await response.json().catch(() => ({}))
+      if (response.status === 401 || response.status === 403) {
+        setAuthed(false)
+        return
+      }
+      if (!response.ok) throw new Error('Could not load customer records.')
+      if (requestId !== customerRecordsRequest.current) return
+      const customerDetails = data.customers?.[0]
+      if (customerDetails) {
+        setSelectedCustomer(current => current?.email?.toLowerCase() === customer.email.toLowerCase()
+          ? { ...current, ...customerDetails }
+          : current)
+      }
+    } catch (requestError) {
+      if (requestId === customerRecordsRequest.current) {
+        setCustomerRecordsError(requestError.message || 'Could not load customer records.')
+      }
+    } finally {
+      if (requestId === customerRecordsRequest.current) setCustomerRecordsLoading(false)
+    }
   }
 
   const closeCustomer = () => {
+    customerRecordsRequest.current += 1
     setSelectedCustomer(null)
+    setCustomerRecordsLoading(false)
+    setCustomerRecordsError('')
     setResetLink('')
     setResetEmailQueued(false)
     setResetLinkMessage('')
@@ -281,7 +312,7 @@ export default function AdminUsers() {
           <div className="admin-customer-modal-header"><div><span className="admin-eyebrow">Customer details</span><h2 id="customer-modal-title">{selectedCustomer.name || selectedCustomer.email}</h2><p>{selectedCustomer.email}</p></div><button className="admin-user-cancel" type="button" onClick={closeCustomer}>Close</button></div>
           <div className="admin-customer-summary"><div><small>Phone</small><strong>{selectedCustomer.phone || 'Not provided'}</strong></div><div><small>Username</small><strong>{selectedCustomer.username || 'No account'}</strong></div><div><small>Sources</small><strong>{(selectedCustomer.sources || []).join(', ') || 'Unknown'}</strong></div></div>
           <div className="admin-customer-records"><h3>Why they signed up</h3>
-            {(selectedCustomer.records || []).map((record, index) => <article key={`${record.source}-${record.date}-${index}`}><div><strong>{record.source}</strong><span>{record.reason}</span><time>{record.date ? new Date(record.date).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : 'Date unavailable'}</time></div><dl>{Object.entries(record.details || {}).filter(([, value]) => value !== '' && value !== null && value !== undefined).map(([label, value]) => <div key={label}><dt>{label.replaceAll('_', ' ')}</dt><dd>{String(value)}</dd></div>)}</dl></article>)}
+            {customerRecordsLoading ? <p>Loading customer records...</p> : customerRecordsError ? <p className="admin-form-error" role="alert">{customerRecordsError}</p> : selectedCustomer.records?.length ? selectedCustomer.records.map((record, index) => <article key={`${record.source}-${record.date}-${index}`}><div><strong>{record.source}</strong><span>{record.reason}</span><time>{record.date ? new Date(record.date).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : 'Date unavailable'}</time></div><dl>{Object.entries(record.details || {}).filter(([, value]) => value !== '' && value !== null && value !== undefined).map(([label, value]) => <div key={label}><dt>{label.replaceAll('_', ' ')}</dt><dd>{String(value)}</dd></div>)}</dl></article>) : <p>No customer records found.</p>}
           </div>
           <div className="admin-customer-password-reset">
             <h3>Password recovery</h3>
