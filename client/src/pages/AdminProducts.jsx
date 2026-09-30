@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPenToSquare, faPlus, faRotate } from '@fortawesome/free-solid-svg-icons'
+import { faPenToSquare, faPlus, faRotate, faSkull, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app')
@@ -19,6 +19,9 @@ export default function AdminProducts() {
   const location = useLocation()
   const [authed, setAuthed] = useState(null)
   const [products, setProducts] = useState([])
+  const [productToDelete, setProductToDelete] = useState(null)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -45,6 +48,30 @@ export default function AdminProducts() {
 
   useEffect(() => { loadProducts() }, [loadProducts])
 
+  const deleteProduct = async () => {
+    if (!productToDelete || deleting) return
+    setDeleting(true)
+    setDeleteError('')
+    try {
+      const response = await fetch(`${BACKEND}/api/admin/shop/products/${encodeURIComponent(productToDelete.slug || productToDelete.id)}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      })
+      const data = await response.json().catch(() => ({}))
+      if (response.status === 401 || response.status === 403) {
+        setAuthed(false)
+        return
+      }
+      if (!response.ok) throw new Error(data.error || 'Could not delete this product.')
+      setProducts(current => current.filter(product => product.id !== productToDelete.id))
+      setProductToDelete(null)
+    } catch (deleteFailure) {
+      setDeleteError(deleteFailure.message || 'Could not delete this product.')
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   if (authed === null && loading) return <div className="admin-state">Loading shop products...</div>
   if (!authed) return <Navigate to="/admin/sign-in" replace />
 
@@ -69,10 +96,26 @@ export default function AdminProducts() {
             <td>{CATEGORIES[product.category] || product.category}</td>
             <td>UGX {Number(product.price).toLocaleString()} <small>{product.unit}</small></td>
             <td><small className={product.active ? 'admin-table-status' : 'admin-table-muted'}>{product.active ? 'Active' : 'Hidden'}</small></td>
-            <td><button className="admin-table-action" type="button" onClick={() => navigate(`/admin/products/${encodeURIComponent(product.slug || product.id)}/edit`)}><FontAwesomeIcon icon={faPenToSquare} /> Edit</button></td>
+            <td className="admin-product-row-actions">
+              <button className="admin-table-action" type="button" onClick={() => navigate(`/admin/products/${encodeURIComponent(product.slug || product.id)}/edit`)}><FontAwesomeIcon icon={faPenToSquare} /> Edit</button>
+              <button className="admin-product-delete-action" type="button" title={`Delete ${product.name}`} aria-label={`Delete ${product.name}`} onClick={() => { setDeleteError(''); setProductToDelete(product) }}><FontAwesomeIcon icon={faTrash} /></button>
+            </td>
           </tr>)}</tbody>
         </table>
       </div>}
     </div>
+    {productToDelete && <div className="admin-modal-backdrop" role="presentation" onClick={() => { if (!deleting) setProductToDelete(null) }}>
+      <section className="admin-product-delete-modal" role="dialog" aria-modal="true" aria-labelledby="admin-product-delete-title" onClick={event => event.stopPropagation()} onKeyDown={event => { if (event.key === 'Escape' && !deleting) setProductToDelete(null) }} tabIndex={-1}>
+        <div className="admin-product-delete-icon" aria-hidden="true"><FontAwesomeIcon icon={faSkull} /></div>
+        <span className="admin-product-delete-kicker">Permanent action</span>
+        <h2 id="admin-product-delete-title">Delete {productToDelete.name}?</h2>
+        <p>This removes the product from the shop and cannot be undone. Existing orders are preserved; if any orders reference this product, deletion will be blocked.</p>
+        {deleteError && <p className="admin-product-delete-error" role="alert">{deleteError}</p>}
+        <div className="admin-product-delete-modal-actions">
+          <button className="admin-user-cancel" type="button" onClick={() => setProductToDelete(null)} disabled={deleting} autoFocus>Cancel</button>
+          <button className="admin-product-delete-confirm" type="button" onClick={deleteProduct} disabled={deleting}><FontAwesomeIcon icon={faTrash} /> {deleting ? 'Deleting...' : 'Delete product'}</button>
+        </div>
+      </section>
+    </div>}
   </section>
 }
