@@ -294,7 +294,7 @@ export default function ChatWidget() {
             </div>
             <div>
               <p style={{ color: '#fff', fontWeight: 700, fontSize: 14, margin: 0 }}>{(sending || waitingForAi || messages[messages.length - 1]?.is_ai) ? 'Boldstone AI' : 'Boldstone Support'}</p>
-              <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, margin: 0 }}>{(sending || waitingForAi) ? AI_WAITING_MESSAGES[waitingMessageIndex] : (messages[messages.length - 1]?.is_ai ? 'Friendly answers from Boldstone AI' : 'We typically reply within a few hours')}</p>
+              <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 12, margin: 0 }}>{(sending || waitingForAi) ? AI_WAITING_MESSAGES[waitingMessageIndex] : (messages[messages.length - 1]?.is_ai ? 'Friendly answers from Boldstone AI' : 'We typically reply within a short time')}</p>
             </div>
           </div>
 
