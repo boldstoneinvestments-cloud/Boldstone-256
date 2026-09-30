@@ -227,7 +227,19 @@ export default function AdminLayout() {
           <p className="admin-identity-intro">{twoFactor.setup_required ? `Set up two-factor authentication for ${pendingIdentity?.name}.` : `Enter the current code for ${pendingIdentity?.name}.`}</p>
           {twoFactor.setup_required && <div className="admin-identity-setup">
             <div className="admin-identity-qr">
-              <QRCodeSVG value={twoFactor.provisioning_uri} size={208} level="M" includeMargin title={`Authenticator setup QR code for ${pendingIdentity?.name || 'admin identity'}`} />
+              <QRCodeSVG
+                value={twoFactor.provisioning_uri}
+                size={208}
+                level="H"
+                includeMargin
+                imageSettings={{
+                  src: 'https://res.cloudinary.com/cwj8d38f/image/upload/v1789729870/Boldstone_logo_hiv7pl.jpg',
+                  width: 48,
+                  height: 36,
+                  excavate: true,
+                }}
+                title={`Authenticator setup QR code for ${pendingIdentity?.name || 'admin identity'}`}
+              />
             </div>
             <p className="admin-identity-qr-help">Scan this code with Google Authenticator, Microsoft Authenticator, or another TOTP app.</p>
             <button type="button" onClick={copySetupSecret}><span aria-hidden="true">▣</span> Copy setup key</button>
