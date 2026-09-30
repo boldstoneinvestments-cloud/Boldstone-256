@@ -21,7 +21,7 @@ export default function AdminUsers() {
   const [editForm, setEditForm] = useState(emptyForm)
   const [selectedCustomer, setSelectedCustomer] = useState(null)
   const [resetLink, setResetLink] = useState('')
-  const [resetEmailSent, setResetEmailSent] = useState(false)
+  const [resetEmailQueued, setResetEmailQueued] = useState(false)
   const [resetLinkLoading, setResetLinkLoading] = useState(false)
   const [resetLinkMessage, setResetLinkMessage] = useState('')
   const [resetLinkError, setResetLinkError] = useState('')
@@ -58,7 +58,7 @@ export default function AdminUsers() {
   const openCustomer = customer => {
     setSelectedCustomer(customer)
     setResetLink('')
-    setResetEmailSent(false)
+    setResetEmailQueued(false)
     setResetLinkMessage('')
     setResetLinkError('')
   }
@@ -66,7 +66,7 @@ export default function AdminUsers() {
   const closeCustomer = () => {
     setSelectedCustomer(null)
     setResetLink('')
-    setResetEmailSent(false)
+    setResetEmailQueued(false)
     setResetLinkMessage('')
     setResetLinkError('')
   }
@@ -84,7 +84,7 @@ export default function AdminUsers() {
     if (!selectedCustomer?.account_id) return
     setResetLinkLoading(true)
     setResetLink('')
-    setResetEmailSent(false)
+    setResetEmailQueued(false)
     setResetLinkMessage('')
     setResetLinkError('')
     try {
@@ -98,7 +98,7 @@ export default function AdminUsers() {
         return
       }
       if (!response.ok) throw new Error(data.error || 'Could not create a password reset link.')
-      setResetEmailSent(data.email_sent === true)
+      setResetEmailQueued(data.email_queued === true)
       setResetLink(data.reset_url || '')
       setResetLinkMessage(data.message || '')
     } catch (resetError) {
@@ -288,7 +288,7 @@ export default function AdminUsers() {
             {selectedCustomer.account_id ? <>
               <p>Send the reset link by email, or copy it to share directly if email delivery is unavailable.</p>
               <button className="admin-table-action" type="button" onClick={generateCustomerResetLink} disabled={resetLinkLoading}>
-                {resetLinkLoading ? 'Sending...' : resetEmailSent ? 'Send another reset email' : resetLink ? 'Generate a new reset link' : 'Send reset email'}
+                {resetLinkLoading ? 'Queueing...' : resetEmailQueued ? 'Queue another reset email' : resetLink ? 'Generate a new reset link' : 'Send reset email'}
               </button>
               {resetLink && <div className="admin-customer-reset-link">
                 <label htmlFor="customer-reset-link">One-time reset link</label>
