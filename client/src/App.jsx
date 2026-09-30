@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { CartProvider } from './CartContext'
 import Navbar from './components/layout/Navbar'
@@ -15,6 +15,7 @@ import Blog from './pages/Blog'
 import AdminBlog from './pages/AdminBlog'
 import AdminOrders from './pages/AdminOrders'
 import AdminProducts from './pages/AdminProducts'
+import AdminProductEditor from './pages/AdminProductEditor'
 import AdminOrderDetail from './pages/AdminOrderDetail'
 import AdminLogin from './pages/AdminLogin'
 import AdminLayout from './pages/AdminLayout'
@@ -52,8 +53,17 @@ function GoogleAuthHandoff() {
 
 function AppInner() {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const isAdmin = pathname.startsWith('/admin')
   const isAccountAuth = pathname === '/account/sign-in' || pathname === '/account/sign-up'
+
+  useEffect(() => {
+    const redirect = sessionStorage.getItem('redirect')
+    if (!redirect) return
+    sessionStorage.removeItem('redirect')
+    navigate(redirect, { replace: true })
+  }, [navigate])
+
   return (
     <div className="min-h-screen flex flex-col">
       <ScrollToTop />
@@ -80,6 +90,8 @@ function AppInner() {
             <Route index element={<AdminDashboard />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="products" element={<AdminProducts />} />
+            <Route path="products/new" element={<AdminProductEditor />} />
+            <Route path="products/:productId/edit" element={<AdminProductEditor />} />
             <Route path="orders/:id" element={<AdminOrderDetail />} />
             <Route path="lease-applications" element={<AdminApplications />} />
             <Route path="chat" element={<AdminChat />} />
