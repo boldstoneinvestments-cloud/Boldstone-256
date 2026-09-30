@@ -33,17 +33,54 @@ const preloadAdminPage = path => {
   if (load) load().catch(() => {})
 }
 
+const ADMIN_SESSION_CACHE_KEY = 'boldstone:admin-session-cache'
+const ADMIN_SESSION_CACHE_DURATION_MS = 60_000
+
+function readCachedAdminSession() {
+  try {
+    const cached = JSON.parse(sessionStorage.getItem(ADMIN_SESSION_CACHE_KEY) || 'null')
+    if (!cached?.session?.authenticated || cached.expiresAt <= Date.now()) {
+      sessionStorage.removeItem(ADMIN_SESSION_CACHE_KEY)
+      return null
+    }
+    return cached.session
+  } catch {
+    return null
+  }
+}
+
+function writeCachedAdminSession(session) {
+  try {
+    sessionStorage.setItem(ADMIN_SESSION_CACHE_KEY, JSON.stringify({
+      session,
+      expiresAt: Date.now() + ADMIN_SESSION_CACHE_DURATION_MS,
+    }))
+  } catch {
+    return
+  }
+}
+
+function clearCachedAdminSession() {
+  try {
+    sessionStorage.removeItem(ADMIN_SESSION_CACHE_KEY)
+  } catch {
+    return
+  }
+}
+
 export default function AdminLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const { pathname } = location
   const [loginSession] = useState(() => location.state?.adminSession || null)
+  const [cachedSession] = useState(readCachedAdminSession)
   const [loginTwoFactor] = useState(() => location.state?.twoFactor || null)
   const [loginPendingIdentity] = useState(() => location.state?.pendingIdentity || null)
+  const initialSession = loginSession?.authenticated ? loginSession : cachedSession
   const [open, setOpen] = useState(false)
-  const [authorized, setAuthorized] = useState(false)
-  const [identity, setIdentity] = useState(null)
-  const [identities, setIdentities] = useState([])
+  const [authorized, setAuthorized] = useState(Boolean(initialSession?.authenticated))
+  const [identity, setIdentity] = useState(initialSession?.identity || null)
+  const [identities, setIdentities] = useState(initialSession?.identities || [])
   const [identitySaving, setIdentitySaving] = useState(false)
   const [identityError, setIdentityError] = useState('')
   const [twoFactor, setTwoFactor] = useState(loginTwoFactor)
@@ -59,6 +96,7 @@ export default function AdminLayout() {
       setIdentities(loginSession.identities)
       setIdentity(loginSession.identity || null)
       setAuthorized(true)
+      writeCachedAdminSession(loginSession)
       return () => { active = false }
     }
     fetch(`${API}/api/admin/session`, { credentials: 'include' })
@@ -66,18 +104,26 @@ export default function AdminLayout() {
       .then(session => {
         if (!active) return
         if (!session?.authenticated) {
+          clearCachedAdminSession()
+          invalidateAdminProductCache()
+          setAuthorized(false)
           navigate('/admin/sign-in', { replace: true })
           return
         }
+        writeCachedAdminSession(session)
         setIdentities(session.identities || [])
         setIdentity(session.identity || null)
         setAuthorized(true)
       })
       .catch(() => {
-        if (active) navigate('/admin/sign-in', { replace: true })
+        if (active && !cachedSession?.authenticated) navigate('/admin/sign-in', { replace: true })
       })
     return () => { active = false }
-  }, [loginSession, navigate])
+  }, [cachedSession, loginSession, navigate])
+
+  useEffect(() => {
+    if (authorized) writeCachedAdminSession({ authenticated: true, identity, identities })
+  }, [authorized, identity, identities])
 
   useEffect(() => {
     if (!authorized || !identity) return undefined
@@ -156,7 +202,9 @@ export default function AdminLayout() {
 
   const logout = async () => {
     await fetch(`${API}/api/admin/logout`, { method: 'POST', credentials: 'include' }).catch(() => {})
+    clearCachedAdminSession()
     invalidateAdminProductCache()
+    setAuthorized(false)
     navigate('/admin/sign-in')
   }
 
