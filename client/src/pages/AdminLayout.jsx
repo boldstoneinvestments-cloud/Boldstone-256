@@ -8,6 +8,7 @@ const API = configuredBackend && !configuredBackend.includes('boldstone-256-prod
 const links = [
   { to: '/admin', label: 'Dashboard', end: true },
   { to: '/admin/orders', label: 'Orders' },
+  { to: '/admin/products', label: 'Shop products' },
   { to: '/admin/lease-applications', label: 'Lease applications' },
   { to: '/admin/chat', label: 'Chat messages' },
   { to: '/admin/users', label: 'Users' },

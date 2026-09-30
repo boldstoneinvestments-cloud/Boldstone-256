@@ -167,11 +167,15 @@ function ProductCard({ product }) {
     <div className="shop-card">
       <div className="shop-card-img-wrap" style={product.varieties?.length ? { height: '260px' } : undefined}>
         <img src={product.image} alt={product.name} className="shop-card-img" loading="lazy" />
+        {product.badge && <span className="shop-card-badge">{product.badge}</span>}
       </div>
       <div className="shop-card-body">
         <p className="shop-card-variety">{product.variety}</p>
         <h3 className="shop-card-name">{product.name}</h3>
         <p className="shop-card-desc">{product.desc}</p>
+        {Object.keys(product.details || {}).length > 0 && <dl className="shop-card-details">
+          {Object.entries(product.details).map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
+        </dl>}
         {product.varieties?.length ? (
           <VarietyQtyTable varieties={product.varieties} qtys={varietyQtys} onChange={handleVarietyQty} open={tableOpen} onToggle={() => setTableOpen(o => !o)} />
         ) : (
