@@ -1,14 +1,16 @@
+from io import StringIO
 from unittest.mock import MagicMock, patch
 from urllib.parse import parse_qs, urlparse
 import time
 
 from django.contrib.auth import get_user_model
+from django.core.management import call_command
 from django.core import signing
 from django.test import TestCase
 from django.utils import timezone
 from django_otp.oath import TOTP
 from django_otp.plugins.otp_totp.models import TOTPDevice
-from api.models import AdminActivity, AdminPresence, ChatMessage
+from api.models import AdminActivity, AdminPresence, AdminRecoveryCodes, ChatMessage
 
 
 User = get_user_model()
@@ -128,6 +130,33 @@ class PasswordResetTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(self.client.get('/api/admin/users').status_code, 401)
         self.assertFalse(TOTPDevice.objects.get(user=self.admin, name='admin:SSEMATA SABIRA').confirmed)
+
+    def test_reset_admin_two_factor_only_removes_selected_identity(self):
+        TOTPDevice.objects.get_or_create(
+            user=self.admin,
+            name='admin:SSEMATA SABIRA',
+            defaults={'confirmed': True},
+        )
+        TOTPDevice.objects.get_or_create(
+            user=self.admin,
+            name='admin:MOSES ALICWAMU',
+            defaults={'confirmed': True},
+        )
+        recovery = AdminRecoveryCodes.objects.create(
+            user=self.admin,
+            identity_code_hashes={
+                'SSEMATA SABIRA': ['ssemata-hash'],
+                'MOSES ALICWAMU': ['moses-hash'],
+            },
+        )
+
+        call_command('reset_admin_two_factor', 'SSEMATA SABIRA', stdout=StringIO())
+
+        self.assertTrue(User.objects.filter(pk=self.admin.pk).exists())
+        self.assertFalse(TOTPDevice.objects.filter(user=self.admin, name='admin:SSEMATA SABIRA').exists())
+        self.assertTrue(TOTPDevice.objects.filter(user=self.admin, name='admin:MOSES ALICWAMU').exists())
+        recovery.refresh_from_db()
+        self.assertEqual(recovery.identity_code_hashes, {'MOSES ALICWAMU': ['moses-hash']})
 
     def test_admin_totp_throttle_returns_retry_after(self):
         self.start_admin_identity_setup('SSEMATA SABIRA')
