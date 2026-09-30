@@ -217,6 +217,13 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; color: var(--text); backgro
 .admin-customer-records dl div { min-width: 0; }
 .admin-customer-records dt { color: #8a9a96; font-size: 10px; text-transform: capitalize; }
 .admin-customer-records dd { margin-top: 3px; color: #536661; font-size: 12px; overflow-wrap: anywhere; white-space: pre-wrap; }
+.admin-customer-password-reset { margin-top: 22px; padding-top: 18px; border-top: 1px solid #edf1ef; }
+.admin-customer-password-reset h3 { margin-bottom: 8px; color: #0d1f1c; font-size: 16px; }
+.admin-customer-password-reset > p { margin-bottom: 12px; color: #536661; font-size: 12px; line-height: 1.5; }
+.admin-customer-reset-link { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; margin-top: 12px; }
+.admin-customer-reset-link label { grid-column: 1 / -1; color: #70817c; font-size: 11px; font-weight: 700; }
+.admin-customer-reset-link input { min-width: 0; padding: 9px 10px; border: 1px solid #cfe0db; border-radius: 7px; color: #315d54; font: inherit; font-size: 12px; }
+.admin-customer-reset-link button { align-self: stretch; }
 .admin-customer-modal-footer { display: flex; justify-content: flex-end; margin-top: 18px; padding-top: 18px; border-top: 1px solid #edf1ef; }
 .admin-danger-button { padding: 10px 14px; border: 0; border-radius: 8px; background: #b64035; color: #fff; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
 .admin-danger-button:disabled { cursor: wait; opacity: .65; }

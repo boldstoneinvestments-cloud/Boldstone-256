@@ -20,6 +20,10 @@ export default function AdminUsers() {
   const [editingId, setEditingId] = useState(null)
   const [editForm, setEditForm] = useState(emptyForm)
   const [selectedCustomer, setSelectedCustomer] = useState(null)
+  const [resetLink, setResetLink] = useState('')
+  const [resetLinkLoading, setResetLinkLoading] = useState(false)
+  const [resetLinkMessage, setResetLinkMessage] = useState('')
+  const [resetLinkError, setResetLinkError] = useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
@@ -50,6 +54,20 @@ export default function AdminUsers() {
 
   const update = event => setForm(current => ({ ...current, [event.target.name]: event.target.value }))
 
+  const openCustomer = customer => {
+    setSelectedCustomer(customer)
+    setResetLink('')
+    setResetLinkMessage('')
+    setResetLinkError('')
+  }
+
+  const closeCustomer = () => {
+    setSelectedCustomer(null)
+    setResetLink('')
+    setResetLinkMessage('')
+    setResetLinkError('')
+  }
+
   const startEditing = user => {
     setEditingId(user.id)
     setEditForm({ name: user.name || user.username, username: user.username, email: user.email, password: '' })
@@ -58,6 +76,40 @@ export default function AdminUsers() {
   }
 
   const updateEdit = event => setEditForm(current => ({ ...current, [event.target.name]: event.target.value }))
+
+  const generateCustomerResetLink = async () => {
+    if (!selectedCustomer?.account_id) return
+    setResetLinkLoading(true)
+    setResetLink('')
+    setResetLinkMessage('')
+    setResetLinkError('')
+    try {
+      const response = await fetch(`${BACKEND}/api/admin/customers/${selectedCustomer.account_id}/password-reset-link`, {
+        method: 'POST',
+        credentials: 'include',
+      })
+      const data = await response.json().catch(() => ({}))
+      if (response.status === 401 || response.status === 403) {
+        setAuthed(false)
+        return
+      }
+      if (!response.ok) throw new Error(data.error || 'Could not create a password reset link.')
+      setResetLink(data.reset_url)
+    } catch (resetError) {
+      setResetLinkError(resetError.message || 'Could not create a password reset link.')
+    } finally {
+      setResetLinkLoading(false)
+    }
+  }
+
+  const copyCustomerResetLink = async () => {
+    try {
+      await navigator.clipboard.writeText(resetLink)
+      setResetLinkMessage('Reset link copied. Share it directly with the customer.')
+    } catch {
+      setResetLinkError('Copy failed. Select and copy the reset link.')
+    }
+  }
 
   const deleteCustomer = async () => {
     if (!selectedCustomer || !window.confirm(`Delete all records for ${selectedCustomer.name || selectedCustomer.email}?`)) return
@@ -75,7 +127,7 @@ export default function AdminUsers() {
       }
       if (!response.ok) throw new Error(data.error || 'Could not delete customer.')
       setCustomers(current => current.filter(customer => customer.email.toLowerCase() !== selectedCustomer.email.toLowerCase()))
-      setSelectedCustomer(null)
+      closeCustomer()
     } catch (deleteError) {
       setError(deleteError.message)
     } finally {
@@ -164,7 +216,7 @@ export default function AdminUsers() {
           <table className="admin-data-table admin-users-table">
             <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Username</th><th>Joined</th><th>Source</th><th>Status</th><th>Action</th></tr></thead>
             <tbody>{customers.length === 0 ? <tr><td colSpan="8" className="admin-table-empty">No customer records found.</td></tr> : customers.map(customer => (
-              <tr className="admin-clickable-row" key={customer.id} onClick={() => setSelectedCustomer(customer)} tabIndex="0" onKeyDown={event => event.key === 'Enter' && setSelectedCustomer(customer)}>
+              <tr className="admin-clickable-row" key={customer.id} onClick={() => openCustomer(customer)} tabIndex="0" onKeyDown={event => event.key === 'Enter' && openCustomer(customer)}>
                 <td><strong>{customer.name || customer.username}</strong></td>
                 <td>{customer.email}</td>
                 <td>{customer.phone || '—'}</td>
@@ -218,12 +270,28 @@ export default function AdminUsers() {
         </div>
       </section>}
 
-      {selectedCustomer && <div className="admin-modal-backdrop" role="presentation" onClick={() => setSelectedCustomer(null)}>
+      {selectedCustomer && <div className="admin-modal-backdrop" role="presentation" onClick={closeCustomer}>
         <section className="admin-customer-modal" role="dialog" aria-modal="true" aria-labelledby="customer-modal-title" onClick={event => event.stopPropagation()}>
-          <div className="admin-customer-modal-header"><div><span className="admin-eyebrow">Customer details</span><h2 id="customer-modal-title">{selectedCustomer.name || selectedCustomer.email}</h2><p>{selectedCustomer.email}</p></div><button className="admin-user-cancel" type="button" onClick={() => setSelectedCustomer(null)}>Close</button></div>
+          <div className="admin-customer-modal-header"><div><span className="admin-eyebrow">Customer details</span><h2 id="customer-modal-title">{selectedCustomer.name || selectedCustomer.email}</h2><p>{selectedCustomer.email}</p></div><button className="admin-user-cancel" type="button" onClick={closeCustomer}>Close</button></div>
           <div className="admin-customer-summary"><div><small>Phone</small><strong>{selectedCustomer.phone || 'Not provided'}</strong></div><div><small>Username</small><strong>{selectedCustomer.username || 'No account'}</strong></div><div><small>Sources</small><strong>{(selectedCustomer.sources || []).join(', ') || 'Unknown'}</strong></div></div>
           <div className="admin-customer-records"><h3>Why they signed up</h3>
             {(selectedCustomer.records || []).map((record, index) => <article key={`${record.source}-${record.date}-${index}`}><div><strong>{record.source}</strong><span>{record.reason}</span><time>{record.date ? new Date(record.date).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : 'Date unavailable'}</time></div><dl>{Object.entries(record.details || {}).filter(([, value]) => value !== '' && value !== null && value !== undefined).map(([label, value]) => <div key={label}><dt>{label.replaceAll('_', ' ')}</dt><dd>{String(value)}</dd></div>)}</dl></article>)}
+          </div>
+          <div className="admin-customer-password-reset">
+            <h3>Password recovery</h3>
+            {selectedCustomer.account_id ? <>
+              <p>Generate a secure, single-use reset link to share with this customer.</p>
+              <button className="admin-table-action" type="button" onClick={generateCustomerResetLink} disabled={resetLinkLoading}>
+                {resetLinkLoading ? 'Generating...' : resetLink ? 'Generate a new link' : 'Generate reset link'}
+              </button>
+              {resetLink && <div className="admin-customer-reset-link">
+                <label htmlFor="customer-reset-link">One-time reset link</label>
+                <input id="customer-reset-link" type="url" value={resetLink} readOnly onFocus={event => event.target.select()} />
+                <button className="admin-table-action" type="button" onClick={copyCustomerResetLink}>Copy link</button>
+              </div>}
+              {resetLinkMessage && <p className="admin-form-success" role="status">{resetLinkMessage}</p>}
+              {resetLinkError && <p className="admin-form-error" role="alert">{resetLinkError}</p>}
+            </> : <p>This contact does not have an active customer account to reset.</p>}
           </div>
           <div className="admin-customer-modal-footer"><button className="admin-danger-button" type="button" onClick={deleteCustomer} disabled={deleting}>{deleting ? 'Deleting...' : 'Delete customer'}</button></div>
         </section>
