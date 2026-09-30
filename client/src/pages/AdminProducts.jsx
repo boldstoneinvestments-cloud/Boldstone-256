@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare, faPlus, faRotate, faSkull, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { fetchAdminProductData } from '../utils/adminProductCache'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app')
@@ -29,7 +30,7 @@ export default function AdminProducts() {
     setLoading(true)
     setError('')
     try {
-      const response = await fetch(`${BACKEND}/api/admin/shop/products`, { credentials: 'include' })
+      const response = await fetchAdminProductData(`${BACKEND}/api/admin/shop/products`, { credentials: 'include' })
       if (response.status === 401 || response.status === 403) {
         setAuthed(false)
         return
@@ -53,7 +54,7 @@ export default function AdminProducts() {
     setDeleting(true)
     setDeleteError('')
     try {
-      const response = await fetch(`${BACKEND}/api/admin/shop/products/${encodeURIComponent(productToDelete.slug || productToDelete.id)}`, {
+      const response = await fetchAdminProductData(`${BACKEND}/api/admin/shop/products/${encodeURIComponent(productToDelete.slug || productToDelete.id)}`, {
         method: 'DELETE',
         credentials: 'include',
       })

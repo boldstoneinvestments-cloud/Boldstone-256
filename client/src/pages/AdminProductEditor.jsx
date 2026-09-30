@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faLink, faPlus, faUpload } from '@fortawesome/free-solid-svg-icons'
+import { fetchAdminProductData } from '../utils/adminProductCache'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app')
@@ -87,7 +88,7 @@ export default function AdminProductEditor() {
 
     let current = true
     setLoading(true)
-    fetch(`${BACKEND}/api/admin/shop/products/${encodeURIComponent(productId)}`, { credentials: 'include' })
+    fetchAdminProductData(`${BACKEND}/api/admin/shop/products/${encodeURIComponent(productId)}`, { credentials: 'include' })
       .then(async response => {
         const data = await response.json().catch(() => ({}))
         if (response.status === 401 || response.status === 403) {
@@ -208,7 +209,7 @@ export default function AdminProductEditor() {
     }
 
     try {
-      const response = await fetch(`${BACKEND}/api/admin/shop/products${isEditing ? `/${encodeURIComponent(productId)}` : ''}`, {
+      const response = await fetchAdminProductData(`${BACKEND}/api/admin/shop/products${isEditing ? `/${encodeURIComponent(productId)}` : ''}`, {
         method: isEditing ? 'PUT' : 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

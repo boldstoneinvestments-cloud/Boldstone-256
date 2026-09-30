@@ -1,6 +1,7 @@
 import { Suspense, useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
+import { invalidateAdminProductCache } from '../utils/adminProductCache'
 
 const configuredBackend = import.meta.env.VITE_API_URL
 const API = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app') ? configuredBackend.replace(/\/$/, '') : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
@@ -155,6 +156,7 @@ export default function AdminLayout() {
 
   const logout = async () => {
     await fetch(`${API}/api/admin/logout`, { method: 'POST', credentials: 'include' }).catch(() => {})
+    invalidateAdminProductCache()
     navigate('/admin/sign-in')
   }
 
