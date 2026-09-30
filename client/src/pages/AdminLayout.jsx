@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
 
@@ -33,6 +33,7 @@ export default function AdminLayout() {
   const [verificationCode, setVerificationCode] = useState('')
   const [useRecoveryCode, setUseRecoveryCode] = useState(false)
   const [recoveryCodes, setRecoveryCodes] = useState([])
+  const verificationInFlight = useRef(false)
 
   useEffect(() => {
     let active = true
@@ -126,8 +127,10 @@ export default function AdminLayout() {
     navigate('/admin/sign-in')
   }
 
-  const verifyIdentity = async event => {
-    event.preventDefault()
+  const verifyIdentity = async (event, code = verificationCode) => {
+    event?.preventDefault()
+    if (verificationInFlight.current) return
+    verificationInFlight.current = true
     setIdentitySaving(true)
     setIdentityError('')
     try {
@@ -136,8 +139,8 @@ export default function AdminLayout() {
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(useRecoveryCode
-          ? { recovery_code: verificationCode }
-          : { token: verificationCode }),
+          ? { recovery_code: code }
+          : { token: code }),
       })
       const data = await response.json().catch(() => ({}))
       if (!response.ok) throw new Error(data.error || 'Verification failed. Try again.')
@@ -151,6 +154,7 @@ export default function AdminLayout() {
     } catch (error) {
       setIdentityError(error.message || 'Verification failed. Try again.')
     } finally {
+      verificationInFlight.current = false
       setIdentitySaving(false)
     }
   }
@@ -231,9 +235,13 @@ export default function AdminLayout() {
           </div>}
           <form className="admin-identity-verify-form" onSubmit={verifyIdentity} aria-busy={identitySaving}>
             <label htmlFor="admin-verification-code">{useRecoveryCode ? 'Recovery code' : 'Authenticator code'}</label>
-            <input id="admin-verification-code" autoFocus value={verificationCode} onChange={event => setVerificationCode(useRecoveryCode
-              ? event.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 13)
-              : event.target.value.replace(/\D/g, '').slice(0, 6))} placeholder={useRecoveryCode ? 'Enter your recovery code' : '000000'} inputMode={useRecoveryCode ? 'text' : 'numeric'} autoComplete="one-time-code" maxLength={useRecoveryCode ? 24 : 16} required />
+            <input id="admin-verification-code" autoFocus value={verificationCode} onChange={event => {
+              const code = useRecoveryCode
+                ? event.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 13)
+                : event.target.value.replace(/\D/g, '').slice(0, 6)
+              setVerificationCode(code)
+              if (!useRecoveryCode && code.length === 6) verifyIdentity(null, code)
+            }} placeholder={useRecoveryCode ? 'Enter your recovery code' : '000000'} inputMode={useRecoveryCode ? 'text' : 'numeric'} autoComplete="one-time-code" maxLength={useRecoveryCode ? 24 : 16} required />
             {!useRecoveryCode && <small className="admin-identity-code-hint">Enter the current six-digit code. It refreshes every 30 seconds.</small>}
             {!twoFactor.setup_required && <button type="button" className="admin-identity-recovery-toggle" onClick={() => { setUseRecoveryCode(value => !value); setVerificationCode('') }}>{useRecoveryCode ? 'Use authenticator code' : 'Use recovery code'}</button>}
             <button className="admin-identity-primary" type="submit" disabled={identitySaving || !verificationCode}>
