@@ -22,6 +22,9 @@ export default function AdminUsers() {
   const [selectedCustomer, setSelectedCustomer] = useState(null)
   const [customerRecordsLoading, setCustomerRecordsLoading] = useState(false)
   const [customerRecordsError, setCustomerRecordsError] = useState('')
+  const [customerLogoutLoading, setCustomerLogoutLoading] = useState(false)
+  const [customerLogoutMessage, setCustomerLogoutMessage] = useState('')
+  const [customerLogoutError, setCustomerLogoutError] = useState('')
   const [resetLink, setResetLink] = useState('')
   const [resetEmailQueued, setResetEmailQueued] = useState(false)
   const [resetLinkLoading, setResetLinkLoading] = useState(false)
@@ -63,6 +66,8 @@ export default function AdminUsers() {
     setSelectedCustomer({ ...customer, records: [] })
     setCustomerRecordsLoading(true)
     setCustomerRecordsError('')
+    setCustomerLogoutMessage('')
+    setCustomerLogoutError('')
     setResetLink('')
     setResetEmailQueued(false)
     setResetLinkMessage('')
@@ -96,6 +101,8 @@ export default function AdminUsers() {
     setSelectedCustomer(null)
     setCustomerRecordsLoading(false)
     setCustomerRecordsError('')
+    setCustomerLogoutMessage('')
+    setCustomerLogoutError('')
     setResetLink('')
     setResetEmailQueued(false)
     setResetLinkMessage('')
@@ -145,6 +152,30 @@ export default function AdminUsers() {
       setResetLinkMessage('Reset link copied. Share it directly with the customer.')
     } catch {
       setResetLinkError('Copy failed. Select and copy the reset link.')
+    }
+  }
+
+  const logoutCustomerDevices = async () => {
+    if (!selectedCustomer?.account_id || !window.confirm(`Sign ${selectedCustomer.name || selectedCustomer.email} out on all devices? They can sign in again.`)) return
+    setCustomerLogoutLoading(true)
+    setCustomerLogoutMessage('')
+    setCustomerLogoutError('')
+    try {
+      const response = await fetch(`${BACKEND}/api/admin/customers/${selectedCustomer.account_id}/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      })
+      const data = await response.json().catch(() => ({}))
+      if (response.status === 401 || response.status === 403) {
+        setAuthed(false)
+        return
+      }
+      if (!response.ok) throw new Error(data.error || 'Could not sign out the customer.')
+      setCustomerLogoutMessage('Signed out on all devices. The customer can sign in again.')
+    } catch (logoutError) {
+      setCustomerLogoutError(logoutError.message || 'Could not sign out the customer.')
+    } finally {
+      setCustomerLogoutLoading(false)
     }
   }
 
@@ -330,6 +361,15 @@ export default function AdminUsers() {
               {resetLinkError && <p className="admin-form-error" role="alert">{resetLinkError}</p>}
             </> : <p>This contact does not have an active customer account to reset.</p>}
           </div>
+          {selectedCustomer.account_id && <div className="admin-customer-password-reset">
+            <h3>Account access</h3>
+            <p>Sign out this customer on all devices. They can sign in again at any time.</p>
+            <button className="admin-table-action" type="button" onClick={logoutCustomerDevices} disabled={customerLogoutLoading}>
+              {customerLogoutLoading ? 'Signing out...' : 'Sign out all devices'}
+            </button>
+            {customerLogoutMessage && <p className="admin-form-success" role="status">{customerLogoutMessage}</p>}
+            {customerLogoutError && <p className="admin-form-error" role="alert">{customerLogoutError}</p>}
+          </div>}
           <div className="admin-customer-modal-footer"><button className="admin-danger-button" type="button" onClick={deleteCustomer} disabled={deleting}>{deleting ? 'Deleting...' : 'Delete customer'}</button></div>
         </section>
       </div>}
