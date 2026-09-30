@@ -207,11 +207,11 @@ export default function AdminProductEditor() {
         <div className="admin-product-image-field admin-product-field-wide">
           <label htmlFor="product-image-url">Image URL</label>
           <input id="product-image-url" name="image" type="url" value={form.image} onChange={updateField} placeholder="https://..." required />
-          <label className={`admin-product-upload-button${!CLOUDINARY_UPLOAD_PRESET || uploadingImage ? ' is-disabled' : ''}`}>
-            <input type="file" accept="image/*" onChange={uploadImage} disabled={!CLOUDINARY_UPLOAD_PRESET || uploadingImage} />
+          <label className={`admin-product-upload-button${uploadingImage ? ' is-uploading' : ''}`} title="Upload a product photo">
+            <input type="file" accept="image/*" onChange={uploadImage} disabled={uploadingImage} />
             <FontAwesomeIcon icon={faUpload} /> {uploadingImage ? 'Uploading photo...' : 'Upload photo'}
           </label>
-          <small>{CLOUDINARY_UPLOAD_PRESET ? 'Upload an image (max 10 MB) or paste an image URL.' : 'Paste a URL, or configure VITE_CLOUDINARY_UPLOAD_PRESET to enable direct upload.'}</small>
+          <small>{CLOUDINARY_UPLOAD_PRESET ? 'Upload an image (max 10 MB) or paste an image URL.' : 'Choose a photo to check upload setup, or paste an image URL. Direct uploads require the Cloudinary preset.'}</small>
         </div>
         {form.image && <img className="admin-product-image-preview" src={form.image} alt="Product preview" />}
         <label className="admin-product-field-wide">Description<textarea name="description" value={form.description} onChange={updateField} rows="4" /></label>
