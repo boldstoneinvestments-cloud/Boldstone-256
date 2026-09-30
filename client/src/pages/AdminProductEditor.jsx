@@ -7,8 +7,6 @@ const configuredBackend = import.meta.env.VITE_API_URL
 const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app')
   ? configuredBackend.replace(/\/$/, '')
   : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
-const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'cwj8d38f'
-const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || ''
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024
 
 const CATEGORIES = [
@@ -109,19 +107,28 @@ export default function AdminProductEditor() {
       setError('Image must be 10 MB or smaller.')
       return
     }
-    if (!CLOUDINARY_UPLOAD_PRESET) {
-      setError('Direct upload is not configured. Enter an image URL or configure the Cloudinary upload preset.')
-      return
-    }
-
     setUploadingImage(true)
     setError('')
     setMessage('')
-    const uploadData = new FormData()
-    uploadData.append('file', file)
-    uploadData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET)
     try {
-      const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+      const signatureResponse = await fetch(`${BACKEND}/api/admin/shop/products/upload-signature`, {
+        method: 'POST',
+        credentials: 'include',
+      })
+      const signatureData = await signatureResponse.json().catch(() => ({}))
+      if (signatureResponse.status === 401 || signatureResponse.status === 403) {
+        setAuthed(false)
+        return
+      }
+      if (!signatureResponse.ok) throw new Error(signatureData.error || 'Cloudinary is not configured on the backend.')
+
+      const uploadData = new FormData()
+      uploadData.append('file', file)
+      uploadData.append('api_key', signatureData.api_key)
+      uploadData.append('timestamp', signatureData.timestamp)
+      uploadData.append('folder', signatureData.folder)
+      uploadData.append('signature', signatureData.signature)
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${signatureData.cloud_name}/image/upload`, {
         method: 'POST',
         body: uploadData,
       })
@@ -211,7 +218,7 @@ export default function AdminProductEditor() {
             <input type="file" accept="image/*" onChange={uploadImage} disabled={uploadingImage} />
             <FontAwesomeIcon icon={faUpload} /> {uploadingImage ? 'Uploading photo...' : 'Upload photo'}
           </label>
-          <small>{CLOUDINARY_UPLOAD_PRESET ? 'Upload an image (max 10 MB) or paste an image URL.' : 'Choose a photo to check upload setup, or paste an image URL. Direct uploads require the Cloudinary preset.'}</small>
+          <small>Upload an image (max 10 MB) or paste an image URL. Uploads require Cloudinary credentials on the backend.</small>
         </div>
         {form.image && <img className="admin-product-image-preview" src={form.image} alt="Product preview" />}
         <label className="admin-product-field-wide">Description<textarea name="description" value={form.description} onChange={updateField} rows="4" /></label>
