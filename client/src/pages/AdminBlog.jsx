@@ -25,6 +25,10 @@ export default function AdminBlog() {
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [editingId, setEditingId] = useState(null)
+  const [section, setSection] = useState('posts')
+  const [subscribers, setSubscribers] = useState([])
+  const [subscriberCount, setSubscriberCount] = useState(0)
+  const [subscribersLoading, setSubscribersLoading] = useState(false)
   const [view, setView] = useState('list') // 'list' | 'new'
 
   useEffect(() => {
@@ -39,6 +43,25 @@ export default function AdminBlog() {
       .finally(() => { if (active) setLoading(false) })
     return () => { active = false }
   }, [])
+
+  useEffect(() => {
+    if (section !== 'subscribers') return undefined
+    let active = true
+    setSubscribersLoading(true)
+    setError('')
+    fetch(`${BACKEND}/api/admin/newsletter/subscribers`, { credentials: 'include' })
+      .then(async response => {
+        const data = await response.json().catch(() => ({}))
+        if (!response.ok) throw new Error(data.error || 'Could not load subscribers.')
+        if (active) {
+          setSubscribers(data.subscribers || [])
+          setSubscriberCount(data.count || 0)
+        }
+      })
+      .catch(loadError => { if (active) setError(loadError.message) })
+      .finally(() => { if (active) setSubscribersLoading(false) })
+    return () => { active = false }
+  }, [section])
 
   const handle = e => setForm({ ...form, [e.target.name]: e.target.value })
 
@@ -154,15 +177,27 @@ export default function AdminBlog() {
             <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#0f8972', marginBottom: 4 }}>Admin Portal</p>
             <h1 style={{ fontSize: 28, fontWeight: 900, color: '#0d1f1c', margin: 0 }}>Blog Manager</h1>
           </div>
-          {view === 'list'
+          {section === 'posts' && view === 'list'
             ? <button onClick={() => { setEditingId(null); setForm(emptyForm); setError(''); setView('new') }} style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: '11px 20px', borderRadius: 8, border: 'none', cursor: 'pointer' }}>
                 <FontAwesomeIcon icon={faPlus} /> New Post
               </button>
-            : <button onClick={() => { setEditingId(null); setForm(emptyForm); setError(''); setView('list') }} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: '1px solid #e0e0e0', color: '#555', fontWeight: 700, fontSize: 14, padding: '11px 20px', borderRadius: 8, cursor: 'pointer' }}>
+            : section === 'posts' && view === 'new' ? <button onClick={() => { setEditingId(null); setForm(emptyForm); setError(''); setView('list') }} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'none', border: '1px solid #e0e0e0', color: '#555', fontWeight: 700, fontSize: 14, padding: '11px 20px', borderRadius: 8, cursor: 'pointer' }}>
                 <FontAwesomeIcon icon={faArrowLeft} /> Back
               </button>
+              : null
           }
         </div>
+
+        {view === 'list' && (
+          <div role="tablist" aria-label="Blog manager views" style={{ display: 'inline-flex', padding: 4, gap: 4, background: '#e8efed', borderRadius: 8, marginBottom: 24 }}>
+            <button role="tab" aria-selected={section === 'posts'} onClick={() => { setSection('posts'); setError('') }} style={{ border: 0, borderRadius: 6, padding: '9px 16px', background: section === 'posts' ? '#fff' : 'transparent', color: section === 'posts' ? '#0d1f1c' : '#52605c', fontWeight: 700, cursor: 'pointer' }}>
+              Posts
+            </button>
+            <button role="tab" aria-selected={section === 'subscribers'} onClick={() => { setSection('subscribers'); setError('') }} style={{ border: 0, borderRadius: 6, padding: '9px 16px', background: section === 'subscribers' ? '#fff' : 'transparent', color: section === 'subscribers' ? '#0d1f1c' : '#52605c', fontWeight: 700, cursor: 'pointer' }}>
+              Subscribers{subscriberCount > 0 ? ` (${subscriberCount})` : ''}
+            </button>
+          </div>
+        )}
 
         {success && (
           <div style={{ background: '#e6f4f1', border: '1px solid #0f8972', borderRadius: 8, padding: '12px 16px', color: '#0f8972', fontSize: 14, fontWeight: 600, marginBottom: 24 }}>
@@ -177,7 +212,7 @@ export default function AdminBlog() {
         )}
 
         {/* NEW POST FORM */}
-        {view === 'new' && (
+        {view === 'new' && section === 'posts' && (
           <form onSubmit={submit} style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 16, padding: '36px 32px', display: 'flex', flexDirection: 'column', gap: 20 }}>
             <h2 style={{ fontSize: 18, fontWeight: 800, color: '#0d1f1c', margin: 0 }}>{editingId ? 'Edit Post' : 'Write New Post'}</h2>
 
@@ -243,7 +278,7 @@ export default function AdminBlog() {
         )}
 
         {/* POSTS LIST */}
-        {view === 'list' && (
+        {view === 'list' && section === 'posts' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {loading && <p style={{ color: '#777', fontSize: 14 }}>Loading blog posts...</p>}
             {!loading && !error && posts.length === 0 && (
@@ -277,6 +312,34 @@ export default function AdminBlog() {
               )
             })}
           </div>
+        )}
+
+        {view === 'list' && section === 'subscribers' && (
+          <section aria-label="Newsletter subscribers">
+            <h2 style={{ fontSize: 18, fontWeight: 800, color: '#0d1f1c', margin: '0 0 14px' }}>
+              Newsletter subscribers <span style={{ color: '#71807b', fontSize: 14 }}>({subscriberCount})</span>
+            </h2>
+            {subscribersLoading && <p style={{ color: '#777', fontSize: 14 }}>Loading subscribers...</p>}
+            {!subscribersLoading && !error && subscribers.length === 0 && (
+              <div style={{ background: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, padding: 32, textAlign: 'center', color: '#777' }}>No subscribers yet.</div>
+            )}
+            {!subscribersLoading && subscribers.length > 0 && (
+              <div style={{ overflowX: 'auto', background: '#fff', border: '1px solid #e0e0e0', borderRadius: 8 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                  <thead><tr style={{ background: '#f4f8f7', color: '#52605c', fontSize: 12, textTransform: 'uppercase' }}>
+                    <th scope="col" style={{ padding: '12px 16px' }}>Email</th>
+                    <th scope="col" style={{ padding: '12px 16px' }}>Subscribed</th>
+                  </tr></thead>
+                  <tbody>{subscribers.map(subscriber => (
+                    <tr key={subscriber.email} style={{ borderTop: '1px solid #e8efed', color: '#0d1f1c', fontSize: 14 }}>
+                      <td style={{ padding: '14px 16px' }}>{subscriber.email}</td>
+                      <td style={{ padding: '14px 16px', color: '#66736f' }}>{new Date(subscriber.subscribed_at).toLocaleString()}</td>
+                    </tr>
+                  ))}</tbody>
+                </table>
+              </div>
+            )}
+          </section>
         )}
       </div>
     </div>
