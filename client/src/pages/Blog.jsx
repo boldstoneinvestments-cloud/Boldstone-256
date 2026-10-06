@@ -67,13 +67,56 @@ const css = `
   }
 `
 
+function NewsletterSignup() {
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState('idle')
+  const [message, setMessage] = useState('')
+
+  const subscribe = async event => {
+    event.preventDefault()
+    setStatus('loading')
+    setMessage('')
+    try {
+      const response = await fetch(`${BACKEND}/api/newsletter/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(data.error || 'Subscription failed. Please try again.')
+      setStatus('success')
+      setMessage(data.already_subscribed ? 'This email is already subscribed.' : 'You are subscribed to Boldstone updates.')
+      setEmail('')
+    } catch (error) {
+      setStatus('error')
+      setMessage(error.message || 'Subscription failed. Please try again.')
+    }
+  }
+
+  return (
+    <section aria-labelledby="newsletter-heading" style={{ marginTop: 48, background: '#fff', borderRadius: 16, padding: '36px 32px', textAlign: 'center', border: '1px solid #e0ede9' }}>
+      <p id="newsletter-heading" style={{ fontSize: 20, fontWeight: 900, color: '#0d1f1c', margin: '0 0 8px' }}>Subscribe to our newsletter</p>
+      <p style={{ fontSize: 14, color: '#666', margin: '0 0 24px' }}>Get the latest Boldstone news and updates delivered straight to your inbox.</p>
+      <form onSubmit={subscribe} style={{ display: 'flex', gap: 10, maxWidth: 460, margin: '0 auto', flexWrap: 'wrap' }}>
+        <input
+          type="email" name="email" autoComplete="email" placeholder="Enter your email address" required
+          value={email} onChange={event => setEmail(event.target.value)}
+          disabled={status === 'loading'}
+          style={{ flex: 1, minWidth: 200, padding: '12px 16px', borderRadius: 8, border: '1px solid #e0e0e0', fontSize: 14, outline: 'none', background: '#f8fffe', color: '#0d1f1c' }}
+        />
+        <button type="submit" disabled={status === 'loading'} style={{ background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: '12px 24px', borderRadius: 8, border: 'none', cursor: status === 'loading' ? 'wait' : 'pointer', whiteSpace: 'nowrap', opacity: status === 'loading' ? 0.7 : 1 }}>
+          {status === 'loading' ? 'Subscribing...' : status === 'success' ? 'Subscribed' : 'Subscribe'}
+        </button>
+      </form>
+      {message && <p role={status === 'error' ? 'alert' : 'status'} aria-live="polite" style={{ fontSize: 13, color: status === 'error' ? '#b42318' : '#0f8972', margin: '14px 0 0' }}>{message}</p>}
+    </section>
+  )
+}
+
 export default function Blog() {
   const [active, setActive] = useState(null)
   const [storedPosts, setStoredPosts] = useState(getStoredPosts)
   const [posts, setPosts] = useState(hardcodedPosts)
-  const [newsletterEmail, setNewsletterEmail] = useState('')
-  const [newsletterStatus, setNewsletterStatus] = useState('idle')
-  const [newsletterMessage, setNewsletterMessage] = useState('')
 
   useEffect(() => {
     let mounted = true
@@ -86,27 +129,6 @@ export default function Blog() {
       .catch(() => {})
     return () => { mounted = false }
   }, [])
-
-  const subscribe = async event => {
-    event.preventDefault()
-    setNewsletterStatus('loading')
-    setNewsletterMessage('')
-    try {
-      const response = await fetch(`${BACKEND}/api/newsletter/subscribe`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: newsletterEmail }),
-      })
-      const data = await response.json().catch(() => ({}))
-      if (!response.ok) throw new Error(data.error || 'Subscription failed. Please try again.')
-      setNewsletterStatus('success')
-      setNewsletterMessage(data.already_subscribed ? 'This email is already subscribed.' : 'You are subscribed to Boldstone updates.')
-      setNewsletterEmail('')
-    } catch (error) {
-      setNewsletterStatus('error')
-      setNewsletterMessage(error.message || 'Subscription failed. Please try again.')
-    }
-  }
 
   const [modal, setModal] = useState(null)
   const [pw, setPw] = useState('')
@@ -199,23 +221,7 @@ export default function Blog() {
           ))}
         </div>
 
-        {/* Subscribe section */}
-        <div style={{ marginTop: 48, background: '#fff', borderRadius: 16, padding: '36px 32px', textAlign: 'center', border: '1px solid #e0ede9' }}>
-          <p style={{ fontSize: 20, fontWeight: 900, color: '#0d1f1c', margin: '0 0 8px' }}>Subscribe to our newsletter</p>
-          <p style={{ fontSize: 14, color: '#666', margin: '0 0 24px' }}>Get the latest Boldstone news and updates delivered straight to your inbox.</p>
-          <form onSubmit={subscribe} style={{ display: 'flex', gap: 10, maxWidth: 460, margin: '0 auto', flexWrap: 'wrap' }}>
-            <input
-              type="email" name="email" autoComplete="email" placeholder="Enter your email address" required
-              value={newsletterEmail} onChange={e => setNewsletterEmail(e.target.value)}
-              disabled={newsletterStatus === 'loading'}
-              style={{ flex: 1, minWidth: 200, padding: '12px 16px', borderRadius: 8, border: '1px solid #e0e0e0', fontSize: 14, outline: 'none', background: '#f8fffe', color: '#0d1f1c' }}
-            />
-            <button type="submit" disabled={newsletterStatus === 'loading'} style={{ background: '#0f8972', color: '#fff', fontWeight: 700, fontSize: 14, padding: '12px 24px', borderRadius: 8, border: 'none', cursor: newsletterStatus === 'loading' ? 'wait' : 'pointer', whiteSpace: 'nowrap', opacity: newsletterStatus === 'loading' ? 0.7 : 1 }}>
-              {newsletterStatus === 'loading' ? 'Subscribing...' : newsletterStatus === 'success' ? 'Subscribed' : 'Subscribe'}
-            </button>
-          </form>
-          {newsletterMessage && <p role={newsletterStatus === 'error' ? 'alert' : 'status'} aria-live="polite" style={{ fontSize: 13, color: newsletterStatus === 'error' ? '#b42318' : '#0f8972', margin: '14px 0 0' }}>{newsletterMessage}</p>}
-        </div>
+        <NewsletterSignup />
       </div>
     )
   }
@@ -280,6 +286,8 @@ export default function Blog() {
             )
           })}
         </div>
+
+        <NewsletterSignup />
 
       </div>
 
