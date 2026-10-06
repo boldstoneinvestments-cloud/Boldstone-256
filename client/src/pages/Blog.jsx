@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faCalendar, faUser, faPlus, faLock, faTimes, faTrash, faImage } from '@fortawesome/free-solid-svg-icons'
 
 const STORAGE_KEY = 'boldstone_blog_posts'
 const ADMIN_PASSWORD = 'boldstone2026'
+const configuredBackend = import.meta.env.VITE_API_URL
+const BACKEND = configuredBackend && !configuredBackend.includes('boldstone-256-production.up.railway.app') ? configuredBackend.replace(/\/$/, '') : (import.meta.env.PROD ? 'https://backend-production-9c1d1.up.railway.app' : 'http://localhost:5000')
 
 function getStoredPosts() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [] } catch { return [] }
@@ -68,7 +70,19 @@ const css = `
 export default function Blog() {
   const [active, setActive] = useState(null)
   const [storedPosts, setStoredPosts] = useState(getStoredPosts)
-  const allPosts = [...storedPosts, ...hardcodedPosts]
+  const [posts, setPosts] = useState(hardcodedPosts)
+
+  useEffect(() => {
+    let mounted = true
+    fetch(`${BACKEND}/api/blog/posts`)
+      .then(async response => {
+        const data = await response.json().catch(() => ({}))
+        if (!response.ok) throw new Error('Could not load blog posts.')
+        if (mounted) setPosts(Array.isArray(data.posts) ? data.posts : [])
+      })
+      .catch(() => {})
+    return () => { mounted = false }
+  }, [])
 
   const [modal, setModal] = useState(null)
   const [pw, setPw] = useState('')
@@ -219,7 +233,7 @@ export default function Blog() {
 
         {/* Blog Grid */}
         <div className="blog-grid">
-          {allPosts.map((post) => {
+          {posts.map((post) => {
             const cat = categoryColors[post.category] || { bg: '#f0faf7', color: '#0f8972' }
             return (
               <div key={post.id} className="blog-card" onClick={() => open(post)}>
