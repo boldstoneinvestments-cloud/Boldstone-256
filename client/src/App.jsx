@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import { lazy, Suspense, useEffect } from 'react'
 import { CartProvider } from './CartContext'
 import Navbar from './components/layout/Navbar'
@@ -12,6 +12,16 @@ const About = lazy(() => import('./pages/About'))
 const LeaseACoffeeFarm = lazy(() => import('./pages/LeaseACoffeeFarm'))
 const LeaseApplication = lazy(() => import('./pages/LeaseApplication'))
 const Farmers = lazy(() => import('./pages/Farmers'))
+const FarmerLayout = lazy(() => import('./farmer/FarmerLayout'))
+const FarmerDashboard = lazy(() => import('./farmer/FarmerDashboardHome'))
+const FarmerPerformance = lazy(() => import('./farmer/FarmerPages').then(module => ({ default: module.FarmerPerformance })))
+const FarmerPrices = lazy(() => import('./farmer/FarmerPages').then(module => ({ default: module.FarmerPrices })))
+const FarmerAgronomy = lazy(() => import('./farmer/FarmerPages').then(module => ({ default: module.FarmerAgronomy })))
+const FarmerHarvest = lazy(() => import('./farmer/FarmerPages').then(module => ({ default: module.FarmerHarvest })))
+const FarmerOpportunities = lazy(() => import('./farmer/FarmerPages').then(module => ({ default: module.FarmerOpportunities })))
+const FarmerRewards = lazy(() => import('./farmer/FarmerPages').then(module => ({ default: module.FarmerRewards })))
+const FarmerLoanApplication = lazy(() => import('./farmer/FarmerPages').then(module => ({ default: module.FarmerLoanApplication })))
+const FarmerAdviceDetail = lazy(() => import('./farmer/FarmerAdviceDetail'))
 const Partnership = lazy(() => import('./pages/Partnership'))
 const Contact = lazy(() => import('./pages/Contact'))
 const Blog = lazy(() => import('./pages/Blog'))
@@ -56,6 +66,7 @@ function AppInner() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const isAdmin = pathname.startsWith('/admin')
+  const isFarmerApp = pathname.startsWith('/farmer')
   const isAccountAuth = pathname === '/account/sign-in' || pathname === '/account/sign-up'
 
   useEffect(() => {
@@ -69,7 +80,7 @@ function AppInner() {
     <div className="min-h-screen flex flex-col">
       <ScrollToTop />
       <GoogleAuthHandoff />
-      {!isAdmin && <Navbar />}
+      {!isAdmin && !isFarmerApp && <Navbar />}
       <main className="flex-1">
         <Suspense fallback={<div className="min-h-[50vh] grid place-items-center" aria-busy="true"><span className="admin-loading-spinner" aria-hidden="true" />Loading page...</div>}>
         <Routes>
@@ -78,6 +89,18 @@ function AppInner() {
           <Route path="/lease-a-coffee-farm" element={<LeaseACoffeeFarm />} />
           <Route path="/lease-application" element={<LeaseApplication />} />
           <Route path="/farmers" element={<Farmers />} />
+          <Route path="/farmer" element={<FarmerLayout />}>
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<FarmerDashboard />} />
+            <Route path="performance" element={<FarmerPerformance />} />
+            <Route path="prices" element={<FarmerPrices />} />
+            <Route path="agronomy" element={<FarmerAgronomy />} />
+            <Route path="harvest" element={<FarmerHarvest />} />
+            <Route path="opportunities" element={<FarmerOpportunities />} />
+            <Route path="rewards" element={<FarmerRewards />} />
+            <Route path="apply-for-loan" element={<FarmerLoanApplication />} />
+            <Route path="advice/:slug" element={<FarmerAdviceDetail />} />
+          </Route>
           <Route path="/partnership" element={<Partnership />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
@@ -110,8 +133,8 @@ function AppInner() {
         </Suspense>
       </main>
       {!isAdmin && ['farmers', 'lease-a-coffee-farm'].includes(pathname.slice(1)) && <PaymentBar />}
-      {!isAdmin && <Footer />}
-      {!isAdmin && !isAccountAuth && pathname !== '/shop' && <ChatWidget />}
+      {!isAdmin && !isFarmerApp && <Footer />}
+      {!isAdmin && !isFarmerApp && !isAccountAuth && pathname !== '/shop' && <ChatWidget />}
     </div>
   )
 }
