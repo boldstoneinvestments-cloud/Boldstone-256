@@ -264,6 +264,9 @@
 .farmer-auth-panel form { display: grid; gap: 12px; }
 .farmer-auth-panel label { display: grid; gap: 6px; color: #506052; font-size: 11px; font-weight: 700; }
 .farmer-auth-panel input { width: 100%; min-height: 42px; padding: 0 11px; border: 1px solid #d8dfd3; border-radius: 4px; background: #fff; color: #1d2e25; font: inherit; font-size: 12px; }
+.farmer-auth-password-field { position: relative; }
+.farmer-auth-password-field input { padding-right: 44px; }
+.farmer-auth-password-field button { position: absolute; inset: 0 0 0 auto; display: grid; width: 42px; place-items: center; border: 0; background: transparent; color: #56736d; cursor: pointer; }
 .farmer-auth-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .farmer-auth-inline-error { color: #a33d32; font-size: 11px; }
 .farmer-auth-switch { margin: 18px 0 0 !important; text-align: center; }
