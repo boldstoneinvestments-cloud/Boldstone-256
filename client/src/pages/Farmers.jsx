@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBullhorn, faLeaf, faChevronDown, faArrowRight, faCircleCheck } from '@fortawesome/free-solid-svg-icons'
 
 const farmerJoinHref = import.meta.env.DEV
-  ? '/farmer/dashboard'
+  ? '/farmers/sign-up'
   : 'https://forms.gle/amtu1ouEKpt2kNYP7'
 const farmerJoinTarget = import.meta.env.DEV ? undefined : '_blank'
 

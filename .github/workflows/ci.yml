@@ -33,8 +33,6 @@ jobs:
 
       - name: Build client
         working-directory: client
-        env:
-          VITE_RECAPTCHA_SITE_KEY: ${{ vars.VITE_RECAPTCHA_SITE_KEY }}
         run: npm run build
 
       - name: Set up Python

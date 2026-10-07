@@ -30,57 +30,72 @@ const pages = {
     description: "Coffee farming is hard enough to keep chasing for the right traders to purchase your coffee or the best agronomical support to ensure that your coffee farms are most productive. Boldstone's digital platform helps you to access the right farming advise, mentor, market prices while selling your coffee at the very best possible time and price.",
     image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
   },
-  '/farmer/dashboard': {
+  '/farmers/sign-in': {
+    title: 'Farmer Sign In | Boldstone Farmer Portal',
+    description: 'Sign in to access your Boldstone farmer dashboard and farm records.',
+    image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
+  },
+  '/farmers/sign-up': {
+    title: 'Create a Farmer Account | Boldstone Farmer Portal',
+    description: 'Register your farm to access Boldstone farmer services and records.',
+    image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
+  },
+  '/farmers/dashboard': {
     title: 'My Farm | Boldstone Farmer Dashboard',
     description: 'Track farm performance, market prices, agronomy tasks, harvest, rewards, and farmer opportunities.',
     image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
   },
-  '/farmer/performance': {
+  '/farmers/performance': {
     title: 'Farm Performance | Boldstone Farmer Portal',
     description: 'Review coffee yield history, farm productivity, and crop health.',
     image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
   },
-  '/farmer/prices': {
+  '/farmers/prices': {
     title: 'Coffee Prices | Boldstone Farmer Portal',
     description: 'Review indicative coffee prices and recent market trends.',
     image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
   },
-  '/farmer/agronomy': {
+  '/farmers/agronomy': {
     title: 'Agronomy | Boldstone Farmer Portal',
     description: 'View farm tasks, crop alerts, weather, and agronomy recommendations.',
     image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
   },
-  '/farmer/harvest': {
+  '/farmers/harvest': {
     title: 'Harvest and Sales | Boldstone Farmer Portal',
     description: 'Plan your coffee harvest and track sales and payments.',
     image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
   },
-  '/farmer/opportunities': {
+  '/farmers/opportunities': {
     title: 'Farmer Opportunities | Boldstone Farmer Portal',
     description: 'Explore financing, training, discounts, land, and certification programs.',
     image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
   },
-  '/farmer/rewards': {
+  '/farmers/rewards': {
     title: 'Farmer Rewards | Boldstone Farmer Portal',
     description: 'Track farm quality scores, sustainability scores, and available rewards.',
     image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
   },
-  '/farmer/apply-for-loan': {
+  '/farmers/apply-for-loan': {
     title: 'Apply for a Farm Loan | Boldstone Farmer Portal',
     description: 'Prepare a seasonal farm financing application.',
     image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
   },
-  '/farmer/advice/twig-borer-check': {
+  '/farmers/advice': {
+    title: 'Farm Advice | Boldstone Farmer Portal',
+    description: 'Practical coffee farming advice from Boldstone agronomists.',
+    image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
+  },
+  '/farmers/advice/twig-borer-check': {
     title: 'Inspect for Coffee Twig Borer | Boldstone Farmer Advice',
     description: 'Learn a simple field inspection routine for coffee twig borer symptoms.',
     image: 'https://address-restaurant2.odoo.com/web/image/1906-689c8b1f/coffee%20man.webp',
   },
-  '/farmer/advice/cherry-harvest-quality': {
+  '/farmers/advice/cherry-harvest-quality': {
     title: 'Keep Coffee Cherries Clean | Boldstone Farmer Advice',
     description: 'Practical coffee cherry picking and handling tips for harvest quality.',
     image: 'https://address-restaurant2.odoo.com/web/image/2002-f96f6be8/coffee_cherries.webp',
   },
-  '/farmer/advice/mulch-young-trees': {
+  '/farmers/advice/mulch-young-trees': {
     title: 'Mulch Young Coffee Trees | Boldstone Farmer Advice',
     description: 'Simple soil moisture and weed management advice for young coffee trees.',
     image: 'https://address-restaurant2.odoo.com/web/image/1948-db6cb14d/Land%20aerial%20view.webp',

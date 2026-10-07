@@ -22,6 +22,7 @@ const FarmerOpportunities = lazy(() => import('./farmer/FarmerPages').then(modul
 const FarmerRewards = lazy(() => import('./farmer/FarmerPages').then(module => ({ default: module.FarmerRewards })))
 const FarmerLoanApplication = lazy(() => import('./farmer/FarmerPages').then(module => ({ default: module.FarmerLoanApplication })))
 const FarmerAdviceDetail = lazy(() => import('./farmer/FarmerAdviceDetail'))
+const FarmerAuth = lazy(() => import('./farmer/FarmerAuth'))
 const Partnership = lazy(() => import('./pages/Partnership'))
 const Contact = lazy(() => import('./pages/Contact'))
 const Blog = lazy(() => import('./pages/Blog'))
@@ -66,7 +67,7 @@ function AppInner() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const isAdmin = pathname.startsWith('/admin')
-  const isFarmerApp = pathname.startsWith('/farmer')
+  const isFarmerApp = pathname.startsWith('/farmers/')
   const isAccountAuth = pathname === '/account/sign-in' || pathname === '/account/sign-up'
 
   useEffect(() => {
@@ -89,17 +90,19 @@ function AppInner() {
           <Route path="/lease-a-coffee-farm" element={<LeaseACoffeeFarm />} />
           <Route path="/lease-application" element={<LeaseApplication />} />
           <Route path="/farmers" element={<Farmers />} />
-          <Route path="/farmer" element={<FarmerLayout />}>
-            <Route index element={<Navigate to="dashboard" replace />} />
-            <Route path="dashboard" element={<FarmerDashboard />} />
-            <Route path="performance" element={<FarmerPerformance />} />
-            <Route path="prices" element={<FarmerPrices />} />
-            <Route path="agronomy" element={<FarmerAgronomy />} />
-            <Route path="harvest" element={<FarmerHarvest />} />
-            <Route path="opportunities" element={<FarmerOpportunities />} />
-            <Route path="rewards" element={<FarmerRewards />} />
-            <Route path="apply-for-loan" element={<FarmerLoanApplication />} />
-            <Route path="advice/:slug" element={<FarmerAdviceDetail />} />
+          <Route path="/farmers/sign-in" element={<FarmerAuth />} />
+          <Route path="/farmers/sign-up" element={<FarmerAuth mode="sign-up" />} />
+          <Route element={<FarmerLayout />}>
+            <Route path="/farmers/dashboard" element={<FarmerDashboard />} />
+            <Route path="/farmers/performance" element={<FarmerPerformance />} />
+            <Route path="/farmers/prices" element={<FarmerPrices />} />
+            <Route path="/farmers/agronomy" element={<FarmerAgronomy />} />
+            <Route path="/farmers/harvest" element={<FarmerHarvest />} />
+            <Route path="/farmers/opportunities" element={<FarmerOpportunities />} />
+            <Route path="/farmers/rewards" element={<FarmerRewards />} />
+            <Route path="/farmers/apply-for-loan" element={<FarmerLoanApplication />} />
+            <Route path="/farmers/advice" element={<FarmerAdviceDetail />} />
+            <Route path="/farmers/advice/:slug" element={<FarmerAdviceDetail />} />
           </Route>
           <Route path="/partnership" element={<Partnership />} />
           <Route path="/contact" element={<Contact />} />

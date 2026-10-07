@@ -1,38 +1,43 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faArrowRight, faClock, faLeaf, faSeedling } from '@fortawesome/free-solid-svg-icons'
-import { Link, useParams } from 'react-router-dom'
-import { farmAdvice } from './farmAdvice'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { useFarmerResource } from './farmerApi'
 
 export default function FarmerAdviceDetail() {
   const { slug } = useParams()
-  const advice = farmAdvice.find(item => item.slug === slug)
+  const [searchParams] = useSearchParams()
+  const adviceSlug = slug || searchParams.get('slug')
+  const { data: detailData, error: detailError, loading: detailLoading } = useFarmerResource(`advice/${adviceSlug}`)
+  const { data: listData } = useFarmerResource('advice')
+  const advice = detailData?.advice?.[0]
+  const related = (listData?.advice || []).filter(item => item.slug !== adviceSlug)
 
-  if (!advice) {
+  if (detailLoading) return <div className="farmer-page-message" role="status">Loading farm advice...</div>
+
+  if (detailError || !advice) {
     return (
       <div className="farmer-subpage farmer-advice-not-found">
         <span className="farmer-section-label">FARM ADVICE</span>
         <h1>Advice not found</h1>
         <p>This farm note may have moved.</p>
-        <Link to="/farmer/dashboard" className="farmer-heading-link"><FontAwesomeIcon icon={faArrowLeft} /> Back to dashboard</Link>
+        <Link to="/farmers/dashboard" className="farmer-heading-link"><FontAwesomeIcon icon={faArrowLeft} /> Back to dashboard</Link>
       </div>
     )
   }
 
-  const related = farmAdvice.filter(item => item.slug !== advice.slug)
-
   return (
     <article className="farmer-subpage farmer-advice-detail">
-      <Link to="/farmer/dashboard" className="farmer-advice-back"><FontAwesomeIcon icon={faArrowLeft} /> Back to My farm</Link>
+      <Link to="/farmers/dashboard" className="farmer-advice-back"><FontAwesomeIcon icon={faArrowLeft} /> Back to My farm</Link>
       <div className="farmer-advice-detail-heading">
         <span className="farmer-section-label">{advice.category} <i>·</i> TODAY’S FARM ADVICE</span>
         <h1>{advice.title}</h1>
         <p>{advice.summary}</p>
-        <span className="farmer-advice-duration"><FontAwesomeIcon icon={faClock} /> {advice.readTime}</span>
+        <span className="farmer-advice-duration"><FontAwesomeIcon icon={faClock} /> {advice.read_time}</span>
       </div>
 
       <figure className="farmer-advice-detail-photo">
-        <img src={advice.image} alt={advice.imageAlt} />
-        <figcaption>{advice.photoCaption} <span>PHOTO · BOLDSTONE</span></figcaption>
+        <img src={advice.image} alt={advice.image_alt} />
+        <figcaption>{advice.photo_caption} <span>PHOTO · BOLDSTONE</span></figcaption>
       </figure>
 
       <div className="farmer-advice-article-grid">
@@ -46,9 +51,9 @@ export default function FarmerAdviceDetail() {
       </div>
 
       <section className="farmer-related-advice">
-        <div className="farmer-panel-heading"><div><span className="farmer-section-label">MORE FIELD NOTES</span><h2>Keep learning</h2></div><Link to="/farmer/dashboard">All advice <FontAwesomeIcon icon={faArrowRight} /></Link></div>
+        <div className="farmer-panel-heading"><div><span className="farmer-section-label">MORE FIELD NOTES</span><h2>Keep learning</h2></div><Link to="/farmers/dashboard">All advice <FontAwesomeIcon icon={faArrowRight} /></Link></div>
         <div className="farmer-related-grid">
-          {related.map(item => <Link to={`/farmer/advice/${item.slug}`} key={item.slug} className="farmer-related-card"><img src={item.image} alt="" /><span><small>{item.category}</small><strong>{item.title}</strong></span><FontAwesomeIcon icon={faArrowRight} /></Link>)}
+          {related.map(item => <Link to={`/farmers/advice?slug=${encodeURIComponent(item.slug)}`} key={item.slug} className="farmer-related-card"><img src={item.image} alt="" /><span><small>{item.category}</small><strong>{item.title}</strong></span><FontAwesomeIcon icon={faArrowRight} /></Link>)}
         </div>
       </section>
     </article>

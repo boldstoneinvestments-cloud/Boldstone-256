@@ -1,9 +1,5 @@
 # React + Vite
 
-## Account reCAPTCHA
-
-The account sign-in and sign-up forms use a reCAPTCHA checkbox. Add the public site key as the GitHub Actions repository variable `VITE_RECAPTCHA_SITE_KEY`; the `Boldstone CI` workflow injects it during the Pages build. Keep the matching `RECAPTCHA_SECRET_KEY` only in the backend Railway service variables. The public site key must be authorized for `boldstoneinvestments.com` and `www.boldstoneinvestments.com`.
-
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
 Currently, two official plugins are available:
