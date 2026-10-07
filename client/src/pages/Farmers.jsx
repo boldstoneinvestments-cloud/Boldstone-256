@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBullhorn, faLeaf, faChevronDown, faArrowRight, faCircleCheck } from '@fortawesome/free-solid-svg-icons'
 
-const farmerJoinHref = '/farmers/sign-in'
+const farmerJoinHref = 'https://forms.gle/amtu1ouEKpt2kNYP7'
 
 function Counter({ target }) {
   const [count, setCount] = useState(0)
@@ -165,7 +165,7 @@ export default function Farmers() {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}
             className="hero-btns"
           >
-            <a href={farmerJoinHref} className="hero-btn primary">
+            <a href={farmerJoinHref} target="_blank" rel="noreferrer" className="hero-btn primary">
               Join as a Farmer
             </a>
           </motion.div>
@@ -268,7 +268,7 @@ export default function Farmers() {
         <div className="cta-inner">
           <h2>Ready to Build Your Coffee Farm?</h2>
           <p>Join a growing network of farmers across Uganda who are building profitable, sustainable coffee farms with Boldstone. Let's grow together.</p>
-          <a href={farmerJoinHref}>
+          <a href={farmerJoinHref} target="_blank" rel="noreferrer">
             Get Started Today <FontAwesomeIcon icon={faArrowRight} />
           </a>
         </div>
